@@ -1,0 +1,175 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hongzhi.zswh.app.competition.dao.AppCompetitionDao">
+<select id="selectCompetitionPage" resultType="com.hongzhi.zswh.app.competition.entity.AppCompetition">
+	select
+		ifnull(a.competition_id, 0) as competition_id,
+		ifnull(a.user_id, 0) as user_id,
+		ifnull(a.language_id, 0) as language_id,
+		ifnull(a.platform_id, 0) as platform_id,
+		ifnull(a.competition_name, '') as competition_name,
+		coalesce (
+			case
+			when a.competition_level = '2' then
+				'俱乐部赛事'
+			when a.competition_level = '1' then
+				'全国赛事'
+			else
+				''
+			end,
+			'  '
+		) as competition_level,
+		ifnull(a.competition_description, '') as competition_description,
+		coalesce (
+			case
+			when a.competition_status = '1' then
+				'启用'
+			when a.competition_status = '0' then
+				'禁用'
+			else
+				''
+			end,
+			' '
+		) as competition_status,
+		ifnull(
+			a.competition_publicity_pictures,
+			''
+		) as competition_publicity_pictures,
+		ifnull(a.registration_start_date, '') as registration_start_date,
+		ifnull(a.registration_end_date, '') as registration_end_date,
+		ifnull(a.competition_start_date, '') as competition_start_date,
+		ifnull(a.competition_end_date, '') as competition_end_date,
+		ifnull(a.id, 0) as id,
+		ifnull(a.compertition_live_status, '1') as compertition_status_final,
+		ifnull(b.user_real_name, '') as user_real_name,
+		ifnull(c.language_name, '') as language_name,
+		ifnull(d.platform_name, '') as platform_name,
+		coalesce (e. name, ' ') as name 
+ <![CDATA[ ,coalesce( case when curdate() >= str_to_date(registration_start_date, '%y%m%d') 
+                 and curdate() <= str_to_date(registration_end_date, '%y%m%d') then '1'
+                when curdate() > str_to_date(registration_end_date, '%y%m%d') then '2'
+                else '0'
+              end ,' ')   as registration_status   ]]>
+		from
+			competition a
+		left join user_info b on a.user_id = b.user_id
+		left join language c on a.language_id = c.language_id
+		left join platform d on a.platform_id = d.platform_id
+		left join world_city e on a.id = e.id
+		where
+			1 = 1
+			and a.is_delete = '0'
+	<if test="other != null" >
+			and a.competition_name like '%${other}%' </if>
+	<if test="other != null">
+			and c.language_abbreviation = #{other,jdbctype=varchar} </if> 
+	<if test="other != null">
+		    and a.platform_id = #{other,jdbctype=integer} </if>
+		order by 
+	 		case when  CURDATE() > cast(a.competition_start_date as date)   
+			      then  abs(to_days(CURDATE())-to_days(cast(a.competition_start_date as date)) )+365
+			      else abs(to_days(CURDATE())-to_days(cast(a.competition_start_date as date)) )  
+			      end 
+			,case when  CURDATE() > cast(a.registration_start_date as date) 
+			      then  abs(to_days(CURDATE())-to_days(cast(a.registration_start_date as date)) )+365
+			      else  abs(to_days(CURDATE())-to_days(cast(a.registration_start_date as date)) ) 
+			      end   
+			,a.competition_id  
+		limit 
+			#{pageStartRow } , #{pageRecorders }
+                                                        
+</select>
+<select id="listCompetitonByPageCount" resultType="Integer">
+		select
+			count(*) as data_count
+   <![CDATA[  from (select * from competition where (is_delete <> '1' or is_delete is null) ) a  ]]>
+		 LEFT JOIN platform p
+			    on p.platform_id=a.platform_id
+		 LEFT JOIN user_info u
+			    ON u.user_id=a.user_id
+		 left join dictionary c
+			    on a.language_id = c.code
+			   and c.p_code='language'
+			   and c.code=2
+			   and c.language= #{language}
+	
+			<if test=" other !=null ">
+				where a.competition_name like CONCAT('%', #{other} ,'%')
+			</if>
+	</select>
+  <select id="getCompetitionById" resultType="map">
+     select  
+                  ifnull(a.competition_id ,0)    as                             competition_id                 
+                    ,ifnull(a.user_id ,0)    as                                    user_id
+                    ,ifnull(a.language_id ,0)    as                                language_id
+                    ,ifnull(a.platform_id ,0)    as                                platform_id
+                    ,ifnull(a.competition_name ,'')    as                           competition_name
+                    ,ifnull(a.competition_level ,'')    as                          competition_level
+                    ,ifnull(a.competition_description ,'')    as                    competition_description
+                    ,ifnull(a.competition_status ,'')    as                         competition_status
+                    ,ifnull(a.competition_publicity_pictures ,'')    as             competition_publicity_pictures
+                 <!--   ,STR_TO_DATE(a.registration_start_date, '%Y%m%d')  as  registration_start_date
+                    ,STR_TO_DATE(a.registration_end_date, '%Y%m%d')  as  registration_end_date
+                    ,STR_TO_DATE(a.competition_start_date, '%Y%m%d')  as  competition_start_date
+                    ,STR_TO_DATE(a.competition_end_date, '%Y%m%d')  as  competition_end_date   -->
+                     ,ifnull(a.registration_start_date ,'')    as                    registration_start_date
+                    ,ifnull(a.registration_end_date ,'')    as                      registration_end_date
+                    ,ifnull(a.competition_start_date  ,'')    as                    competition_start_date 
+                    ,ifnull(a.competition_end_date   ,'')    as                     competition_end_date  
+                    ,ifnull(a.id ,0)    as                                         id
+                    ,ifnull(a.compertition_live_status,'1')  as                     compertition_status_final  
+                    ,ifnull(b.user_real_name,'')     as user_real_name
+                    ,ifnull(c.platform_name ,'')     as platform_name  
+                    ,ifnull(d.language_name ,'')     as  language_name 
+                    ,ifnull( e.name,' ') as name 
+                    ,''  as  registration_status   
+   
+                 from competition  a
+            left join user_info b
+                   on a.user_id=b.user_id
+            left join platform c 
+                   on a.platform_id=c.platform_id
+            left join language  d
+                   on a.language_id=d.language_id
+            left join world_city e
+                   on a.id=e.id       
+            where a.competition_id= #{competition_id,jdbcType=INTEGER}
+
+ </select>
+
+ <select id="getJoinCompetition" resultType="map">
+	   select 
+   a.user_id 
+   ,case when b.user_competition_status  in ('97','98')  then '0' 
+         else coalesce( b.user_competition_status ,'0')  end  as user_competition_status 
+   ,case when d.join_club_status in ('97','98')  then '0'  
+         else coalesce (d.join_club_status , '0')  end  as  join_club_status 
+
+ from  user_info a 
+ left join   user_competition  b 
+  on a.user_id = b.user_id  
+  and b.competition_id =#{competition_id} 
+ left join  user_detail d
+   on a.user_id = d.user_id  
+where a.user_id = #{user_id}  
+  and a.platform_id = #{platform_id} 
+  
+ </select>
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+    
+</mapper>

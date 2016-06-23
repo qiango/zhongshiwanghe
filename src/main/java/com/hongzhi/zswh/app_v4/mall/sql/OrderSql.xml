@@ -1,0 +1,671 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hongzhi.zswh.app_v4.mall.dao.OrderDao">
+
+	<insert id="saveOrder" useGeneratedKeys="true" keyProperty="id">
+		insert into mall_order (
+			 code
+			,user_id
+			,create_time
+			,status
+			,price
+		) values (
+			 #{code}
+			,#{user_id}
+			,now() 
+			,'1'
+			,#{price}
+		)
+	</insert>
+   
+	<select id="myOrderList" resultType="map">
+        select 
+			 t1.id
+			,coalesce(t1.code ,'') as  code 
+			,coalesce(t1.status  ,'') as  status 
+			,coalesce(t4.value,'')  as status_name 
+			,coalesce(t1.price,0)   as final_pay_price
+        from  
+			mall_order t1 
+        left join dictionary t4 
+			 on t1.status=t4.code 
+			and t4.p_code = 'order_status'
+			and t4.language = #{language}
+        where 
+        	t1.user_id = #{user_id}
+        	order by  t1.create_time desc 
+	</select> 
+   
+	<select id="myOrderGoodsList" resultType="map">
+		select 
+			 t1.order_id
+			,t1.goods_id
+			,t2.name 
+			,t3.picture_url 
+			,t1.properties_id
+			,t1.total_counts
+            ,t1.effect_counts
+            ,(t1.total_counts - t1.effect_counts) as unusable_counts 
+			,coalesce(t1.effect_counts*t1.single_price)  as goods_price
+			,coalesce(t1.single_price,0.0)  as single_price
+			,coalesce(t1.effect_counts*(t5.price-t1.single_price))   as    discount_part
+			,coalesce(t6.property_value,0)  as  begin_time
+            ,coalesce(t7.property_value,0)  as  due_time 
+		from 
+			mall_order_goods t1
+		left join  mall_goods t2 
+		       on  t1.goods_id = t2.id 
+		left join  mall_goods_picture t3 
+		       on  t1.goods_id = t3.goods_id 
+		      and  t3.status = '1' 
+		      and  show_index = 1 
+		left join  mall_order  t4 
+		       on  t1.order_id = t4.id 
+		left join  mall_goods_price t5
+               on  t1.goods_id = t5.goods_id 
+              and  t1.properties_id = t5.properties_id 
+        left join mall_goods_properties t6 
+               on t6.properties_id=0 
+              and t1.goods_id = t6.goods_id 
+              and t6.property_code = "begin_date"
+        left join mall_goods_properties t7 
+               on t7.properties_id=0 
+              and t1.goods_id = t7.goods_id 
+              and t7.property_code = "due_date"
+		where t4.user_id = #{user_id}
+		order by 
+		        t1.order_id
+	</select>
+                
+	<insert id="saveOrderGoods">
+	   insert into mall_order_goods (
+			 order_id
+			,goods_id
+			,properties_id
+			,total_counts
+			,effect_counts
+			,single_price 
+	   ) values (
+			 #{id}
+			,#{goods_id}
+			,#{properties_id}
+			,#{total_counts}
+			,#{total_counts}
+			,#{goods_price}  
+	   )
+	</insert>
+   
+   <!-- int updateOrderStatusById(@Param("id") int id); -->
+	<update id="updateOrderStatusById">
+		update 
+			mall_order a 
+		set 
+			a.status =3
+		where 
+			a.code=#{code}
+	</update>
+	
+	<!-- int selectEffecCountByCode(@Param("code") String code); -->
+	<select id="selectEffecCountByCode" resultType="map">
+	<!-- 
+		select
+			b.effect_counts 
+		from 
+			mall_order a 
+		inner join mall_order_goods b
+				on a.id=b.order_id  
+			   and a.code=#{code}
+			   and b.goods_id=1 
+	 -->
+		 
+		 select  
+			 coalesce(b.effect_counts,0)   as effect_counts 
+            ,coalesce(c.profile_picture ,'')   as  profile_picture  
+            ,coalesce(d.name,'')   as  ticket_name 
+            ,coalesce(nickname,'')  as user_nickname 
+            ,coalesce(c.phone ,'')  as phone
+		    ,coalesce(e.picture_url,'')   as ticket_pic_url 
+		    ,coalesce(a.status,'')   as order_status
+		    ,coalesce(f.value,'')  as order_status_name 
+		    ,coalesce(g.property_value,0) as due_time 
+		 from 
+		       mall_order  a 
+		 left  join  mall_order_goods b 
+		         on  a.id = b.order_id 
+         left  join  user_info  c
+                 on  a.user_id = c.user_id 
+         left  join  mall_goods d 
+                 on  b.goods_id = d.id 
+         left  join  mall_goods_picture e 
+                 on  b.goods_id = e.goods_id  
+                and  e.show_index = 1 
+         left join dictionary f 
+                on a.status = f.code 
+               and f.p_code = 'order_status'
+               and f.language = 'zh' 
+         left join  mall_goods_properties g
+                on  b.goods_id = g.goods_id 
+               and  g.properties_id = 0 
+               and  g.property_code = 'due_date'
+		 where 
+		  	 	a.code = #{code}
+	</select>
+
+   
+	<select id="getDiscountInfoByGoodsIdAndPropertiesId" resultType="map">
+        select  
+			 coalesce(t1.current_price ,0)  as price 
+			,coalesce(t2.discount_type,0)  as  discount_type 
+			,coalesce(t2.param , 0 )   as  param 
+			,coalesce(t2.method , 'aa' )  as  method 
+        from   
+			mall_goods_price  t1  
+        left join  mall_discount t2 
+               on  t1.discount_id = t2.id 
+        where t1.goods_id = #{goods_id} 
+		 and  t1.properties_id = #{property}
+	</select>
+   
+	<select id="checkOrderCode" resultType="com.hongzhi.zswh.app_v4.mall.entity.V4OrderEntity">
+  		select 
+  			t.id
+  		   ,t.code 
+  		from
+  			mall_order t
+  		where
+  			t.code = #{orderCode}
+	</select>
+   
+	<select id="getOrderInfoToPay" resultType="map">
+		  select 
+             max(price)  as  total_fee  
+            ,max(t3.name) as goods_name
+         from  
+            mall_order   t1 
+         left join mall_order_goods  t2  
+                on t1.id = t2.order_id   
+         left join mall_goods t3 
+                on t2.goods_id = t3.id 
+         where 
+         	code = #{order_code}
+	</select>
+   
+	<update id="updatePayInfo">
+		update  
+			mall_order 
+		set  
+			status = #{status}
+		where  
+			code = #{order_code}
+	</update>
+   
+	<select id="checkUserClubStatus" resultType="String">
+		select
+			join_club_status
+		from
+			user_detail
+		where user_id = #{user_id}
+	</select>
+	<select id="getEffectCountsByGoodsId" resultType="String">
+		select
+	    	(t1.property_value - coalesce(t2.sum_count,0)) count_ticket
+		from
+	         mall_goods_properties t1
+		left join (
+		select
+			goods_id
+		   ,sum(effect_counts) as sum_count
+		from
+			mall_order a
+		left join mall_order_goods b
+				on a.id = b.order_id
+		where user_id = #{user_id}
+		   and (
+		        a.status = '1'
+		    or  a.status = '2'
+		    or  a.status = '5'
+		   )
+		group by goods_id) t2
+				on t1.goods_id = t2.goods_id
+		where t1.goods_id = #{goods_id}
+			and t1.property_code = 'limit'
+  	</select>
+  	
+    <insert id="setPayment">
+        insert into  mall_payment (
+                 order_id
+                ,way
+                ,status
+                ,start_time
+                ,trace_code
+        ) values (
+                 (select id from mall_order where  code = #{order_code}  )
+                ,#{way}
+                ,#{status}
+                ,now()
+                ,#{trace_code}
+        )
+    </insert>	
+    
+   
+    
+    <update id="updatePayment"  >
+           update  mall_payment  t1 
+           left join  mall_order t2 
+                  on  t1.order_id = t2.id  
+           set  t1.end_time = now()  
+           where t2.code = #{order_code} 
+             and t1.end_time is null 
+    </update>
+  	
+
+  	<update id="voteTickets">
+  		update 
+			mall_order a 
+		set 
+			a.status = 5
+		where 
+			a.code=#{orderCode}
+  	</update>
+  	
+  	
+  	<select id="selectOrderDetailByCode"  resultType="com.hongzhi.zswh.app_v4.mall.entity.V4OrderDetailEntity">
+  	<!-- 
+        private String order_code;
+        private String order_status;
+        private String order_status_name;
+        private String payment;
+        private Timestamp create_time;
+        private Timestamp pay_time;
+        private Double total_price;
+        private Double origin_price;
+        private Double discount_part;
+  	 -->
+  		select 
+  		     a.id as order_id
+  			,a.code  as order_code 
+  			,a.status  as order_status
+  			,b.value  as order_status_name 
+            ,d.value as payment 
+  			,a.create_time as create_time 
+            ,coalesce(c.start_time,e.start_time) as pay_time 
+            ,a.price  as  total_price 
+            ,coalesce(c.trace_code ,e.trace_code ,'' )  as trace_code 
+  		 from 
+  		 	mall_order  a 
+  		 left join dictionary   b 
+  		        on a.status  = b.code 
+  		       and b.language = #{language}
+  		       and b.p_code = 'order_status'
+  		 left join mall_payment  c 
+  		        on a.id=c.order_id 
+  		       and c.status = '2' 
+  		  left join mall_payment  e 
+                on a.id=e.order_id 
+               and e.status = '1' 
+  		 left join  dictionary  d 
+  		        on e.way = d.code 
+  		       and d.p_code ='pay_way' 
+  		       and d.language = #{language} 
+  		 where a.code=#{code}
+  		  order by  coalesce(c.start_time,e.start_time)  desc 
+         limit 1 
+  	</select>
+  	
+  	<!--订单的退款状态  -->
+  	<select id="selectReturnTicketByCode" resultType="map" >
+		 SELECT 
+			c.status AS return_status
+		   ,c.goods_count 
+  		FROM 
+  			mall_return_history c 
+  		INNER JOIN 
+  			mall_order d
+  		ON 
+  			c.order_id =d.id
+  		WHERE 
+  			d.code=#{code}
+  		AND 
+  			c.goods_id=1
+  	
+  	</select>
+  	
+  	<!-- 退货记录 -->
+	<insert id="saveReturnHistory" useGeneratedKeys="true" keyProperty="id">
+    	insert into  mall_return_history (
+        	user_id
+           ,order_id
+           ,goods_id
+           ,goods_count
+           ,status
+           ,start_time
+           ,pay_device
+           ,refund_no
+        ) values (
+             #{user_id}
+            ,#{order_id}
+            ,#{goods_id}
+            ,#{return_count}
+            ,#{status}
+            ,now()
+            ,#{device}
+            ,#{refund_no}
+        )
+	</insert>
+
+  	
+  	<select id="usableGoodsByOrderId" resultType="map">
+<!-- 
+    List<Map<String, Object>> usableGoodsByOrderId(@Param("order_id") Integer order_id,@Param("language") String language);
+ -->
+  	         select 
+  	             (a.total_counts*c.price)  as  origin_price 
+  	            ,coalesce(c.price,0.0)  as  origin_single_price 
+  	            ,coalesce(d.discount_type,'')  as  discount_type
+                ,coalesce(d.param,'0.0')  as  param
+                ,coalesce(d.method,'')  as  method
+                ,coalesce(b.name ,'')   as goods_name 
+                ,coalesce(a.total_counts,0)  as  total_counts 
+                ,coalesce(a.effect_counts ,0)  as goods_total_count 
+                ,coalesce(a.goods_id     ,'')  as     goods_id 
+                ,coalesce(a.properties_id,'')  as     properties_id
+                ,coalesce(f.picture_url  ,'')  as     picture_url 
+                ,coalesce(t6.property_value,0)  as  begin_time
+                ,coalesce(t7.property_value,0)  as  due_time 
+                ,coalesce(t8.value,'')  as  status_name
+  	         from   mall_order_goods  a 
+  	         left join mall_goods b 
+  	                on  a.goods_id = b.id 
+  	         left join mall_goods_price c 
+  	                on a.properties_id = c.properties_id 
+  	               and a.goods_id = c.goods_id 
+  	         left join mall_discount d 
+  	                on c.discount_id = d.id 
+             left join mall_goods_picture f
+                    on a.goods_id = f.goods_id  
+                   and f.show_index = 1 
+             left join mall_goods_properties t6 
+                    on  t6.properties_id=0 
+                   and a.goods_id = t6.goods_id 
+                   and t6.property_code = "begin_date"
+             left join mall_goods_properties t7 
+                    on t7.properties_id=0 
+                   and a.goods_id = t7.goods_id 
+                   and t7.property_code = "due_date"
+             left  join  dictionary  t8  
+                     on t8.p_code = 'data_alias' 
+                    and t8.language = #{language}
+              where a.order_id = #{order_id }
+  	</select>
+  	
+  	<select id="unusableGoodsByOrderId" resultType="map">
+  	         select 
+  	               b.value as  status_name  
+  	              ,a.goods_count   as  goods_total_count 
+  	              ,c.name  as goods_name 
+  	         from  mall_return_history   a 
+  	         left join dictionary b 
+  	                on a.status = b.code 
+  	               and b.p_code = 'return_status' 
+  	               and b.language = 'zh' 
+  	         left join mall_goods c
+  	                on a.goods_id = c.id 
+  	         where  a.end_time  is null 
+               and  a.order_id = #{order_id }
+  	</select>
+  	
+
+  	<select id="selectReturnHistoryById" resultType="com.hongzhi.zswh.app_v4.mall.entity.V4ReturnHistory">
+  		select 
+  			 a.id
+  			,a.user_id
+  			,a.order_id
+  			,a.goods_id 
+  			,a.goods_count
+  			,a.status 
+  			,a.start_time
+  			,a.end_time
+  		from mall_return_history a
+  		where 
+  			a.order_id = #{order_id}
+  		and
+  			a.goods_id = #{goods_id}
+  	</select>
+  	
+	<update id="updateOrderGoodsById">	
+		update
+			mall_order_goods b
+		set
+			b.effect_counts =( select c.s from (select (a.effect_counts-#{return_count})s from mall_order_goods a where a.order_id = #{order_id} and  a.goods_id = #{goods_id} and a.properties_id = #{properties_id})c)  
+		where b.order_id = #{order_id}
+		and 
+			  b.goods_id = #{goods_id}
+	    and
+	    	  b.properties_id = #{properties_id}
+	</update>
+	
+	<update id="updateReturnHistory">
+		update
+			mall_return_history a
+		set
+			a.end_time = now()
+		where
+			a.id =(select c.temp_id from (select b.id temp_id from mall_return_history b where b.order_id = #{order_id} and b.goods_id = #{goods_id} and coalesce(end_time,0) = 0)c)
+	</update>
+
+  	<insert id="payHistroyInsert">
+  	         insert into mall_payment_histroy (
+  	             order_code
+                ,return_code
+                ,return_time
+                ,data_source
+  	         )  values  (
+  	             #{order_code}
+  	            ,#{return}
+  	            ,now()
+  	            ,#{source}
+  	         )
+  	</insert>
+  	
+  	<select id="getServerNotifyInfo" resultType="map">
+                    select 
+                          a.order_code 
+                         ,max(case when data_source = 1  then return_code 
+                               else null end ) as client_return 
+                         ,max(case when data_source = 1  then trace_code 
+                               else null end ) as client_trace_code 
+                         ,max(case when data_source = 2  then return_code 
+                               else null end ) as server_return  
+                         ,max(case when data_source = 2  then trace_code 
+                               else null end )  as server_trace_code  
+                         ,max(b.create_time )  as create_time
+                         ,max(c.start_time )   as pay_time  
+                         ,max(e.name)   as order_name       
+                    from  mall_payment_histroy  a 
+                    left join mall_order b
+                           on a.order_code = b.code 
+                    left join mall_payment c
+                           on b.id = c.order_id 
+                    left join mall_order_goods d 
+                           on b.id = d.order_id 
+                    left join mall_goods e
+                           on d.goods_id = e.id 
+                    where  a.order_code = #{order_code}
+                    group by a.order_code 
+  	</select>
+  	
+  	<select id="getOrderInfoToRefund" resultType="map">
+  		select  
+  	    	a.price *100 as total_pay 
+  	    from  
+  	    	mall_order  a 
+  	    where 
+  	    	code = #{order_code}
+  	</select>
+  	<select id="selectOrderCodeById" resultType="map">
+     <!--
+  		select
+  			code
+  		from mall_order
+  		where id = #{order_id}
+       -->
+  		select
+	   	    a.code 
+           ,coalesce(b.goods_id , 0 )  as goods_id 
+           ,coalesce(c.effect_counts ,0) as effect_counts 
+           ,coalesce(c.effect_counts - coalesce(sum(b.goods_count),0) ,0)   as current_limit  
+           ,d.current_price as price       
+           ,c.single_price  as buy_price
+        from mall_order  a 
+        left join mall_return_history b 
+               on a.id = b.order_id 
+              and b.end_time is null 
+        <![CDATA[     and b.status <> '2'  ]]>
+        left join  mall_order_goods c 
+               on a.id = c.order_id 
+        left join mall_goods_price  d 
+               on c.goods_id = d.goods_id 
+              and c.properties_id = d.properties_id 
+  		where a.id = #{order_id} 
+  			  and a.status = '2'
+        group by a.code ,b.goods_id 
+  	</select>
+  	<select id="selectGoodsPriceById" resultType="Double">
+  	<!-- 
+  		select 
+  			price
+  		from mall_goods_price
+  		where goods_id = #{goods_id}
+  			and  properties_id = #{properties_id}
+  	 -->
+  			
+  		select 
+        	single_price
+        from mall_order_goods 
+        where order_id = #{order_id}
+        	and goods_id = #{goods_id }
+            and properties_id = #{properties_id }
+  	</select>
+  	
+<!-- 
+    void updateOrderStatusByOrderCode(@Param("order_code") String order_code,@Param("status") String status);
+ -->
+  	<update id="updateOrderStatusByOrderCode">
+  	     update  mall_order  
+  	        set  status = #{status } 
+  	      where  code = #{order_code}
+  	</update>
+
+	<select id="selectPaymentByOrderId" resultType="String">
+		select 
+		    way 
+		from mall_payment
+	    where order_id = #{order_id}
+	    group by order_id
+	</select>
+	<insert id="saveReturnReason">
+		insert into mall_return_reason (
+			 order_id
+			,goods_id
+			,properties_id
+			,return_reason
+			,preset_reason_id
+		) values (
+			 #{order_id}
+			,#{goods_id}
+			,#{properties_id}
+			,#{return_reason}
+			,#{preset_reason_id}
+		)
+	</insert>
+	
+	<select id="getCountsById" resultType="map">
+		select
+	    	concat((t1.property_value - coalesce(t2.sum_count,0)),'') as  count_ticket
+	       ,t1.property_value as limit_counts
+		from
+	         mall_goods_properties t1
+		left join (
+		select
+			goods_id
+		   ,sum(effect_counts) as sum_count
+		from
+			mall_order a
+		left join mall_order_goods b
+				on a.id = b.order_id
+		where user_id = #{user_id}
+		  and (
+		        a.status = '1'
+		    or  a.status = '2'
+		    or  a.status = '5'
+		  )
+		group by goods_id) t2
+				on t1.goods_id = t2.goods_id
+		where t1.goods_id = #{goods_id}
+			and t1.property_code = 'limit'
+  	</select>
+  	
+  	<select id="selectReturnHistory" resultType="com.hongzhi.zswh.app_v4.mall.entity.V4ReturnHistory">
+  		select 
+  			a.id as id
+  		   ,a.user_id as user_id
+  		   ,a.order_id as order_id
+  		   ,a.goods_id as goods_id
+  		   ,a.goods_count as return_count
+  		   ,a.pay_device as device
+  		   ,a.status
+  		   ,b.code as code
+  		from mall_return_history a
+  	    LEFT JOIN mall_order b 
+  	    	on a.order_id = b.id where a.status=1  
+  	    	and a.end_time is null
+  	</select>
+  	<update id="updateReturnHistoryById">
+  		update
+  			mall_return_history
+  		set
+  			status = #{status}
+  		   ,end_time = now()
+  		where 
+  			id = #{id}
+  	</update>
+  	<insert id="addReturnHistory">
+  		insert into  mall_return_history (
+        		user_id
+         	   ,order_id
+          	   ,goods_id
+               ,goods_count
+               ,status
+               ,start_time
+               ,pay_device
+               ,refund_no
+         ) values (
+               #{user_id}
+              ,#{order_id}
+              ,#{goods_id}
+              ,#{status}
+              ,#{return_count}
+              ,now()
+              ,#{device}
+              ,#{refund_no}
+        )
+  	</insert>
+  	 <update id="updateOrderStatusByOrderId">
+ <!-- void updateOrderStatusByOrderId(@Param("order_id") Integer order_id,@Param("status") String to_status); -->
+       update  mall_order  
+          set  status = #{status} 
+       where id = #{order_id }
+    </update>
+    
+    <update id="updateOrderEffectCountByOrderId">
+ <!-- void updateOrderEffectCountByOrderId(@Param("order_id") Integer order_id, @Param("goods_id") Integer goods_id, @Param("property") Integer properties_id, @Param("effect_count") Integer effect_count ); --> 
+        update  mall_order_goods 
+        set
+            effect_counts = #{effect_count}
+        where order_id = #{order_id}
+        and 
+              goods_id = #{goods_id}
+        and
+              properties_id = #{property}
+    </update>
+</mapper>

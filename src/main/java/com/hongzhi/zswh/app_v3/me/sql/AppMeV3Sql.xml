@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hongzhi.zswh.app_v3.me.dao.AppMeV3Dao">
+
+
+	<select id="loadMe" resultType="com.hongzhi.zswh.app_v3.me.entity.OutputEntity">
+		SELECT
+			a.nickname AS user_name,
+			ifnull(a.profile_picture, ' ') AS profile_picture,
+			ifnull(b.join_club_status, '0') AS join_club_status,
+			ifnull(c.competition_count, '0') AS user_competition_number,
+			ifnull(d.sprots_count, '0') AS user_sports_camp_number,
+			COALESCE (f1.fans, 0) AS followers_count,
+			COALESCE (f2.following, 0) AS following_count
+		FROM
+			(
+				SELECT
+					COALESCE (nickname, '未设置昵称') AS nickname,
+					user_id,
+					profile_picture
+				FROM
+					user_info
+				WHERE
+					user_id = #{user_id}
+			) a
+		LEFT JOIN (
+			SELECT
+				user_id,
+				join_club_status
+			FROM
+				user_detail
+			WHERE
+				user_id = #{user_id}
+		) b ON a.user_id = b.user_id
+		LEFT JOIN (
+			SELECT
+				x1.user_id,
+				count(1) competition_count
+			FROM
+				user_competition x1,
+				competition x2
+			WHERE
+				x1.competition_id = x2.competition_id
+			AND x1.user_id = #{user_id}
+			AND x2.is_delete = '0'
+			AND (
+				x1.user_competition_status = '1'
+				OR x1.user_competition_status = '99'
+			)
+		) c ON a.user_id = c.user_id
+		LEFT JOIN (
+			SELECT
+				x1.user_id,
+				count(1) AS sprots_count
+			FROM
+				user_sports_camp x1
+			LEFT JOIN sports_camp x2 
+				ON x1.sports_camp_id = x2.sports_camp_id
+				AND x2.is_delete = 0
+			WHERE
+				x1.user_id = #{user_id}
+		) d ON a.user_id = d.user_id
+		LEFT JOIN (
+			SELECT
+				user_id,
+				count(follower_id) fans
+			FROM
+				follower
+			WHERE
+				user_id = #{user_id}
+		) f1 ON a.user_id = f1.user_id
+		LEFT JOIN (
+			SELECT
+				follower_id,
+				count(user_id) AS following
+			FROM
+				follower
+			WHERE
+				follower_id = #{user_id}
+		) f2 ON a.user_id = f2.follower_id
+	</select>
+
+
+    <select id="followers" resultType="com.hongzhi.zswh.app_v3.me.entity.FollowersEntity">
+         select 
+               t1.follower_id                    
+              ,t2.profile_picture             as  user_image 
+              ,coalesce(t2.nickname,concat(substr(t2.phone,1,3),'****',substr(t2.phone,8) ) )  as  user_name    
+              ,case when t3.follower_id is null
+                    then '0'  
+                    else '1' 
+                    end         as  follow 
+        from  follower   t1
+   left join  user_info  t2   
+          on  t1.follower_id = t2.user_id
+   left join  follower   t3 
+          on  t1.follower_id = t3.user_id 
+         and  t3.follower_id = #{user_id}
+       where  t1.user_id  = #{user_id}
+    </select>
+    
+    <select id="following" resultType="com.hongzhi.zswh.app_v3.me.entity.FollowingEntity">
+         select 
+               t1.user_id                    
+              ,t2.profile_picture             as  user_image 
+              ,coalesce(t2.nickname,concat(substr(t2.phone,1,3),'****',substr(t2.phone,8) ) )  as user_name  
+              ,'1'  as follow 
+        from  follower   t1
+   left join  user_info  t2   
+          on  t1.user_id = t2.user_id
+       where  t1.follower_id  = #{user_id}
+    </select>
+    
+    <insert id="follow">
+    insert into follower (user_id,follower_id)
+    values  (#{user_id},#{follower_id})
+    </insert>
+    
+    <delete id="unfollow">
+    delete  from follower
+     where  user_id = #{user_id}
+       and  follower_id = #{follower_id}
+    </delete>
+    
+     <select id="findFollowUserInfoById" resultType="com.hongzhi.zswh.app_v3.me.entity.FollowingEntity">
+     	select
+			coalesce(nickname,concat(substr(phone,1,3),'****',substr(phone,8) ) )  as user_name 
+		from
+			user_info
+     	where 
+     		user_id = #{follow_user_id}
+     </select>
+    
+
+</mapper>

@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hongzhi.zswh.util.basic.sessionDao.SessionDao">
+    
+    <insert id="createSession"  useGeneratedKeys="true" keyProperty="id">
+        insert into session_time (
+           session_id
+           ,create_time
+           ,last_use_time
+           ,due_time
+        )  values (
+          #{session_id }
+          ,now()
+          ,now()
+          ,DATE_ADD(now(), INTERVAL 30 minute )
+        )
+    </insert>
+        
+     <insert id="insertAttribute" >
+        insert into session_attribute (
+            id
+           ,key_name
+           ,value_content 
+        )   values 
+       <foreach collection="list" item="item" separator=",">
+         ( #{item.id}
+          ,#{item.key_name}
+          ,#{item.value_content}  )
+       </foreach> 
+     </insert>
+     
+     <select id="sessionUsable" resultType="Integer">
+     select 
+         count(*)  as data_count 
+         from v_session_time 
+        where due_time > now() 
+          and id = #{s_id} 
+     </select>
+     <update id="updateSessionTime" >
+       update  session_time  
+          set  last_use_time = now() 
+             , due_time = DATE_ADD(now(), ${time } )
+        where id = #{id} 
+     </update>
+     
+     <select id="getProperty"  resultType="com.hongzhi.zswh.util.basic.sessionDao.SessionProperty">
+        select 
+                id 
+               ,max(case when a.key_name='user_id' then value_content  
+                  else null end  ) as user_id
+               ,max(case when a.key_name='user_real_name' then value_content 
+                  else null end ) as user_real_name
+               ,max(case when a.key_name='language' then value_content  
+                  else null end ) as language
+               ,max(case when a.key_name='platform' then value_content  
+                  else null end ) as   platform  
+            from v_session_attribute  a
+          where id =   #{s_id } 
+          group by id 
+     </select>
+     
+     <insert id="saveSessionLog" >
+        insert into session_log (
+             id
+            ,function_name
+            ,visit_time
+        ) values (
+            #{id}
+           ,#{function}
+           ,now() 
+        )
+     </insert>
+     
+     <select id="listAttribute" resultType="map">
+       select 
+                a.id 
+               ,max(case when a.key_name='user_id' then value_content  
+                  else '' end  ) as user_id
+               ,max(case when a.key_name='user_real_name' then value_content 
+                  else '' end ) as user_real_name
+               ,max(case when a.key_name='language' then value_content  
+                  else '' end ) as language
+               ,max(case when a.key_name='platform' then value_content  
+                  else '' end ) as   platform  
+            from v_session_attribute  a  
+          left join session_time  b 
+          on a.id= b.id 
+          where   b.due_time  > now() 
+                    group by id 
+     </select>
+     
+     <select id="listSession" resultType="com.hongzhi.zswh.util.basic.sessionDao.SessionTime">
+       select  
+             id
+            ,session_id
+            ,create_time 
+            ,last_use_time
+            ,due_time
+       from session_time 
+    where   due_time  > now() 
+     </select>
+    
+	
+	
+</mapper>

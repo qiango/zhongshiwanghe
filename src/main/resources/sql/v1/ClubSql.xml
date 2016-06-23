@@ -1,0 +1,208 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hongzhi.zswh.app.club.dao.AppClubDao">
+
+    
+    <select id="listClub" resultType="map" >
+		select 
+			ifnull(a.club_id,0) as club_id,
+    		ifnull(a.club_name,'') as club_name,
+		    ifnull(a.club_applicant_name,'') as club_applicant_name,
+		    concat(cast(a.club_create_date as date ),'')  as club_create_date,
+		    concat(cast(a.create_time as time ),'')  as create_time,
+		    concat(cast(a.create_date as date ),'')  as create_date,
+		    ifnull(a.club_qq,'') as club_qq,
+		    ifnull(a.club_description,'') as club_description,
+		    ifnull(d.value,'') as club_status,
+		    a.user_id,
+		    a.club_id,
+		    a.id,
+		    a.language_id
+		from 
+			club  a 
+		left join 
+			world_city b
+        		on 
+        			a.id = b.id
+		left join 
+			dictionary  c
+       			on 
+        			a.language_id = c.code 
+					and c.p_code='language'
+					and c.language='zh'
+		left join 
+			dictionary d
+        		on 
+        			a.club_status = d.code 
+					and d.p_code = 'club'  
+					and d.language='zh'
+		where 
+			is_delete = '0'  and  a.club_status ='99' 
+		order by 
+			convert(a.club_name USING gbk) COLLATE gbk_chinese_ci 
+  </select>
+  
+     
+    <select id="listClubByPageCount" resultType="Integer" >
+            select 
+            count(*) as data_count
+          from club  a 
+     left join world_city b
+            on a.id = b.id
+     left join dictionary  c
+            on a.language_id = c.code 
+           and c.p_code='language'
+           and c.language= #{language}
+     left join dictionary d
+            on a.club_status = d.code 
+           and d.p_code = 'club'  
+           and d.language= #{language}
+    where is_delete = '0' 
+   <if test=" other !=null ">
+         and  a.club_name  like  CONCAT('%', #{other} ,'%') 
+   </if>
+  </select>
+  
+  
+  <select id="clubSports"  resultType="map">
+            select
+				coalesce (b.sports_camp_id, ' ') as sports_camp_id,
+				coalesce (b.language_id, ' ') as language_id,
+				coalesce (b.user_id, ' ') as user_id,
+				coalesce (b.sports_camp_name, ' ') as sports_camp_name,
+				coalesce (b.remark, ' ') as remark
+			from
+				club_sports_camp a
+			left join sports_camp b on a.sports_camp_id = b.sports_camp_id
+			where
+				a.club_id = #{club_id } 
+				and b.is_delete = '0'
+  </select>
+  
+  
+    <select id="selectByID" resultType="map">
+  	  select   
+  	    club_id
+        ,user_id
+        ,ifnull(jump_club_number,'0') as  jump_club_number
+        ,join_club_status
+  	    from user_detail  
+  	    where user_id=#{user_id}
+  	</select>
+
+   	<insert id="saveUserSportCamp" >
+  	replace into user_sports_camp(
+  	sports_camp_id
+  	,user_id
+  	)
+  	values 
+  	  <foreach collection="list" item="item" index="index" separator="," >  
+    (
+  	#{item.sports_camp_id,jdbcType=INTEGER}
+  	,#{item.user_id,jdbcType=INTEGER}
+  	)
+  	</foreach>
+  	</insert>
+  	
+  	
+  	
+  	<insert id="saveUserClub" >
+  	replace into user_detail(
+  	 club_id
+  	,user_id
+  	,join_club_status
+  	)
+  	values(
+  	#{club_id,jdbcType=INTEGER}
+  	,#{user_id,jdbcType=INTEGER}
+  	,'1'
+  	)
+  	</insert>
+
+ <select id="loadClubManage" resultType="map">
+          SELECT
+            sc.sports_camp_id
+            ,sc.language_id
+            ,sc.user_id
+            ,sc.sports_camp_name
+            ,sc.remark
+        FROM
+                sports_camp sc
+        LEFT JOIN  user_sports_camp usc 
+               ON  sc.sports_camp_id = usc.sports_camp_id 
+        left join user_detail ud
+              on   usc.user_id = ud.user_id  
+        left join club_sports_camp csc
+             on   ud.club_id = csc.club_id 
+             and  usc.sports_camp_id=csc.sports_camp_id 
+        where  ud.join_club_status='99'
+            and  usc.user_id = #{user_id, jdbcType = INTEGER}
+ 
+ 
+ 
+ </select>
+ 
+ <select id="selectClubInfoByUserIdApp"  resultType="map">
+      select 
+            b.club_id
+           ,b.user_id
+           ,b.id
+           ,b.language_id
+           ,b.club_name
+           ,b.club_name_short
+           ,b.club_applicant_name
+           ,b.create_time
+           ,b.create_date
+           ,b.club_status
+           ,b.club_description
+           ,b.club_create_date
+           ,b.club_qq
+        from user_detail a 
+        left join club b
+        on a.club_id = b.club_id 
+        where b.is_delete = '0' 
+        and a.user_id = #{user_id } 
+ </select>
+
+    <select id="joinClubStatus" resultType="String" >
+        select  coalesce(join_club_status,'') 
+        from user_detail 
+        where user_id = #{user_id} 
+    </select>
+    <select id="clubMemberNumber" resultType="Integer" >
+       select  
+                count(*) as data_count
+           from user_detail  a 
+           left join user_detail b
+           on a.club_id = b.club_id 
+        where user_id = #{user_id} 
+    </select>
+    <select id="getBasicClubInfo" resultType="map" >
+                select  
+                  t1.club_id
+                 ,coalesce(t1.join_club_status , '' )  as join_club_status 
+                 ,t1.club_member_number
+                 ,t2.sports_camp_number 
+                from 
+                 (  select  
+                            a.club_id 
+                            ,a.join_club_status 
+                            ,count(*)  as club_member_number 
+                       from user_detail  a 
+                  left join user_detail b
+                         on a.club_id = b.club_id 
+                      where a.user_id = #{user_id }  
+                 group by a.club_id ,a.join_club_status  
+               )  t1 
+             left join (
+                        select 
+                            a.club_id 
+                          , count(*) as sports_camp_number 
+                       from user_detail  a
+                  left join  club_sports_camp  b 
+                         on a.club_id = b.club_id
+                      where a.user_id = #{user_id } )  t2 
+                         on t1.club_id = t2.club_id  
+    </select>
+  
+</mapper>

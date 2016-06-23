@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hongzhi.zswh.app_v3.club.dao.V3ClubAuditDao">
+    
+    <select id="userRole" resultType="Integer">
+        select   
+             count(*)  
+           from user_detail  
+          where  user_id = #{userID}
+            and  user_level = '0' 
+    </select>
+    
+    <select id="waitingForJoin" resultType="map">
+                  select  
+                       b.user_id                      as  club_user_id 
+                      ,c.profile_picture              as  club_user_image 
+                      ,coalesce(nickname,'')  
+                                                      as  club_user_name 
+                      ,coalesce(b.user_level,'99')    as  club_user_level 
+                      ,coalesce(h.value,g.value)      as  club_role_name       
+                      ,c.phone                        as  club_member_phone  
+                     <!-- 
+                      ,case when f.follower_id  is null 
+                            then  1    
+                            else  0 end         
+                      -->
+                      ,1          as  is_focus  
+                from  user_detail  b
+
+            left join user_info  c 
+                   on b.user_id = c.user_id  
+                   
+            left join users_roles d 
+                   on c.user_id  = d.user_id 
+           <!-- 
+            left join follower   f 
+                   on  f.follower_id = c.user_id 
+                  and  f.user_id = #{user}
+            --> 
+            left join dictionary  g 
+                   on  g.p_code='user_level'
+                  and  g.language = #{language}
+                  and  g.code ='other'
+            left join dictionary  h 
+                   on  h.code = b.user_level   
+                  and  h.p_code='user_level'
+                  and  h.language = #{language}
+
+                where b.club_id = #{club}
+                  and b.join_club_status = '1'  
+                
+           order by   club_user_level  ,  club_user_id 
+           limit  #{start}  , #{pageSize} 
+    </select>
+    
+<!-- 
+	int apply(@Param("club") int clubID,@Param("status") int status,@Param("userList") List<String> userIdList);
+ -->    
+	<update id="apply">
+	   update  user_detail  
+	      set  join_club_status = #{status} 
+	         , change_status_time = now() 
+	     <if test="reasonID != null and reasonID != '' ">
+	         , club_refuse_id = #{reasonID}
+	     </if>
+	   where  club_id = #{club} 
+	   and  user_id  in (
+	       <foreach collection="userList"  item="user" separator=",">
+	           #{user}
+	       </foreach>
+	   )
+	</update>
+<!-- 
+	int updateUserDetail(@Param("user") int user_id,@Param("club") int club_id,@Param("status") int status);
+ -->	
+    <update id="updateUserDetail">
+       update  user_detail  
+          set  join_club_status = #{status} 
+       where  club_id = #{club} 
+       and  user_id = #{user}
+    </update>
+ 
+ 
+    <insert id="refuseReason"  useGeneratedKeys="true" keyProperty="club_reason_id">
+    insert into user_detail_refuse_club_reason (reason_content)  
+    values ( #{reason}  )
+    </insert>
+  
+
+</mapper>

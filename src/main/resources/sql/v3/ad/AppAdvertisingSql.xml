@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hongzhi.zswh.app_v3.advertising.dao.AppAdvertisingDao">
+
+	<select id="queryAdvertisingById" resultType="map">
+		select
+			c.advertising_fodder_image
+		from
+			advertising a
+		left join 
+			advertising_fodder b 
+				on a.advertising_fodder_id = b.advertising_fodder_id
+		left join 
+			advertising_fodder_image c 
+				on b.advertising_fodder_id = c.advertising_fodder_id
+		where 
+			a.advertising_id = #{advertising_id}
+			and a.advertising_status = 0
+	</select>
+	
+</mapper> 

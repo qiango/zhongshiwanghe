@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hongzhi.zswh.back.competitionApplication.dao.CompetitionApplicationDao">
+
+
+	<select id="withoutForms" resultType="map">
+		select
+		competition_id
+		,competition_name
+		from competition
+		where competition_id not in (
+		select distinct competition_id from competition_application
+		where user_id = #{user_id}
+		)
+	</select>
+
+	<update id="userCompetitionApply">
+		update user_competition
+		set user_competition_status ='99'
+		   , apply_or_refuse_time = now() 
+		where competition_id = #{comp_id }
+		and user_id in (
+		<foreach collection="user_id_list" item="item" index="index"
+			separator=",">
+			#{item}
+		</foreach>
+		)
+	</update>
+	
+	
+	<update id="userCompetitionRefuse">
+        update user_competition
+        set user_competition_status ='98'
+           , apply_or_refuse_time = now() 
+        where competition_id = #{comp_id }
+        and user_id in (
+        <foreach collection="user_id_list" item="item" index="index"
+            separator=",">
+            #{item}
+        </foreach>
+        )
+    </update>
+    
+    
+    <insert id="userRefuseReason">
+     insert into  user_competition_refuse_reason (
+       user_id
+      ,competition_id
+      ,refuse_reason
+     )
+     values
+        <foreach collection="user_id_list" item="item" index="index" separator=",">
+    (
+       #{item}
+      ,#{comp_id}
+      ,#{reason}
+    ) 
+        </foreach>
+    </insert>
+    
+    <select id="getCompetitionName" resultType="String">
+       select  competition_name  from  competition  where competition_id = #{compId } 
+    </select>
+  
+</mapper>

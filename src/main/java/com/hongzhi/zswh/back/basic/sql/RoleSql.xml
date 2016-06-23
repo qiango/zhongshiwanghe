@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hongzhi.zswh.back.basic.dao.RoleDao">
+
+	<select id="allRoles" resultType="com.hongzhi.zswh.back.basic.entity.RoleInfo">
+		select
+		role_id
+		,role_name
+		,remark
+		from role_info
+		where is_delete = '0'
+		order by role_id
+	</select>
+
+	<select id="allRolesByRoleName" resultType="com.hongzhi.zswh.back.basic.entity.RoleInfo">
+		select
+		role_id
+		,role_name
+		,remark
+		from role_info
+		where is_delete = '0'
+		<if test=" role_name !=null ">
+			and role_name like CONCAT('%', #{role_name} ,'%')
+		</if>
+		order by role_id
+	</select>
+
+	<insert id="saveNewRole">
+		insert into role_info(
+		role_id
+		,role_name
+		,remark
+		)
+		values (#{role_id,jdbcType=INTEGER},
+		#{role_name,jdbcType=VARCHAR},
+		#{remark,jdbcType=VARCHAR}
+		)
+	</insert>
+
+	<select id="countByRoleName" resultType="Integer">
+		select
+		count(*) as cnt
+		from role_info
+		where role_name = #{role_name,jdbcType=VARCHAR}
+		and is_delete = '0' 
+	</select>
+
+	<select id="selectById" resultType="com.hongzhi.zswh.back.basic.entity.RoleInfo">
+		select
+		role_id
+		,role_name
+		,remark
+		from role_info
+		where role_id = #{role_id,jdbcType=INTEGER}
+		order
+		by role_id
+
+	</select>
+
+	<update id="updateRole">
+		update role_info
+		set role_name =
+		#{role_name,jdbcType=VARCHAR}
+		,remark=#{remark,jdbcType=VARCHAR}
+		where
+		role_id = #{role_id,jdbcType=INTEGER}
+	</update>
+
+
+
+	<update id="logicDelete">
+		update role_info
+		set is_delete=1
+		where role_id =
+		#{role_id,jdbcType=INTEGER}
+
+	</update>
+	
+	<select id="roleMenuIds" resultType="Integer" >
+	   select 
+           menu_id 
+            from
+            roles_menus 
+            where role_id =  #{role_id } 
+	</select>
+	
+	<delete id="deleteRoleMenu">
+	   delete from roles_menus 
+          where role_id =  #{role_id } 
+	</delete>
+	
+	<insert id="insertRoleMenu" >
+	   insert into roles_menus 
+	    ( role_id, menu_id )
+	       values 
+	       <foreach collection="list" item="item" separator=",">
+	          (#{item.role_id} , #{item.menu_id} )
+	       </foreach>
+	</insert>
+
+
+</mapper>

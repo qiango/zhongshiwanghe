@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hongzhi.zswh.app_v4.mall.dao.V4GoodsDao">
+
+    <select id="getAllPropertiesByGoodsId" resultType="com.hongzhi.zswh.app_v4.mall.entity.V4GoodsProperties">
+        select 
+             properties_id      
+            ,goods_id           
+            ,property_code          
+            ,property_value         
+            ,price_effect       
+      from 
+           mall_goods_properties 
+     where goods_id = #{goods_id}     
+    </select>
+    
+    <select id="getAllPriceByGoodsId" resultType="com.hongzhi.zswh.app_v4.mall.entity.V4GoodsPrice">
+           select 
+                 t1.id              
+                ,t1.goods_id          
+                ,t1.properties_id  
+                ,t1.current_price as price                 
+                ,t1.discount_id    
+                ,t2.discount_type
+                ,t2.param
+                ,t2.method
+           from 
+                mall_goods_price  t1  
+           left join  mall_discount t2
+                  on  t1.discount_id = t2.id    
+           where goods_id = #{goods_id}     
+    </select>
+    
+    <select id="getGoodsById"  resultType="com.hongzhi.zswh.app_v4.mall.entity.V4GoodsEntity">
+           select 
+                   id
+                  ,goods_code
+                  ,category
+                  ,name
+                  ,goods_describe
+                  <!-- 
+                  ,status
+                  ,create_time
+                  ,create_user
+                   -->
+           from                      
+                mall_goods
+           where status='1' 
+          <if test=" goods_id !=null and goods_id !=0 ">
+           and id = #{goods_id}     
+          </if>
+    </select>
+    
+    <select id="goodsPicturesByGoodsId"  resultType="com.hongzhi.zswh.app_v4.mall.entity.V4GoodsPicture">
+    <!-- 
+     * @param index   -1:all , 0:=0 , 1:<>0
+    List<V4GoodsPicture> goodsPicturesByGoodsId(@Param("goods_id") Integer goodsId,@Param("index") Integer index);  
+     -->
+          select 
+                id
+               ,picture_url
+               ,show_index
+           from 
+                 mall_goods_picture
+           where status = '1' 
+           <if test="index !=null and index ==0 " >
+             and show_index = 0 
+           </if>
+           <if test="index !=null and index ==1 " >
+      <![CDATA[ and show_index <> 0  ]]>
+           </if>
+             and goods_id = #{goods_id}     
+    </select>
+    
+    <select id="presetRefundReasonList" resultType="map">
+         select  
+                id   as  preset_reason_id  
+               ,preset_reason_content
+         from mall_return_preset_reason 
+         where is_delete = '0' 
+         order by id   
+    </select>
+    
+    <update id="updateTest"  keyProperty="refund_no" >
+          update mall_return_history 
+             set refund_no = 'abcd23453'
+            where order_id = #{order_id }
+    </update>
+
+</mapper>

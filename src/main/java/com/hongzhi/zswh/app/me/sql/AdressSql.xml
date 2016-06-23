@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hongzhi.zswh.app.me.dao.AdressDao">
+
+    <select id="selectAdressByID" resultType="map">
+		select
+			 a.shipping_id
+			,a.user_id
+			,b.name as city_name
+			,b.parent_id
+			,a.detail_address
+			,a.receiver_name
+			,a.receiver_phone
+			,a.is_default
+			,a.city_code
+		from shipping_address a
+		left join world_city b
+		on a.city_code=b.remark
+	<![CDATA[	where (a.is_delete <> '1' or a.is_delete is null)  ]]>
+		 and a.user_id=#{user_id}
+    </select>
+    
+    <select id="selectcitybyparent_id" resultType="map">
+        select name
+          ,parent_id
+          ,id
+        from world_city
+        where id=#{parent_id}
+    </select>
+    
+    
+    <insert id="insertAdress" parameterType="com.hongzhi.zswh.app.me.entity.Adress" useGeneratedKeys="true" keyProperty="shipping_id">
+    	insert into shipping_address (
+    		
+			user_id
+			,city_code
+			,detail_address
+			,receiver_name
+			,receiver_phone
+			,is_default
+			,is_delete
+    	  )values(
+    	 	
+	    	#{user_id},
+	    	#{city_code},
+	    	#{detail_address},
+	    	#{receiver_name},
+	    	#{receiver_phone},
+	    	#{is_default},
+	    	'0'   
+    	)
+ 
+    </insert>
+    
+
+    <update id="updateAdress" >
+        update  shipping_address 
+         <trim prefix="SET" suffixOverrides=",">  
+             <if test=" user_id != null"> user_id=#{user_id},</if>
+             <if test=" city_code != null"> city_code=#{city_code },</if>
+             <if test=" detail_address != null"> detail_address=#{detail_address },</if>
+             <if test=" receiver_name != null"> receiver_name=#{receiver_name },</if>
+             <if test=" receiver_phone != null"> receiver_phone=#{receiver_phone },</if>
+             <if test=" is_default != null"> is_default=#{is_default}</if>
+         </trim>  
+      <![CDATA[	where (is_delete <> '1' or is_delete is null)  ]]>
+       and shipping_id = #{shipping_id }
+    </update>
+    
+        <select id="selectAdressByShippingID" resultType="com.hongzhi.zswh.app.me.entity.Adress">
+		select
+			 user_id
+			,city_code
+			,detail_address
+			,receiver_name
+			,receiver_phone
+			,is_default
+		from shipping_address
+	<![CDATA[	where (is_delete <> '1' or is_delete is null)  ]]>
+	
+		 and shipping_id=#{shipping_id}
+    </select>
+    
+    
+    <update id="deleteAdress">
+	     update  shipping_address 
+	     set is_delete=1 
+	     where shipping_id=#{shipping_id}
+    </update>
+	<update id="updateAdressDefaultAll">
+	update  shipping_address
+	   set is_default='0'
+	 where user_id=#{user_id}
+	
+	</update>
+    
+</mapper>

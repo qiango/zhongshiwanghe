@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hongzhi.zswh.app.me.dao.AppSportsCampDao">
+        
+     <select id="selectSportsCampsByUserId" resultType="com.hongzhi.zswh.app.me.entity.SportsCamp"
+    parameterType="Integer">
+         SELECT
+            sc.sports_camp_id
+            ,sc.language_id
+            ,sc.user_id
+            ,sc.sports_camp_name
+            ,sc.remark
+        FROM
+                sports_camp sc
+        LEFT JOIN  user_sports_camp usc 
+               ON  sc.sports_camp_id = usc.sports_camp_id 
+        left join user_detail ud
+              on   usc.user_id = ud.user_id  
+        left join club_sports_camp csc
+             on   ud.club_id = csc.club_id 
+             and  usc.sports_camp_id=csc.sports_camp_id 
+        where sc.is_delete=0
+        	and ud.join_club_status='99'
+            and  usc.user_id = #{user_id, jdbcType = INTEGER}
+    </select>
+   
+</mapper>

@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hongzhi.zswh.back.club.dao.ClubSportCampDao">
+
+
+    <select id="sprotCamp"  resultType="Integer" >
+       select distinct  sports_camp_id from club_sports_camp 
+      where club_id =  #{club_id } 
+    </select>
+    
+    <select id="allSportsCamps"  resultType="map">
+            select 
+                 sports_camp_id
+                ,sports_camp_name
+              from sports_camp
+              where is_delete='0' 
+    </select>
+    
+    <delete id="deleteClubSportsCamp" >
+        delete  
+           from  club_sports_camp  
+          where club_id = #{club_id } 
+    </delete>
+    
+    <insert id="insertClubSportsCamp" >
+        insert into club_sports_camp (club_id,sports_camp_id)
+        values 
+        <foreach collection="list" item="item" separator=",">
+         (#{item.club_id } , #{item.sports_camp_id } )
+        </foreach>
+    </insert>
+
+  
+</mapper>

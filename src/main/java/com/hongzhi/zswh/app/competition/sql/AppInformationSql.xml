@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hongzhi.zswh.app.competition.dao.AppInformationDao">
+<select id="loadInformationByCompetitionId" resultType="map">
+select   a.information_id
+		,coalesce(a.information_type    ,'0')  as    information_type
+		,coalesce(a.information_title    ,'')  as    information_title
+		,coalesce(a.information_abstract ,'')  as    information_abstract
+     from information a
+     where a.is_delete='0'
+      and a.competition_id=#{other}
+      order by a.create_date desc,a.create_time desc
+    limit #{pageStartRow } , #{pageRecorders }
+</select>
+<select id="loadInformationDetailByInformationId" resultType="map">
+select   a.information_id
+		,coalesce(a.information_type    ,'0')  as    information_type
+        ,coalesce(a.information_title    ,'')  as    information_title
+        ,coalesce(a.information_abstract ,'')  as    information_abstract
+		,b.information_image_url
+	 from information a
+     left join information_image b
+     on a.information_id=b.information_id
+     where a.is_delete='0'
+       and b.information_id=#{information_id}
+</select>
+
+
+    <select id="getImageByInfoId"  resultType="map">
+        select information_id,information_image_url 
+           from information_image 
+           where information_id in (
+           <foreach collection="list" item="item" separator=",">
+            #{item} 
+           </foreach>
+           )
+           order by information_id 
+    </select>
+
+</mapper>

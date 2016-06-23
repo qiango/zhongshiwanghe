@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hongzhi.zswh.back.basic.dao.UserRoleDao">
+        
+    
+    
+    <select id="userRoleIds" resultType="Integer">
+               select
+                    b.role_id
+               from users_roles  a
+          left join role_info b
+                 on a.role_id=b.role_id 
+       <if test=" _parameter != null">
+              where a.user_id = #{user_id}
+       </if>
+    </select>
+
+    <delete id="deleteRolesOfUser" >
+        delete  from users_roles 
+        where  user_id = #{user_id } 
+    </delete>
+    <insert id="insertRolesOfUser" >
+        insert into users_roles (user_id,role_id)
+        values 
+          <foreach collection="list" item="item" index="index" separator="," >  
+        (
+         #{item.user_id}
+        ,#{item.role_id}
+        )  
+        </foreach>   
+    
+    </insert>
+    
+
+
+
+</mapper>

@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hongzhi.zswh.app_v3.phoneInfo.dao.V3DeviceInfoDao">
+    
+  
+    <insert id="saveDevice">
+     insert into  device_info (
+         user_id 
+       , platform_id
+       , sim
+       , brand
+       , device
+       , screen
+       , size
+       , udid
+       , imei
+       , os
+       , carrier
+       , networkType
+       , insert_time 
+    ) values (
+        #{user_id }
+       ,#{platform_id}
+       ,#{sim}
+       ,#{brand}
+       ,#{device}
+       ,#{screen}
+       ,#{size}
+       ,#{udid}
+       ,#{imei}
+       ,#{os}
+       ,#{carrier}
+       ,#{networkType}
+       ,now()
+      )
+    </insert>
+
+<!-- 
+ drop table   device_info ;
+ create table  device_info  (
+         user_id      integer 
+       , platform_id  char(1)                                                                    
+       , sim          varchar(200)                                                            
+       , brand        varchar(200)                                                              
+       , device       varchar(200)                                                               
+       , screen       varchar(200)                                                               
+       , size         varchar(200)                                                             
+       , udid         varchar(200)                                                             
+       , imei         varchar(200)                                                             
+       , os           varchar(200)                                                           
+       , carrier      varchar(200)                                                                
+       , networkType  varchar(200)                                                                    
+       , insert_time  timestamp 
+) ;
+ -->  
+
+</mapper>

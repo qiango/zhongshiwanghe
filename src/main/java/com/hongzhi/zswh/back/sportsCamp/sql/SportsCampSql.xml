@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hongzhi.zswh.back.sportsCamp.dao.SportsCampDao">
+
+
+
+	<select id="listSportsCampByPage" resultType="map">
+	   select
+			a.sports_camp_id ,
+			a.language_id,
+			a.user_id,
+			a.sports_camp_name,
+			a.remark,
+			dic.value as language_name
+       from 
+       		sports_camp a 
+       left join 
+       		dictionary dic 
+         		on 
+         			a.language_id = dic.code and
+         			dic.p_code ='language' and
+         			dic.language ='zh'
+        where   
+        	a.is_delete = '0'   
+	        <if test="other != null">
+	         and   a.sports_camp_name like CONCAT('%', #{other,jdbcType=VARCHAR}, '%')
+	        </if>
+        order by 
+        	a.sports_camp_name
+		limit 
+			#{pageStartRow,jdbcType=INTEGER} , #{pageRecorders,jdbcType=INTEGER}
+	</select>
+
+	<select id="listSportsCampByPageCount" resultType="Integer">
+		select 
+			count(1) as countnumber
+		from 
+			sports_camp 
+		where
+			is_delete = '0' 
+		<if test="other != null">
+		 and   sports_camp_name like CONCAT('%', #{other,jdbcType=VARCHAR}, '%')
+		</if>
+	</select>
+
+	 <insert id="insertSportsCamp">
+		insert into 
+			Sports_Camp(
+				language_id,
+				user_id,
+				sports_camp_name,
+				remark,
+				is_delete
+			)
+			values (
+				#{language_id,jdbcType=INTEGER},
+				#{user_id,jdbcType=INTEGER},
+				#{sports_camp_name,jdbcType=VARCHAR},
+				#{remark,jdbcType=VARCHAR},
+				'0'
+			)
+	</insert>
+
+
+	<select id="selectById" resultType="com.hongzhi.zswh.back.sportsCamp.entity.SportsCamp">
+		select
+			sports_camp_id,
+			language_id,
+			user_id,
+			sports_camp_name,
+			remark
+		from 
+			sports_camp
+		where
+			sports_camp_id = #{sports_camp_id , jdbcType = INTEGER}
+		order by 
+			sports_camp_name
+	</select>
+
+
+
+	<update id="update">
+		update 
+			sports_camp
+		set 
+			language_id = #{language_id , jdbcType = INTEGER},
+			user_id = #{user_id , jdbcType = INTEGER} ,
+			sports_camp_name = #{sports_camp_name , jdbcType = VARCHAR},
+			remark = #{remark , jdbcType = VARCHAR}
+		where 
+			sports_camp_id = #{sports_camp_id , jdbcType = INTEGER}
+
+	</update>
+
+
+	<update id="SportsCampDelete">
+		update 
+			sports_camp
+		set 
+			is_delete='1'
+		where 
+			sports_camp_id=#{sports_camp_id,jdbcType=INTEGER}
+	</update>
+
+
+
+</mapper>

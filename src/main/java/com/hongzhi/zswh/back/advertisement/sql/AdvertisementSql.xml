@@ -1,0 +1,201 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hongzhi.zswh.back.advertisement.dao.AdvertisementDao">
+
+    <insert id="saveNewAd" useGeneratedKeys="true" keyProperty="ad_id"> 
+        insert into  advertisement (
+          ad_name
+         ,ad_type
+         ,ad_status
+         ,ad_location
+         ,ad_start_time
+         ,ad_end_time
+       
+        ) values (
+          #{ad_name}
+         ,#{ad_type}
+         ,#{ad_status}
+         ,#{ad_location}         
+         ,cast(#{ad_start_time} as date ) 
+         ,cast(#{ad_end_time} as date ) 
+        )
+    </insert>
+    
+    <insert id="saveImages" >
+         insert into advertisement_image(
+              ad_id
+             ,image_url
+             ,image_index
+             ,information_link
+             ,image_height
+             ,image_width
+             ,image_text
+         ) values 
+         <foreach collection="images" index="currindex" item="image" separator=",">
+         (
+              #{image.ad_id}
+             ,#{image.image_url}
+             ,#{currindex}
+             ,#{image.information_link}
+             ,#{image.image_height}
+             ,#{image.image_width}
+             ,#{image.image_text}
+         )
+         </foreach>
+    </insert>
+    
+    <insert id="savePropertys">
+        insert into  advertisement_properties (
+             ad_id
+            ,property_code
+            ,property_value
+        ) values 
+        <foreach collection="propertyList" item="prop" separator=",">
+           (
+             #{prop.ad_id}
+            ,#{prop.property_code}
+            ,#{prop.property_value}
+            )
+        </foreach>
+    
+    </insert>
+    
+    <select id="getAdvertisement" resultType="com.hongzhi.zswh.back.advertisement.entity.AdvertisementEntity">
+        select  
+            ad_id
+           ,ad_name
+           ,ad_type
+           ,ad_status
+           ,ad_location
+           ,ad_start_time
+           ,ad_end_time
+        from  advertisement
+        <if test="ad_id !=null and ad_id !=0 ">
+        where ad_id = #{ad_id} 
+        </if>
+    </select>
+    
+    <select id="getAdImages" resultType="com.hongzhi.zswh.back.advertisement.entity.AdvertisementImageEntity">
+       select 
+            image_id
+           ,ad_id
+           ,image_url
+           ,image_index
+           ,information_link
+           ,image_text
+           ,image_width
+           ,image_height
+       from advertisement_image
+       <if test="ad_id !=null and ad_id !=0 ">
+       where ad_id = #{ad_id} 
+       </if>
+       order by  image_index 
+    </select>
+    
+    <select id="getAdProperties" resultType="com.hongzhi.zswh.back.advertisement.entity.AdvertisementPropertiesEntity">
+        select 
+             property_id
+            ,ad_id
+            ,property_code
+            ,property_value
+        from advertisement_properties
+       <if test="ad_id !=null and ad_id !=0 ">
+       where ad_id = #{ad_id} 
+       </if>
+    </select>
+
+    <update id="updateAdById">
+        update   advertisement    
+           <trim prefix="SET" suffixOverrides=",">
+               <if test=" ad_name != null"> ad_name=#{ad_name },</if>
+               <if test=" ad_type != null"> ad_type=#{ad_type},</if>
+               <if test=" ad_location != null"> ad_location=#{ad_location},</if>
+               <if test=" ad_status != null"> ad_status=#{ad_status },</if>
+               <if test=" ad_start_time != null"> ad_start_time=#{ad_start_time },</if>
+               <if test=" ad_end_time != null"> ad_end_time=#{ad_end_time },</if>
+           </trim>
+       <if test="ad_id !=null and ad_id!=0 ">
+       where ad_id = #{ad_id} 
+       </if>
+    </update>
+    
+    <delete id="deleteImagesByNewsId">
+        delete  from  advertisement_image  
+        where ad_id = #{ad_id} 
+    </delete>
+    
+    <delete id="deletePropertysByNewsId">
+        delete  from  advertisement_properties  
+        where ad_id = #{ad_id} 
+    </delete>
+    <update id="updateAdvertisementById">
+    	update  advertisement 
+    	set ad_status = 0
+    	where ad_id = #{ad_id}
+    </update>
+	<select id="listCount" resultType="Integer">
+		select count(1) as data_count
+		from advertisement a
+		where a.ad_status !=0 
+		<if test=" other != null">
+		 	and a.ad_name like CONCAT('%', #{other}, '%' )
+			
+		</if>
+	</select>
+	<select id="list" resultType="com.hongzhi.zswh.back.advertisement.entity.AdParam">
+		select 
+			a.ad_id
+		   ,a.ad_name
+		   ,a.ad_location
+		   ,a.ad_type
+		   ,a.ad_status
+		   ,date_format(a.ad_start_time,'%Y-%m-%d') as ad_start_time
+		   ,date_format(a.ad_end_time,'%Y-%m-%d') as ad_end_time
+		   ,c.value as ad_status_name
+		   ,b.value as ad_type_name
+		   ,d.location_name
+		from 
+		advertisement a
+		left join 
+		dictionary b
+			on  a.ad_type = b.code
+			and b.p_code='ad_type'
+ 			and b.language='zh'
+ 		left join
+        dictionary c
+         	on a.ad_status = c.code
+			and c.p_code='news_status'
+ 			and c.language='zh'
+ 		left join 
+ 		advertisement_preset_location d
+ 			on a.ad_location = d.location_id
+		where a.ad_status !=0 
+		<if test="other != null">
+			and a.ad_name like CONCAT('%', #{other},'%')
+		</if>
+		<if test="pageStartRow !=null  and   pageRecorders != null">
+			limit #{pageStartRow,jdbcType=INTEGER } ,#{pageRecorders,jdbcType=INTEGER }
+		</if>
+		
+	</select>
+
+	
+	<!-- List<Map<String,Object>> adLocationList(); -->
+	<select id="adLocationList" resultType="map">
+		select location_id ,location_name from advertisement_preset_location
+	</select>
+	<!-- List<Map<String,Object>> adPixelList() -->
+	<select id="adPixelList" resultType="map">
+		select a.width,a.height from advertisement_pic_size a
+	</select>
+
+	<select id="selectAdDetailById" resultType="map">
+		select a.ad_name,b.* from advertisement a 
+		left join advertisement_image b
+			on a.ad_id = b.ad_id
+		where a.ad_id = #{ad_id}
+	
+	
+	</select>
+
+</mapper>

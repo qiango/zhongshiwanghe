@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hongzhi.zswh.app_v5.dao.V5AdDao">
+    
+    <select id="homeAdList" resultType="com.hongzhi.zswh.app_v5.entity.AdvertisementEntity">
+     select 
+             ad_id
+            ,ad_name
+            ,ad_type 
+            ,ad_location
+      from (
+                  select 
+                       ad_id
+                      ,ad_name
+                      ,ad_type 
+                      ,ad_location
+                      ,CASE WHEN @partitionBy_1 = ad_location THEN @row_number:=@row_number+1 ELSE @row_number:=1 END AS ind
+                      ,@partitionBy_1:=ad_location  AS p
+                  from  advertisement  a 
+                  cross join (
+                        select @row_number:=0,@partitionBy_1:=null
+                             ) b 
+                  where a.ad_status = '1' 
+               <![CDATA[ and a.ad_location >= #{localMin} ]]>
+               <![CDATA[ and a.ad_location < #{localMax} ]]>
+               <![CDATA[ and a.ad_start_time <= now()  ]]> 
+               <![CDATA[ and a.ad_end_time > now()     ]]>
+                  order by a.ad_location , a.ad_start_time  desc 
+        ) x 
+        where x.ind = 1 
+    </select>
+    
+    <select id="imageListByAdId" resultType="com.hongzhi.zswh.app_v5.entity.AdvertisementImageEntity">
+        select 
+             concat('/pic.htmls?p=',coalesce(image_url ,''))  as    image_url
+            ,coalesce(image_index      ,'')  as    image_index
+            ,coalesce(information_link ,'')  as    information_link
+        from  advertisement_image 
+        where  ad_id = #{ad_id}
+        order by image_index 
+    </select>
+    
+     <select id="imageListByAdIdList" resultType="com.hongzhi.zswh.app_v5.entity.AdvertisementImageEntity">
+        select 
+             ad_id 
+            ,concat('/pic.htmls?p=',coalesce(image_url        ,''))  as    image_url
+            ,coalesce(image_text       ,'')  as    image_text
+            ,coalesce(image_index      ,'')  as    image_index
+            ,coalesce(information_link ,'')  as    information_link
+            ,coalesce(image_height     ,0)   as    image_height
+            ,coalesce(image_width      ,0)   as    image_width
+        from  advertisement_image 
+        where  ad_id  in (
+            <foreach collection="idList" item="ad_id" separator=",">
+                #{ad_id}
+            </foreach>
+        )
+        order by image_index 
+    </select>
+    
+
+</mapper>

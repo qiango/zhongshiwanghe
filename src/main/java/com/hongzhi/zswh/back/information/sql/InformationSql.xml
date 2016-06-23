@@ -1,0 +1,161 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hongzhi.zswh.back.information.dao.InformationDao">
+	<select id="listInformationByPageCount" resultType="Integer">
+		select
+		count(*) as data_count
+		 from information a
+		 where a.is_delete = '0'
+		<if test=" other !=null ">
+			 and a.information_title like CONCAT('%', #{other} ,'%')
+		</if>
+	</select>
+
+	<select id="listInformationByPage" resultType="map">
+		select
+		information_id
+		,competition_id
+		,user_id
+		,platform_id
+		,c.value as information_type
+		,information_title
+		,information_abstract
+		,coalesce( d.value ,'' )  as information_status
+		,date_format(create_date,'%Y-%m-%d') as create_date
+		,concat(CAST(create_time as time),'') as create_time
+		,remark
+		,is_delete  
+        from information a
+		left join dictionary c
+		on a.information_type = c.code
+		and c.p_code = 'info_type'
+		and c.language= #{language}
+		left join dictionary d
+		on a.information_status = d.code
+		and d.p_code = 'info_status'
+		and d.language= #{language}
+		where 
+			a.is_delete = '0' 
+		<if test=" other !=null ">
+			and a.information_title like CONCAT('%', #{other} ,'%')
+		</if>
+		<if test=" pageStartRow !=null  and   pageRecorders != null ">
+			limit #{pageStartRow,jdbcType=INTEGER } ,
+			#{pageRecorders,jdbcType=INTEGER
+			}
+		</if>
+	</select>
+
+	<select id="listWorldCity" resultType="com.hongzhi.zswh.back.club.entity.WorldCity">
+		select
+		id
+		,name
+		,parent_id
+		,remark
+		,name_en
+		from world_city
+		<if test=" _parameter != null ">
+			where parent_id=#{parent_id}
+		</if>
+		order by id
+    </select>
+
+	
+	<insert id="insertInformation"  useGeneratedKeys="true" keyProperty="information_id"  keyColumn="information_id" >
+		insert into information(
+		competition_id
+		,user_id
+		,platform_id
+		,information_type
+		,information_title
+		,information_abstract
+		,information_content
+		,information_status
+		,create_date
+		,create_time
+		,remark
+		,is_delete
+		)
+		values
+		(
+		#{competition_id , jdbcType=INTEGER}
+		,#{user_id , jdbcType=INTEGER}
+		,#{platform_id , jdbcType=INTEGER}
+		,#{information_type , jdbcType=VARCHAR }
+		,#{information_title , jdbcType=VARCHAR }
+		,#{information_abstract , jdbcType=VARCHAR }
+		,#{information_content , jdbcType=VARCHAR }
+		,#{information_status , jdbcType=VARCHAR }
+		,DATE_FORMAT(now(),'%Y%m%d')
+		,DATE_FORMAT(now(),'%H%i%s')
+		,#{remark , jdbcType=VARCHAR }
+		,'0'
+		)
+	</insert>
+	
+	<insert id="insertInformationImages"  useGeneratedKeys="true" keyProperty="information_image_id"  keyColumn="information_image_id" >
+		insert into information_image(
+		information_id
+		,user_id
+		,information_image_url
+		)
+		values
+		(
+		#{information_id , jdbcType=INTEGER}
+		,#{user_id , jdbcType=INTEGER}
+		,#{information_image_url , jdbcType=VARCHAR}
+		)
+	</insert>
+
+	<select id="selectById"
+		resultType="com.hongzhi.zswh.back.information.entity.Information">
+		select
+		information_id
+		,competition_id
+		,user_id
+		,platform_id
+		,information_type
+		,information_title
+		,information_abstract
+		,information_content
+		,information_status
+		,date_format(create_date,'%Y-%m-%d') as create_date
+		,CAST(create_time as time) as create_time
+		,remark
+		,is_delete
+         from information a
+		 where a.is_delete = '0'
+		<if test=" information_id !=null ">
+			 and a.information_id = #{information_id}
+		</if>
+	</select>
+
+	<update id="update">
+		update information
+		set
+		competition_id = #{competition_id , jdbcType=INTEGER}
+		,platform_id = #{platform_id , jdbcType=INTEGER}
+		,information_type = #{information_type , jdbcType=VARCHAR }
+		,information_title = #{information_title , jdbcType=VARCHAR }
+		,information_abstract = #{information_abstract , jdbcType=VARCHAR }
+		,information_content = #{information_content , jdbcType=VARCHAR }
+		,information_status = #{information_status , jdbcType=VARCHAR }
+		,remark = #{remark , jdbcType=VARCHAR }
+		where information_id=#{information_id,jdbcType=INTEGER}
+	</update>
+
+	<update id="delete">
+		update information
+		set is_delete='1'
+		where information_id = #{information_id,jdbcType=INTEGER}
+	</update>
+	
+	
+	<select id="listInformationImagesById"
+		resultType="map">
+		select *
+        from information_image
+		where information_id = #{information_id,jdbcType=INTEGER}
+	</select>
+	
+</mapper>
