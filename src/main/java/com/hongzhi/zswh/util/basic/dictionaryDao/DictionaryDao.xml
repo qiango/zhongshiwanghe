@@ -1,0 +1,52 @@
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.hongzhi.zswh.util.basic.dictionaryDao.DictionaryDao">
+        
+	<select id="listAllDictionary" resultType="com.hongzhi.zswh.util.basic.dictionaryDao.Dictionary">
+		SELECT  *  FROM  DICTIONARY   
+	</select>
+	
+	<select id="selectByCodeAndLanguage" resultType="com.hongzhi.zswh.util.basic.dictionaryDao.Dictionary">
+	   SELECT 
+	     * 
+	    FROM DICTIONARY 
+	   <where>
+	       <if test="code != null ">
+	         AND CODE = #{code }
+	       </if>
+	       <if test=" language != null ">
+	         AND LANGUAGE = #{language }
+	       </if>
+	       <if test="pcode !=null ">
+	         AND P_CODE = #{pcode }
+	       </if>
+	   </where>
+	</select>
+
+    <select id="getDataByPcode" resultType="com.hongzhi.zswh.util.basic.dictionaryDao.Dictionary" >
+       select * from dictionary 
+       <if test=" _parameter !=null">
+       where  p_code = #{p_code}
+       </if>
+    </select>
+	
+	<select id="selectByPcodeAndLanuage" resultType="map" >
+	       select 
+	           code
+	          ,value
+	     from dictionary
+	    <where>
+           <if test=" language != null ">
+             AND LANGUAGE = #{language }
+           </if>
+           <if test="pcode !=null ">
+             AND P_CODE = #{pcode }
+           </if>
+       </where>  
+	</select>
+	
+	
+	
+</mapper>

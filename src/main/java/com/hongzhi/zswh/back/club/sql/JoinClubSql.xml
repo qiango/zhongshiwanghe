@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hongzhi.zswh.back.club.dao.JoinClubDao">
+
+    <select id="ClubJoinUserByAdminID" resultType="com.hongzhi.zswh.back.club.entity.JoinClub">
+     select  
+          a.club_id
+         ,b.user_id
+         ,c.user_real_name 
+         ,c.phone
+         ,d.club_name
+        from user_detail   a 
+   left join user_detail  b
+          on a.club_id=b.club_id 
+   left join user_info c
+          on b.user_id=c.user_id
+   left join club d 
+          on  b.club_id = d.club_id 
+       where a.user_id = #{admin_id }
+           and b.join_club_status = '1'
+    </select>
+    
+  <select id="ClubJoinUserByAdmin" resultType="com.hongzhi.zswh.back.club.entity.JoinClub">
+     select  
+          a.club_id
+         ,a.user_id
+         ,c.user_real_name 
+         ,c.phone
+         ,d.club_name 
+        from user_detail   a 
+   left join user_info c
+          on a.user_id=c.user_id 
+   left join club d 
+          on a.club_id  = d.club_id 
+       where  a.join_club_status = '1'
+    </select>
+    
+    <update id="applyToJoinClub" >
+        update  user_detail 
+           set join_club_status='99' 
+        where  user_id  = #{user_id } 
+           and club_id = #{club_id } 
+    </update>
+    
+    <select id="userRoles" resultType="Integer">
+        select  role_id 
+        from  users_roles 
+        where user_id = #{user_id}
+    </select>
+    
+    <select id="getClubName" resultType="String">
+     select club_name from club  where club_id = #{club_id } 
+    </select>
+    
+  
+</mapper>

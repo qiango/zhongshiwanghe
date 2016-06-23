@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hongzhi.zswh.wechat.traffic.dao.TrafficDao">
+
+
+	<insert id="addTraffic" parameterType="com.hongzhi.zswh.wechat.traffic.entity.Traffic">
+		insert into 
+			traffic (
+				 order_id
+				,level_id
+				,phone
+				,create_time
+			)
+		values (
+				 #{order_id}
+				,#{level_id}
+				,#{phone}
+				,now()
+	 		)
+	</insert>
+  
+	<select id="findTrafficByPhone" resultType="Integer">
+		select 
+			count(1) count_number
+		from 
+			traffic
+		where 
+			phone = #{phone} 
+		and traffic_status = '0000'
+		and (traffic_code is null or traffic_code='0000')
+	</select>
+	
+	<update id="updateTraffic">
+		update 
+			traffic
+		set 
+			traffic_status = #{status}
+		where 
+			order_id = #{order_id} 
+	</update>
+	
+	<update id="updateTrafficByOrder">
+		update 
+			traffic
+		set 
+			traffic_code = #{code}
+		where 
+			order_id = #{order_id} 
+	</update>
+  	
+</mapper>

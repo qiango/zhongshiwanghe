@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hongzhi.zswh.app_v2.profile.dao.AppMeV2Dao">
+
+
+	<select id="loadMe" resultType="map">
+		SELECT
+			a.nickname AS user_name,
+			ifnull(dic. CODE, '0') AS join_club_status,
+			ifnull(t1.competition_count, '0') AS user_competition_number,
+			ifnull(t2.sprots_count, '0') AS user_sports_camp_number,
+			ifnull(a.profile_picture,' ' ) AS profile_picture
+		FROM
+			(
+				SELECT
+					COALESCE(nickname, '未设置昵称') AS nickname,
+					user_id,
+					profile_picture
+				FROM
+					user_info
+				WHERE
+					user_id =  #{user_id}
+			) a
+		LEFT JOIN (
+			SELECT
+				a.user_id,
+				a.user_real_name,
+				COALESCE (b.join_club_status, '0') AS join_club_status,
+				count(c.user_competition_status) AS competition_count
+			FROM
+				user_info a
+			LEFT JOIN 
+				user_detail b 
+					ON 
+					a.user_id = b.user_id
+			LEFT JOIN 
+				user_competition c 
+					ON 
+						a.user_id = c.user_id
+			<![CDATA[   and c.user_competition_status<>'0' ]]>
+			LEFT JOIN 
+				competition d 
+					ON 
+						c.competition_id = d.competition_id 
+			WHERE
+					a.is_delete = '0'
+				AND d.is_delete = '0'
+				and a.user_id= #{user_id}
+				and a.platform_id= #{platform_id}
+				
+			GROUP BY
+				a.user_id,
+				a.user_real_name,
+				b.join_club_status,
+				a.nickname
+		) t1 
+			ON 
+				a.user_id = t1.user_id
+		LEFT JOIN (
+			SELECT
+				user_id,
+				count(sports_camp_id) AS sprots_count
+			FROM
+				user_sports_camp
+			GROUP BY
+				user_id
+		) t2 
+			ON 
+				t1.user_id = t2.user_id
+		LEFT JOIN dictionary dic 
+			ON 
+				t1.join_club_status = dic.CODE
+				AND p_code = 'user_detail'
+				and dic.language= #{language}
+	</select>
+
+
+</mapper>

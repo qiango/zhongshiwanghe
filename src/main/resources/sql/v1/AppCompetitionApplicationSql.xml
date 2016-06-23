@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hongzhi.zswh.app.competition.dao.AppCompetitionApplicationDao">
+<select id="loadByCompetitionId" resultType="map">
+<!-- 		select 
+		 coalesce(a.competition_application_id,'') as competition_application_id
+		,coalesce(a.controls_id,'') as controls_id
+		,coalesce(a.competition_id,'') as competition_id
+		,coalesce(a.controls_placeholder,'') as controls_placeholder
+		,coalesce(a.title_name,'') as title_name
+		,coalesce(a.controls_data,'') as controls_data
+		 from competition_application a
+	left join competition b
+	       on a.user_id=b.user_id
+	    where b.is_delete=0
+	      and b.platform_id=#{platform_id}
+	      and b.user_id=#{user_id}
+	      and a.competition_id=#{competition_id}
+	       -->
+	       select 
+	       competition_application_id,
+			controls_id,
+			competition_id,
+			controls_placeholder,
+			title_name,
+			controls_data
+        from competition_application     
+       where competition_id=#{competition_id,jdbcType=INTEGER}  
+       order by controls_order  
+</select>
+
+<update id="saveCompetitionApplicationData" >
+	  insert into competition_application_data(
+		 controls_id
+        ,competition_application_id
+        ,user_id
+        ,competition_id
+        ,create_time
+        ,create_date
+        ,title_name
+        ,controls_order
+        ,user_value
+	  )values
+	  <foreach collection="list" item="com"  separator=",">
+	      	  (
+	       #{com.controls_id} 
+	      ,#{com.competition_application_id}
+	      ,#{com.user_id}
+	      ,#{com.competition_id}
+	      ,DATE_FORMAT(now(),'%H%i%s')
+          ,DATE_FORMAT(now(),'%Y%m%d')
+	      ,#{com.title_name}
+		  ,#{com.controls_order}
+		  ,#{com.user_value}
+		  
+	  )
+	      
+	      
+	      
+	  </foreach>
+	  
+	  
+
+</update>
+
+
+<insert id="saveUserCompetition">
+    
+    replace into user_competition 
+    (
+     competition_id
+     ,user_id
+     ,user_competition_status
+     ,create_time
+    )
+    values 
+    (
+    #{competition_id}
+    ,#{user_id } 
+    ,'1' 
+    ,now() 
+    )
+</insert>
+
+
+
+
+
+
+
+
+</mapper>

@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hongzhi.zswh.back.competitionApplication.dao.FormDataDao">
+
+
+	<select id="formTitles" resultType="String">
+		select
+		title_name
+		from competition_application a
+		<if test=" _parameter != null ">
+			where competition_id = #{competition_id }
+		</if>
+		order by controls_order
+	</select>
+
+
+	<select id="formData" resultType="map">
+		select
+		       a.user_id
+		      ,coalesce( a.user_competition_status,'') as user_join_status
+		      ,coalesce(c.value,'') as user_competition_status
+		      ,coalesce(e.club_name,' ' )  as club_name
+		      ,DATE_FORMAT(a.apply_or_refuse_time,'%Y-%m-%d %H:%i:%s')    as  apply_or_refuse_time 
+		      ,DATE_FORMAT(a.create_time,'%Y-%m-%d %H:%i:%s')    as  create_time 
+		      ${url }
+		  from 
+		      user_competition a  
+        
+    left join  competition_application_data   b
+		   on a.competition_id = b.competition_id
+		  and a.user_id = b.user_id
+
+	left join dictionary c
+		   on a.user_competition_status = c.code
+		  and c.p_code = 'user_comp'
+		  and c.language = #{language }
+
+	left join user_detail d 
+           on a.user_id = d.user_id    
+
+    left join club e 
+          on d.club_id = e.club_id 
+         <if  test=" model_object !=null  and  model_object.club_id !=null ">
+                             left join user_detail t2
+                             on a.user_id = t2.user_id 
+         </if>
+         <where>
+		      <if test=" other != null ">
+		      	and a.competition_id = #{other , jdbcType=INTEGER}
+		      </if>
+		       <if  test=" model_object !=null  and  model_object.club_id !=null  and  model_object.club_id !=0 ">
+                   and  t2.club_id = #{model_object.club_id }
+              </if>
+              <if test=" model_object !=null  and  model_object.search !=null  and model_object.search !='' ">
+              <!--
+                   and ( b.user_value  like  concat('%',#{model_object.search },'%')
+                -->
+                   and ( b.user_id  in 
+                                 (  select  
+                                           user_id 
+                                     from  competition_application_data   s1 
+                                    where  user_value  like  concat('%',#{model_object.search },'%')
+                                 )
+                   or   e.club_name   like  concat('%',#{model_object.search },'%')  ) 
+              </if>
+              <if test=" model_object !=null  and  model_object.category !=null  and model_object.category !='' ">
+                  and  ${model_object.category}
+              </if>
+         </where>
+		group by a.user_id ,a.user_competition_status , c.value ,e.club_name  
+		order by
+		a.user_competition_status , convert(e.club_name USING gbk) COLLATE gbk_chinese_ci  , a.user_id  
+		<if test=" pageStartRow !=null  and   pageRecorders != null ">
+			limit #{pageStartRow } , #{pageRecorders }
+		</if>
+	</select>
+	<select id="formDataCount" resultType="Integer">
+		select count( distinct a.competition_id,a.user_id ) as data_count 
+
+		from
+		user_competition a  
+		
+	left join  competition_application_data   b
+           on a.competition_id = b.competition_id
+          and a.user_id = b.user_id
+		
+    left join user_detail d 
+           on a.user_id = d.user_id    
+
+    left join club e 
+          on d.club_id = e.club_id 
+		     <if  test=" model_object !=null  and  model_object.club_id !=null ">
+                             left join user_detail t2
+                             on a.user_id = t2.user_id 
+            </if>
+            <where>
+		      <if test=" other != null ">
+		      	 and  a.competition_id = #{other , jdbcType=INTEGER}
+		      </if>
+		      <if  test=" model_object !=null  and  model_object.club_id !=null ">
+                   and  t2.club_id = #{model_object.club_id }
+		      </if>
+		      <if test=" model_object !=null  and  model_object.search !=null  ">
+		           and ( b.user_value  like  concat('%',#{model_object.search },'%')
+                   or   e.club_name   like  concat('%',#{model_object.search },'%')  )
+		      </if>
+		       <if test=" model_object !=null  and  model_object.category !=null  and model_object.category !='' ">
+                  and  ${model_object.category}
+              </if>
+            </where>
+            
+	</select>
+	
+	<update id="deleteRefuseData">
+	  update competition_application_data  
+	     set  is_delete = '1' 
+	   where competition_id = #{compID }
+        and user_id in (
+        <foreach collection="userList" item="item" index="index"
+            separator=",">
+            #{item}
+        </foreach>
+        )
+	</update>
+    
+  
+</mapper>

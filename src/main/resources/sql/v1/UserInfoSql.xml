@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hongzhi.zswh.app.me.dao.AppUserInfoDao">
+
+    <select id="selectUserByID" resultType="com.hongzhi.zswh.app.me.entity.UserInfo">
+        select 
+            a.user_id
+           ,a.platform_id
+           ,c.value  as platform_name 
+           ,ifnull(a.user_real_name,'') as user_real_name
+           ,ifnull(a.user_login_name,'') as user_login_name
+           ,ifnull(a.nickname,'') as nickname
+           ,ifnull(b.value,'') as gender
+           ,ifnull(DATE_FORMAT(a.birthdate,'%Y-%m-%d'),'') as birthdate
+           ,ifnull(a.phone,'') as phone
+           ,ifnull(a.address,'') as address
+           ,ifnull(a.mail_address,'') as mail_address
+           ,ifnull(a.user_status,'') as user_status
+           ,ifnull(a.remark,'') as remark
+           ,ifnull(a.create_time,'') as create_time
+           ,ifnull(a.create_date,'') as create_date
+           ,ifnull(a.is_delete,'') as is_delete 
+           ,ifnull(a.create_timestamp,'') as create_timestamp
+         from user_info  a 
+    left join dictionary b
+           on a.gender = b.code
+          and b.p_code = 'gender' 
+          and b.language = #{language}
+    left join dictionary c
+           on a.platform_id = c.code
+          and c.p_code = 'platform' 
+          and c.language = #{language }
+      where  a.user_id = #{user_id } 
+    </select>
+    
+
+    <update id="updateUserInfo" >
+        update  user_info 
+         <trim prefix="SET" suffixOverrides=",">  
+             <if test=" platform_id != null"> platform_id=#{platform_id },</if>
+             <if test=" birthdate != null"> birthdate=STR_TO_DATE(#{birthdate},'%Y-%m-%d'),</if>
+             <if test=" nickname != null"> nickname=#{nickname},</if>
+             <if test=" gender != null"> gender=#{gender},</if>
+             <if test=" user_real_name != null"> user_real_name=#{user_real_name },</if>
+             <if test="mail_address !=null ">mail_address=#{mail_address},</if>
+         </trim>  
+        where user_id = #{user_id }
+    </update>
+    
+    
+    
+ <select id="selectByPhoneAndPlatform" resultType="com.hongzhi.zswh.app.me.entity.UserInfo" >
+        select 
+           user_id 
+          ,platform_id 
+          ,user_real_name  
+          ,user_login_name 
+          ,user_password   
+          ,phone   
+          ,mail_address    
+          ,user_status  
+          ,remark  
+          ,create_time 
+          ,create_date 
+          ,salt
+        from user_info    
+        where is_delete='0'
+         and phone=#{phone}
+         and platform_id=#{platform_id}
+    </select>
+    
+    <insert id="insertUserInfo"   useGeneratedKeys="true" keyProperty="user_id">
+        insert into user_info (
+            platform_id
+           ,user_real_name
+           ,user_login_name
+           ,user_password
+           ,phone
+           ,mail_address
+           ,user_status
+           ,remark
+           ,create_time
+           ,create_date
+           ,is_delete
+           ,salt
+        ) values (
+            #{platform_id }
+           ,#{user_real_name }
+           ,#{user_login_name }
+           ,#{user_password }
+           ,#{phone }
+           ,#{mail_address }
+           ,#{user_status }
+           ,#{remark }
+           ,DATE_FORMAT(CURTIME(),'%H%i%s')
+           ,DATE_FORMAT(CURDATE(),'%Y%m%d')
+           ,'0'
+           ,#{salt } 
+        )
+    </insert>
+    
+    <select id="getIdbyPhone" resultType="Integer">
+        select
+         	user_id
+         from 
+         	user_info
+         where 
+         	is_delete='0'
+         	and phone=#{phone}	
+    </select>
+</mapper>

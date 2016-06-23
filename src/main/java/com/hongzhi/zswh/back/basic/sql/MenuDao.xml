@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hongzhi.zswh.back.basic.dao.MenuDao">
+
+    
+    <select id="getChildrens" resultType="com.hongzhi.zswh.back.basic.entity.Menu" >
+         select  
+            distinct 
+              c.menu_id
+             ,c.menu_name
+             ,c.menu_url
+             ,c.menu_parent_id
+        from  users_roles  a
+   left join roles_menus b
+          on a.role_id = b.role_id 
+   left join menu_info c
+          on b.menu_id = c.menu_id  
+     <where>
+         <if test=" user_id !=null">
+          and a.user_id = #{user_id }
+         </if>
+         <if test=" parent_id !=null">
+          and c.menu_parent_id = #{parent_id}
+         </if>
+     </where>
+     order by c.menu_id
+    </select>
+    
+    <select id="getChildrensAll" resultType="com.hongzhi.zswh.back.basic.entity.Menu">
+            select  
+              menu_id
+             ,menu_name
+             ,menu_url
+             ,menu_parent_id 
+           from menu_info 
+       <if test=" _parameter !=null">
+          where  menu_parent_id = #{parent_id}
+       </if>
+    </select>
+    
+    <select id="allMenus" resultType="com.hongzhi.zswh.back.basic.entity.Menu">
+        select  
+              menu_id
+             ,menu_name
+             ,menu_url
+             ,menu_parent_id 
+           from menu_info 
+    <![CDATA[      where menu_id <> 27  ]]>
+           <if test=" _parameter != null " >
+            and  menu_name like  CONCAT('%', #{menu_name,jdbcType=VARCHAR}, '%')
+           </if>
+           order by menu_id
+    </select>
+    
+    <select id="getUserMenus" resultType="com.hongzhi.zswh.back.basic.entity.Menu">
+    select  
+            distinct 
+              c.menu_id
+             ,c.menu_name
+             ,c.menu_url
+             ,c.menu_parent_id
+        from  users_roles  a
+   left join roles_menus b
+          on a.role_id = b.role_id 
+   left join menu_info c
+          on b.menu_id = c.menu_id  
+         <if test=" user_id !=null">
+          where a.user_id = #{user_id }
+         </if>
+     order by c.menu_id
+    
+    </select>
+
+</mapper>

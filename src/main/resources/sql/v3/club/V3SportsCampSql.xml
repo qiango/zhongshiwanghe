@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hongzhi.zswh.app_v3.club.dao.V3SportsCampDao">
+    
+    <select id="listSportsCamp" resultType="map">
+          select 
+                 a.language_id
+                ,a.sports_camp_id 
+                ,a.remark
+                ,a.sports_camp_name
+                ,case when c.sports_camp_id is null 
+                      then  1 
+                      else  0   end  
+                      as is_subscribe 
+         from  sports_camp  a
+
+    left join  club_sports_camp  b
+           on  a.sports_camp_id = b.sports_camp_id 
+         
+    left join  user_sports_camp c 
+           on  a.sports_camp_id = c.sports_camp_id 
+          and  c.user_id = #{user}  
+         
+        where  a.is_delete='0' 
+          and  b.club_id = #{club}
+    </select>
+    
+    <select id="subscribeList" resultType="map">
+    select 
+             a.sports_camp_id 
+            ,a.sports_camp_name
+            ,a.remark
+            ,case when c.sports_camp_id is null then  1 
+                   else  0   end  as is_subscribe 
+        from  sports_camp  a
+            
+   left join  user_sports_camp c 
+          on  a.sports_camp_id = c.sports_camp_id 
+         and  c.user_id = #{user} 
+       where  a.is_delete='0' 
+    </select>
+    
+    
+    <insert id="subscribe">
+       insert into  user_sports_camp(sports_camp_id,user_id) 
+       values (
+             #{sport}
+            ,#{user}
+       )
+    </insert>
+    
+    <delete id="unsubscribe">
+        delete  from user_sports_camp 
+        where  sports_camp_id = #{sport}
+          and  user_id = #{user}
+    </delete>
+  
+
+</mapper>

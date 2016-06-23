@@ -1,0 +1,202 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hongzhi.zswh.back.competition.dao.CompetitionDao">
+
+    
+    <select id="listCompetitonByPage" resultType="com.hongzhi.zswh.back.competition.entity.Competition" >
+		select
+			a.competition_id
+            ,u.user_real_name
+            ,c.value as language_name
+            ,p.platform_name
+            ,a.competition_name
+            ,d.value as competition_level
+            ,a.competition_description
+            ,e.value   as competition_status
+            ,coalesce(a.compertition_live_status,'1')  as competition_live_status
+            ,a.create_time
+            ,a.create_date
+            ,a.competition_publicity_pictures
+            ,a.competition_primary_id
+            ,cast(a.registration_start_date  as date )  as registration_start_date
+            ,cast(a.registration_end_date  as date )   as registration_end_date 
+            ,cast(a.competition_start_date  as date )   as competition_start_date
+            ,cast(a.competition_end_date  as date )   as competition_end_date 
+       from   competition   a
+		LEFT JOIN platform p
+               on p.platform_id=a.platform_id
+        LEFT JOIN user_info u
+               ON u.user_id=a.user_id
+        left join dictionary c
+               on a.language_id = c.code
+              and c.p_code='language'
+              and c.language=#{language}
+        left join dictionary d
+               on a.competition_level = d.code
+              and d.p_code='comp_level'
+              and d.language=#{language}
+        left join dictionary e
+               on a.compertition_live_status = e.code
+              and e.p_code='comp_status'
+              and e.language=#{language}   
+       where  (a.is_delete='0' or a.is_delete is null  ) 
+		<if test=" other !=null ">
+			and a.competition_name like CONCAT('%', #{other} ,'%')
+		</if>
+		<if test=" pageStartRow !=null  and   pageRecorders != null ">
+			limit #{pageStartRow } , #{pageRecorders }
+		</if>
+    </select>
+
+
+	<select id="listCompetitonByPageCount" resultType="Integer">
+		select
+			count(*) as data_count
+         from   competition   a
+  <![CDATA[    where ( a.is_delete <> '1' or a.is_delete is null )  ]]>
+			<if test=" other !=null ">
+				and a.competition_name like CONCAT('%', #{other} ,'%')
+			</if>
+	</select>
+	<insert id="insertCompetition">
+		insert into competition
+			(competition_id
+			,user_id
+			,language_id
+			,platform_id
+			,competition_name
+			,competition_level
+			,competition_description
+			,competition_status
+			,create_time
+			,create_date
+			,competition_publicity_pictures
+			,competition_primary_id
+			,registration_start_date
+			,registration_end_date
+			,competition_start_date
+			,competition_end_date
+			,compertition_live_status
+			,is_delete
+			,id
+		)
+		values
+			(#{competition_id ,jdbcType=INTEGER}
+			,#{user_id ,jdbcType=INTEGER}
+			,#{language_id ,jdbcType=INTEGER}
+			,#{platform_id ,jdbcType=INTEGER}
+			,#{competition_name ,jdbcType=VARCHAR}
+			,#{competition_level ,jdbcType=VARCHAR}
+			,#{competition_description ,jdbcType=VARCHAR}
+			,#{competition_status ,jdbcType=VARCHAR}
+			,#{create_time ,jdbcType=VARCHAR}
+			,#{create_date ,jdbcType=VARCHAR}
+			,#{competition_publicity_pictures ,jdbcType=VARCHAR}
+			,#{competition_primary_id ,jdbcType=INTEGER}
+			,#{registration_start_date ,jdbcType=VARCHAR}
+			,#{registration_end_date ,jdbcType=VARCHAR}
+			,#{competition_start_date ,jdbcType=VARCHAR}
+			,#{competition_end_date ,jdbcType=VARCHAR}
+			,#{compertition_live_status ,jdbcType=VARCHAR}
+			,'0'
+			,#{id ,jdbcType=INTEGER}
+		)
+
+	</insert>
+
+	<select id="listWorldCity" resultType="com.hongzhi.zswh.back.club.entity.WorldCity">
+		select
+		 id
+		,name
+		,parent_id
+		,remark
+		,name_en
+		from world_city
+		<if test=" _parameter != null ">
+			where parent_id=#{parent_id}
+		</if>
+		order by id
+	</select>
+
+	<!-- 删除 -->
+	<update id="competitionDelete">
+		 update competition
+			set is_delete='1'
+		  where competition_id=#{competition_id,jdbcType=INTEGER}
+	</update>
+
+	<update id="updateCompetition">
+		update competition
+		   set language_id = #{language_id ,jdbcType=INTEGER}
+		,create_time = #{create_time ,jdbcType=VARCHAR}
+		,platform_id =#{platform_id ,jdbcType=INTEGER}
+		,competition_name=#{competition_name ,jdbcType=VARCHAR}
+		,competition_level=#{competition_level ,jdbcType=VARCHAR}
+		,competition_description= #{competition_description ,jdbcType=VARCHAR}
+		,competition_status= #{competition_status ,jdbcType=VARCHAR}
+		,create_date = #{create_date ,jdbcType=VARCHAR}
+		,competition_publicity_pictures = #{competition_publicity_pictures,jdbcType=VARCHAR}
+		,competition_primary_id = #{competition_primary_id ,jdbcType=INTEGER}
+		,registration_start_date = #{registration_start_date,jdbcType=VARCHAR}
+		,registration_end_date = #{registration_end_date ,jdbcType=VARCHAR}
+		,competition_start_date = #{competition_start_date ,jdbcType=VARCHAR}
+		,competition_end_date = #{competition_end_date ,jdbcType=VARCHAR}
+		,id= #{id,jdbcType=INTEGER}
+		where competition_id= #{competition_id,jdbcType=INTEGER}
+	</update>
+
+	<select id="selectByID" resultType="com.hongzhi.zswh.back.competition.entity.Competition">
+		select
+		ifnull(a.competition_id ,0) as competition_id
+		,ifnull(a.user_id ,0) as user_id
+		,ifnull(a.language_id ,0) as language_id
+		,ifnull(a.platform_id ,0) as platform_id
+		,ifnull(a.competition_name ,'') as competition_name
+		,ifnull(a.competition_level ,'') as competition_level
+		,ifnull(a.competition_description ,'') as competition_description
+		,ifnull(a.competition_status ,'') as competition_status
+		,ifnull(a.competition_publicity_pictures ,'') as competition_publicity_pictures
+	<!-- 	,STR_TO_DATE(a.registration_start_date, '%Y-%m-%d') as registration_start_date
+		,STR_TO_DATE(a.registration_end_date, '%Y-%m-%d') as registration_end_date
+		,STR_TO_DATE(a.competition_start_date, '%Y-%m-%d') as competition_start_date
+		,STR_TO_DATE(a.competition_end_date, '%Y-%m-%d') as competition_end_date  -->
+		,cast(a.registration_start_date  as date )  as registration_start_date
+        ,cast(a.registration_end_date  as date )   as registration_end_date 
+        ,cast(a.competition_start_date  as date )   as competition_start_date
+        ,cast(a.competition_end_date  as date )   as competition_end_date 
+		,ifnull(a.id ,0) as id
+		,ifnull(a.compertition_live_status,'0') as compertition_status_final
+		,ifnull(b.user_real_name,'') as user_real_name
+		,ifnull(c.platform_name ,'') as language_name
+		,ifnull(d.language_name ,'') as platform_name
+		,ifnull( e.name,' ') as name
+
+		from competition a
+   left join user_info b
+		  on a.user_id=b.user_id
+   left join platform c
+		  on a.platform_id=c.platform_id
+   left join language d
+		  on a.language_id=d.language_id
+   left join world_city e
+		  on a.id=e.id
+	   where a.competition_id= #{competition_id,jdbcType=INTEGER}
+	</select> 
+	<update id="changeStatus">
+	update competition   t1  
+        left join       
+        (
+        select distinct    
+        competition_id
+        from competition_application  ) t2 
+          on t1.competition_id  = t2.competition_id    
+		set t1.compertition_live_status=#{new_status}
+		where t2.competition_id=#{competition_id,jdbcType=INTEGER}
+	</update>
+	<select id="listCompetitiony"
+		resultType="com.hongzhi.zswh.back.competition.entity.Competition">
+		select *
+        from competition
+	</select>
+
+</mapper>

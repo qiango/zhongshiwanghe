@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hongzhi.zswh.back.competitionApplication.dao.FormDao">
+
+    <select id="listFormByPage" resultType="com.hongzhi.zswh.back.competitionApplication.entity.Form" >
+                    select
+                          a.competition_id
+                         ,a.competition_name
+                         ,count(b.user_id) as numberOfSignUp
+                    from competition   a 
+               left join  
+                        (select  distinct t1.competition_id,t1.user_id  from competition_application_data  t1
+                          
+                        <if  test=" model_object !=null  and  model_object.club_id !=null ">
+                             left join user_detail t2
+                             on t1.user_id = t2.user_id 
+                             where t2.club_id = #{model_object.club_id }
+                        </if>
+                        
+                         ) b 
+                        on a.competition_id = b.competition_id
+                  where a.competition_id in
+                        (select distinct competition_id from  competition_application )  
+                    <if test=" other != null "     >
+                       and  a.competition_name like CONCAT('%', #{other} ,'%') 
+                    </if>
+                    group by     
+                          a.competition_id
+                         ,a.competition_name
+                    order by registration_end_date desc 
+               <if test=" pageStartRow !=null  and   pageRecorders != null ">
+                     limit  #{pageStartRow } , #{pageRecorders }
+               </if>
+    </select>
+
+    <select id="listFormByPageCount" resultType="Integer">
+                   select
+                         count(*) as data_count 
+                    from competition   a 
+                  where a.competition_id in
+                        (select distinct competition_id from  competition_application )  
+                    <if test=" other != null "     >
+                       and  a.competition_name like CONCAT('%', #{other} ,'%') 
+                    </if>
+    </select>
+
+  <insert id="insertCompetitionApplication"   >
+      insert into  competition_application (
+        competition_id
+       ,title_name
+       ,controls_id
+       ,controls_data
+       ,controls_placeholder
+       ,user_id
+      )  values    ${value_sql}
+    </insert>
+
+<delete id="deleteByCompeitionId" parameterType="Integer">
+       delete from  competition_application   
+       where  competition_id=#{competition_id}   
+    </delete>
+    
+    <select id="selectByCompeitionID" resultType="com.hongzhi.zswh.back.competitionApplication.entity.CompetitionApplication" >
+    select 
+     competition_application_id
+    ,controls_id
+    ,user_id
+    ,competition_id
+    ,language_id
+    ,create_time
+    ,create_date
+    ,controls_placeholder
+    ,title_name
+    ,controls_data
+    ,controls_order
+    from competition_application  
+       where  competition_id=#{competition_id}   
+    </select>
+    
+    <select id="getCompetitionName" resultType="String" >
+        select coalesce(competition_name,' ') from  competition
+        where competition_id  =  #{competition_id }
+         limit 1  
+    </select>
+    
+
+    <select id="userLevel" resultType="map">
+    select 
+          club_id
+         ,user_id
+         ,user_level
+     from user_detail  a 
+    where a.user_id = #{user_id}
+    </select>
+    
+    <select  id="userRole" resultType="Integer" >
+       select  
+        distinct role_id 
+     from  users_roles 
+    where user_id = #{user_id}
+    </select>
+  
+</mapper>

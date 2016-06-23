@@ -1,0 +1,16 @@
+
+
+
+delete  from  session_time where  due_time < now() ;
+
+delete  from session_log 
+where id not in ( select id from session_time  ) ;
+
+delete  from session_attribute  
+where id not in ( select id from session_time  )  ; 
+
+
+
+
+
+

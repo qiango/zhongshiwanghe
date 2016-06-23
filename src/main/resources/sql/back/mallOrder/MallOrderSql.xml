@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hongzhi.zswh.back.mallOrder.dao.MallOrderDao">
+	<select id="listMallOrderByPageCount" resultType="Integer">
+		select
+			count(*) as data_count
+        from   mall_order   a
+		<if test=" model_object.goods_id !=null and model_object.goods_id !=0 ">
+        left join  mall_order_goods b 
+               on  a.id = b.order_id 
+              and  b.goods_id = #{model_object.goods_id}
+		</if>
+        	where 1=1
+			<if test=" model_object.order_code !=null and model_object.order_code!=''">
+				and a.code like CONCAT('%', #{model_object.order_code} ,'%')
+			</if>
+			<if test=" model_object.order_status !=null and model_object.order_status !=''">
+				and a.status like CONCAT('%', #{model_object.order_status} ,'%')
+			</if>
+			<if test=" model_object.goods_id !=null and model_object.goods_id !=0 ">
+			    and  b.goods_id is not null
+			</if>
+	</select>
+
+
+    
+    <select id="listMallOrderByPage" resultType="com.hongzhi.zswh.back.mallOrder.entity.MallOrder" >
+		select
+			a.id
+            ,a.user_id
+            ,a.code as order_code
+            ,a.price
+            ,a.status
+            ,cast(a.create_time  as date )  as create_time
+            ,c.value as status_name
+            ,b.user_real_name
+			,b.user_login_name
+        from   mall_order   a 
+        left join user_info b
+        	   on a.user_id = b.user_id
+        left join dictionary c
+               on a.status = c.code
+              and c.p_code='order_status'
+              and c.language='zh'
+		<if test=" model_object.goods_id !=null and model_object.goods_id !=0 ">
+        left join  mall_order_goods  x
+               on  a.id = x.order_id 
+              and  x.goods_id = #{model_object.goods_id}
+		</if>
+        where 1=1
+		<if test=" model_object.order_code !=null and model_object.order_code!=''">
+			and a.code like CONCAT('%', #{model_object.order_code} ,'%')
+		</if>
+		<if test=" model_object.order_status !=null and model_object.order_status !=''">
+			and a.status like CONCAT('%', #{model_object.order_status} ,'%')
+		</if>
+		<if test=" model_object.goods_id !=null and model_object.goods_id !=0 ">
+                and  x.goods_id is not null
+        </if>
+		<if test=" pageStartRow !=null  and   pageRecorders != null ">
+			limit #{pageStartRow } , #{pageRecorders }
+		</if>
+    </select>
+    
+    <!-- List<Map<String,Object>> selectOrderDetailByCode(String order_code) -->
+    
+    <select id="selectOrderDetailByCode" resultType="map">
+    	select 
+	 		 b.name
+			,a.total_counts	
+			,a.effect_counts
+			,a.single_price
+			,substr(c.picture_url,2) as picture_url
+		from 
+			mall_order_goods a 
+		left join mall_goods b
+			on a.goods_id = b.id
+		left join mall_goods_picture c
+			on b.id= c.goods_id
+		   and c.show_index=1
+		left join mall_order d
+			on d.id=a.order_id
+		where d.code= #{order_code}
+    </select>
+	<!-- Map<String,String> orderSumPriceAndCount() -->
+	<select id="orderSumPriceAndCount" resultType="map">
+		select 
+			 count(1) as order_count
+			,sum(m.price) as sum_price
+	    <if test="goodsID !=null and goodsID !=0 ">
+	        ,c.name  as goods_name 
+	    </if>
+		from 
+			mall_order m
+	    <if test="goodsID !=null and goodsID !=0 ">
+	    left join mall_order_goods b 
+               on m.id = b.order_id 
+              and b.goods_id = #{goodsID}
+        left join mall_goods c 
+               on b.goods_id = c.id 
+        where b.goods_id is not null
+	    </if>
+			
+	</select>
+	
+</mapper>

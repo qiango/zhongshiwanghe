@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hongzhi.zswh.app_v3.verstion.dao.VersionDao">
+
+
+        <select id="upgradeInfo" resultType="com.hongzhi.zswh.app_v3.verstion.entity.VersionInfo">
+            select    
+                  iOS_current_version
+                 ,android_current_version
+                 ,iOS
+                 ,Android
+                 ,iOS_open
+                 ,android_open
+            from  upgrade_version  
+        </select>
+
+
+
+
+</mapper>

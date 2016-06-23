@@ -1,0 +1,178 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hongzhi.zswh.back.club.dao.ClubDao">
+
+    
+    <select id="listClubByPage" resultType="map" >
+            select 
+               a.club_id
+              ,b.name
+              ,c.value    as language_name 
+              ,a.club_name
+              ,a.club_name_short
+              ,a.club_applicant_name
+              ,concat(cast(a.club_create_date as date ),'')  as club_create_date 
+              ,a.club_qq
+              ,d.value   as club_status 
+          from club  a 
+     left join world_city b
+            on a.id = b.id
+     left join dictionary  c
+            on a.language_id = c.code 
+           and c.p_code='language'
+           and c.language= #{language}
+     left join dictionary d
+            on a.club_status = d.code 
+           and d.p_code = 'club'  
+           and d.language= #{language}
+    where is_delete = '0' 
+   <if test=" other !=null ">
+        and  a.club_name  like  CONCAT('%', #{other} ,'%') 
+   </if>
+   <if test=" pageStartRow !=null  and   pageRecorders != null ">
+        limit  #{pageStartRow } , #{pageRecorders }
+   </if>
+  </select>
+  
+     
+    <select id="listClubByPageCount" resultType="Integer" >
+            select 
+            count(*) as data_count
+          from club  a 
+     left join world_city b
+            on a.id = b.id
+     left join dictionary  c
+            on a.language_id = c.code 
+           and c.p_code='language'
+           and c.language= #{language}
+     left join dictionary d
+            on a.club_status = d.code 
+           and d.p_code = 'club'  
+           and d.language= #{language}
+    where is_delete = '0' 
+   <if test=" other !=null ">
+         and  a.club_name  like  CONCAT('%', #{other} ,'%') 
+   </if>
+  </select>
+  
+  <select id="listWorldCity" resultType="com.hongzhi.zswh.back.club.entity.WorldCity">
+            select 
+                id
+               ,name
+               ,parent_id
+               ,remark
+               ,name_en
+             from world_city
+        <if test=" _parameter != null "   >
+        where parent_id=#{parent_id}
+        </if>
+          order by id 
+  </select>
+  
+  
+   <insert id="insertClub" >
+    insert into
+    club(
+      id
+     ,language_id
+     ,user_id
+     ,club_name
+     ,club_name_short
+     ,club_applicant_name
+     ,create_time
+     ,create_date
+     ,club_status
+     ,club_description
+     ,club_create_date
+     ,club_qq
+    )
+    values(
+     #{id,jdbcType=INTEGER}
+    ,#{language_id,jdbcType=INTEGER}
+    ,#{user_id,jdbcType=INTEGER}
+    ,#{club_name,jdbcType=VARCHAR}
+    ,#{club_name_short,jdbcType=VARCHAR}
+    ,#{club_applicant_name,jdbcType=VARCHAR}
+    ,DATE_FORMAT(now(),'%H%i%s')
+    ,DATE_FORMAT(now(),'%Y%m%d')
+    ,'99'
+    ,#{club_description,jdbcType=VARCHAR}
+    ,#{club_create_date,jdbcType=VARCHAR}
+    ,#{club_qq,jdbcType=VARCHAR}
+    )
+    </insert>
+
+ <select id="selectById" resultType="com.hongzhi.zswh.back.club.entity.Club" >
+            select 
+              a.club_id 
+              ,a.id
+              ,b.name
+              ,c.code as language_id
+              ,a.club_name
+              ,a.club_name_short 
+              ,a.club_applicant_name
+              ,a.club_description 
+              ,a.club_create_date
+              ,a.club_qq
+              ,d.code  as club_status 
+          from club  a 
+     left join world_city b
+            on a.id = b.id
+     left join dictionary  c
+            on a.language_id = c.code 
+           and c.p_code='language'
+           and c.language= #{language}
+     left join dictionary d
+            on a.club_status = d.code 
+           and d.p_code = 'club'  
+           and d.language = #{language}
+   <if test=" club_id !=null ">
+         where a.club_id = #{club_id}
+   </if>
+  </select>
+  
+  <update id="update">
+    update club
+     set language_id = #{language_id,jdbcType=INTEGER}
+        ,user_id = #{user_id,jdbcType=INTEGER}
+        ,club_name = #{club_name,jdbcType=VARCHAR}
+        ,club_name_short =  #{club_name_short,jdbcType=VARCHAR}
+        ,club_applicant_name = #{club_applicant_name,jdbcType=VARCHAR}
+        ,club_status = #{club_status,jdbcType=VARCHAR}
+        ,club_qq = #{club_qq,jdbcType=VARCHAR}
+        ,club_description = #{club_description,jdbcType=VARCHAR}
+        ,club_create_date= #{club_create_date,jdbcType=VARCHAR}
+        ,id=#{id,jdbcType=INTEGER}
+    where club_id = #{club_id,jdbcType=INTEGER}
+  </update>
+  
+  <update id="logicDelete">
+    update club 
+       set is_delete='1' 
+    where club_id = #{club_id,jdbcType=INTEGER}
+  </update>
+  
+  
+  <select id="clubMeberRank"  resultType="map">
+     select 
+            @row_number:=@row_number+1  AS rank 
+            , a.club_name 
+            , a.club_people   as  club_people_number  
+         from ( 
+            select 
+                 a.club_id 
+                ,''  as club_image 
+                ,b.club_name  
+                ,count(*)  as  club_people  
+            from user_detail  a  
+       left join club  b 
+              on a.club_id = b.club_id  
+        where join_club_status = '99'
+         and  b.club_name IS NOT NULL
+        group by club_id  
+        ) a 
+        ,(SELECT @row_number:=0) t 
+        order by club_people desc 
+  </select>
+
+</mapper>

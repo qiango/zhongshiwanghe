@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hongzhi.zswh.back.mallOrder.dao.MallGoodsDao">
+
+    <select id="goodsList" resultType="map">
+        select 
+            a.id
+           ,a.goods_code
+           ,a.category
+           ,a.name
+           ,a.goods_describe
+           ,b.value as status
+           ,a.create_time
+        from mall_goods a  
+        left join dictionary b 
+               on a.status = b.code
+              and b.p_code = 'goods_status'
+              and b.language = #{language}
+        <where>
+            <if test="model_object.goodsStatus !=null and model_object.goodsStatus !='' ">
+                and status = #{model_object.goodsStatus}
+            </if>
+            <if test="model_object.search !=null and model_object.search!=''">
+                and name like concat('%', #{model_object.search},'%')
+            </if>
+        </where>
+    </select>
+    
+    <select id="goodsListCount" resultType="Integer">
+      select 
+        count(1) 
+       from mall_goods a 
+        <where>
+            <if test="model_object.goodsStatus !=null and model_object.goodsStatus !='' ">
+                and status = #{model_object.goodsStatus}
+            </if>
+            <if test="model_object.search !=null and model_object.search!=''">
+                and name like concat('%', #{model_object.search},'%')
+            </if>
+        </where>
+    </select>
+	
+	
+</mapper>

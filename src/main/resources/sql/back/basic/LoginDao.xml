@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hongzhi.zswh.back.basic.dao.LoginDao">
+    
+    <select id="selectUserIdAndPassword" resultType="map" >
+         select 
+            user_id
+           ,user_password
+           ,salt
+         from user_info 
+       <if test=" _parameter != null">
+        where user_login_name = #{user_login_name}
+       </if>
+    </select>
+    
+
+    <select id="selectUser"  resultType="com.hongzhi.zswh.back.basic.entity.User" > 
+               select 
+                    a.user_id
+                   ,a.user_real_name
+                   ,b.club_id
+                   ,c.club_name
+              from user_info  a
+         left join user_detail b
+                on a.user_id = b.user_id 
+         left join club c 
+                on b.club_id = c.club_id 
+       <if test=" _parameter != null">
+             where a.user_id = #{user_id}
+       </if>
+    </select>
+    
+    <select id="userRoles" resultType="com.hongzhi.zswh.back.basic.entity.RoleInfo">
+                select
+                    b.role_id
+                   ,b.role_name 
+               from users_roles  a
+          left join role_info b
+                 on a.role_id=b.role_id 
+       <if test=" _parameter != null">
+              where a.user_id = #{user_id}
+       </if>
+    </select>
+    
+    
+    
+</mapper>

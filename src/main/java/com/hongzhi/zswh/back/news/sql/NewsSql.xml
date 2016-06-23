@@ -1,0 +1,247 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hongzhi.zswh.back.news.dao.NewsDao">
+
+	<!-- 逻辑删除 -->
+	<update id="logicDelete" >
+		update news  
+			set  
+				news_status =0 
+			where 
+				news_id=#{news_id}
+	</update>
+	<!-- 修改前加载 -->
+	<select id="modifyLoad" resultType="map">
+		select
+			 a.news_id
+			,a.platform_id
+			,a.news_type
+			,a.news_title
+			,a.news_abstract
+			,a.news_content
+			
+		from  news a  
+		where 
+			a.news_id =#{news_id} 
+	</select>
+	
+	<!-- 根据news_id 修改数据库中对应的记录 -->
+	<update id="modifySave" parameterType="com.hongzhi.zswh.back.news.entity.NewsParam">
+		update news a
+			<set>
+				<if test="platform_id != null">  
+	            	a.platform_id=#{platform_id},
+	        	</if> 
+	        	<if test="news_type != null">  
+	       	    	a.news_type=#{news_type},
+	       		</if> 
+	        	<if test="news_title != null">  
+	            	a.news_title=#{news_title},
+	        	</if> 
+	         	<if test="news_abstract != null">  
+	            	a.news_abstract=#{news_abstract}, 
+	        	</if> 
+	        	<if test="news_content != null">  
+	            	a.news_content=#{news_content}  
+	        	</if> 
+			</set>
+		where 
+			a.news_id=#{news_id}
+	</update>
+	
+	
+
+	<select id="listNewsByPageCount" resultType="Integer">
+		select 
+			count(1) as data_count
+		from news a
+		where news_status !=0
+		<if test=" other != null">
+		and a.news_title like CONCAT('%', #{other}, '%' )
+		</if>
+	</select>
+	<select id="listNewsByPage" resultType="com.hongzhi.zswh.back.news.entity.NewsParam">
+		select 
+			a.news_id
+		   ,a.platform_id
+		   ,a.news_type
+		   ,a.news_title
+		   ,a.news_abstract
+		   ,a.news_content
+		   ,a.create_user
+		   ,a.news_status
+		   ,date_format(a.create_time,'%Y-%m-%d') as create_time
+		   ,b.value as news_type_name
+		   ,c.value as news_status_name
+		from 
+		news a
+		left join 
+		dictionary b
+			on a.news_type = b.code
+   			and b.p_code='info_type'
+            and b.language='zh'
+         left join
+         dictionary c
+         	on a.news_status = c.code
+			and c.p_code='news_status'
+ 			and b.language='zh'
+		where a.news_status!=0
+		<if test="other != null">
+			and a.news_title like CONCAT('%', #{other},'%')
+		</if>
+		<if test="pageStartRow !=null  and   pageRecorders != null">
+			limit #{pageStartRow,jdbcType=INTEGER } ,#{pageRecorders,jdbcType=INTEGER }
+		</if>
+	</select>
+	<insert id="newSave" useGeneratedKeys="true" keyProperty="news_id">
+		insert into news(
+			platform_id
+		   ,news_type
+		   ,news_title
+	       ,news_abstract
+		   ,news_status
+		   ,news_content
+		   ,create_time
+		   ,create_user
+		)
+		values
+		(
+		   #{platform_id }
+		  ,#{news_type }
+		  ,#{news_title }
+		  ,#{news_abstract }
+		  ,#{news_status }
+		  ,#{news_content }
+		  ,now()
+		  ,#{create_user}
+		)
+		
+	</insert>
+
+	
+	 <!--用作循环插入图片集  -->
+	<insert id="saveNewsMultimedia">
+		insert into news_multimedia(
+			 news_id
+			,media_url
+			,media_information	
+			,media_index
+		)
+		values
+		<foreach collection ="imageList" item="image" index= "index" separator="," >
+		(
+		     #{image.news_id}
+            ,#{image.media_url}
+            ,#{image.media_information}
+		    ,#{index}
+		)
+		</foreach>
+	</insert>
+	
+	<!-- 根据news_id找到图片列表news_multimedia -->
+	<select id="findPictureBynews_id" resultType="map">			
+		select  
+			a.media_id,
+			a.news_id,
+			a.media_url,
+			a.media_information,
+			a.media_index
+		from 
+			news_multimedia  a
+		where  
+			a.news_id =#{news_id}
+			and 
+				a.is_delete=0
+				
+	</select>
+	
+	<!-- 根据news_id找到图片列表news_multimedia -->
+	<update id="logicDeletePictureBynew_id">
+		update 
+			news_multimedia  a
+		set a.is_delete =1
+			where 
+				a.news_id =#{news_id}
+	</update>
+	
+	<select id="newsCategoryList" resultType="map">
+	   select
+             category_id
+            ,category_name
+            ,parent_category_id
+	   from news_category
+	</select>
+	
+	<select id="listCompetitiony" resultType="map">
+	   select 
+	        competition_id
+	       ,competition_name
+	   from competition
+	   where is_delete = '0' 
+	</select>
+	
+	<select id="listClub" resultType="map">
+	   select 
+	        club_id
+	       ,club_name
+	   from  club
+	   where is_delete ='0'
+	</select>
+	
+	<insert id="saveNewsRange">
+	   insert into news_range (
+             news_id
+            ,range_type
+            ,circle_id
+            ,is_delete
+         ) values
+         <foreach collection="rangeList" item="range" separator=",">
+            (
+             #{range.news_id}
+            ,#{range.range_type}
+            ,#{range.circle_id}
+            ,0
+            )
+         </foreach>
+	</insert>
+	
+	<insert id="saveNewsCategory" >
+        insert into news_category_relation (
+             news_id
+            ,category_id
+            ,is_delete
+         ) values 
+         <foreach collection="categoryList" item="cate" separator=",">
+         (
+             #{newsID}
+            ,#{cate}
+            ,0
+           )
+         </foreach>
+	</insert>
+	
+
+	<update id="logicDeleteRangeByNewsID">
+	    update news_range 
+	       set is_delete = 1 
+	     where  news_id = #{news_id}
+	</update >
+	
+	<update id="logicDeleteCategoryByNewsID">
+		update news_category_relation 
+	       set is_delete = 1 
+	     where  news_id = #{news_id}
+	</update>
+	<!--  Map<String ,Object> findNewsRangeById(Integer news_id ); -->
+	<select id="findNewsRangeById" resultType="map">
+		select 
+			 a.range_type as news_range 
+			,coalesce(a.circle_id ,-1)as circle_id
+		from news_range  a
+		where news_id = #{news_id}
+			and a.is_delete=0
+	
+	
+	</select>
+	
+</mapper>

@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hongzhi.zswh.back.club.dao.ClubScoreDao">
+
+   <select id="compList"  resultType="map">
+        select 
+              competition_id
+             ,competition_name
+        from competition 
+       where is_delete='0' 
+       order by 
+             case when  CURDATE() > cast(competition_start_date as date)   
+                  then  abs(to_days(CURDATE())-to_days(cast(competition_start_date as date)) )+365
+                  else abs(to_days(CURDATE())-to_days(cast(competition_start_date as date)) )  
+                  end 
+            ,case when  CURDATE() > cast(registration_start_date as date) 
+                  then  abs(to_days(CURDATE())-to_days(cast(registration_start_date as date)) )+365
+                  else  abs(to_days(CURDATE())-to_days(cast(registration_start_date as date)) ) 
+                  end   
+            ,competition_id
+   </select>
+        
+   <select id="clubList" resultType="map">
+        select 
+              a.club_id 
+             ,a.club_name
+             ,coalesce(
+             <if  test="compID !=null and compID !=0 " >
+              b.rank , 
+             </if>
+              999) as rank
+        from club  a 
+             <if  test="compID !=null and compID !=0 " >
+   left join club_competition_score b 
+          on a.club_id = b.club_id 
+         and b.competition_id = #{compID }
+             </if>
+    <if test="search !=null and search !='' ">
+      where  club_name like concat('%',#{search},'%')
+    </if>
+      order by rank, convert(club_name USING gbk) COLLATE gbk_chinese_ci 
+   </select>
+   
+    <insert id="insertScore" >
+         replace  into  club_competition_score (
+             club_id
+            ,competition_id
+            ,rank
+         )  values 
+         <foreach collection="clubentity" item="cs" separator=",">
+            (
+                #{cs.club_id}
+               ,#{cs.competition_id}
+               ,#{cs.rank}
+            )
+         </foreach>
+    </insert>
+    
+    <insert id="modifyScore">
+    <!-- 
+          update  club_competition_score 
+            set   rank= #{rank}
+          where  club_id = #{club_id}
+            and  competition_id = #{competition_id}
+     -->
+         replace  into  club_competition_score (
+             club_id
+            ,competition_id
+            ,rank
+         )  values 
+            (
+                #{club_id}
+               ,#{competition_id}
+               ,#{rank}
+            )
+    </insert>
+    
+    <update id="publish">
+     update competition
+        set club_score_publish = #{pub}
+     where  competition_id = #{compID}
+    </update>
+    
+   
+
+</mapper>

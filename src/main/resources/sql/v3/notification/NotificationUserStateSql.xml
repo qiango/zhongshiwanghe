@@ -1,0 +1,180 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hongzhi.zswh.app_v3.notification.dao.NotificationUserStateDao">
+    
+   <select id="userNotiList"  resultType="map">
+   select 
+        user_id 
+        ,sum(
+               case when category_code = '1'  
+                    then  noti_count else 0 end
+               )    as system
+        ,sum(
+               case when category_code = '2' 
+                    then  noti_count else 0 end 
+             )   as  subscribe
+
+    from notification_user_state  
+   where user_id =  #{user_id} 
+   group by user_id 
+   </select> 
+   
+    <insert id="updateNotificationState">
+   replace into notification_user_state 
+    ( user_id ,category_code ,noti_count  
+   ) 
+      select 
+  noti_to
+  ,concat(noti_category,'')
+  ,sum( case  when  already_read = '0' then 1 
+     else 0 end )   
+  from notification  
+  where is_delete = '0'
+  <if test=" _parameter != null and  _parameter != ''  ">
+    and  noti_to = #{user_id}
+  </if>
+  group by  noti_to,noti_category 
+    
+    </insert>
+    
+      <insert id="updateNotificationStateMultipleUser">
+   replace into notification_user_state 
+    ( user_id ,category_code ,noti_count  
+   ) 
+      select 
+  noti_to
+  ,concat(noti_category,'')
+  ,sum( case  when  already_read = '0' then 1 
+     else 0 end )   
+  from notification  
+  where is_delete = '0'
+    and  noti_to  in (
+     <foreach collection="userlist" item="user" separator=",">
+       #{user} 
+     </foreach>
+    )
+  group by  noti_to,noti_category 
+    </insert>
+   
+   
+   <insert id="saveNewNoti">
+   insert into  notification  (
+             noti_from
+           , noti_to
+           , noti_category
+           , notification_body
+           , create_time
+           , already_read
+           , is_delete
+   ) values (
+            #{noti_from}
+           ,#{noti_to}
+           ,#{noti_category}
+           ,#{notification_body}
+           ,now() 
+           ,'0'
+           ,'0'
+   )
+   </insert>
+   
+    <insert id="saveMultipleNoti">
+          insert into  notification  (
+                    noti_from
+                  , noti_to
+                  , noti_category
+                  , notification_body
+                  , create_time
+                  , already_read
+                  , is_delete
+          ) values
+          <foreach collection="userList" item="user" separator=",">
+           (
+                   #{notiEntity.noti_from}
+                  ,#{user}
+                  ,#{notiEntity.noti_category}
+                  ,#{notiEntity.notification_body}
+                  ,now() 
+                  ,'0'
+                  ,'0'
+          )
+          </foreach>
+   </insert>
+   
+   <select id="categoryList" resultType="map">
+    select 
+         code as category_id 
+        ,value as category_name 
+        from dictionary 
+       where p_code='noti_category'  
+       and language = #{language}
+   </select>
+    
+    
+    <select id="readNotification" resultType="map">
+        select 
+             id
+           , coalesce(b.nickname,b.user_login_name ) user_name_from 
+           , coalesce(c.nickname,c.user_login_name ) user_name_to 
+           , noti_category
+           , d.value  as noti_category_name 
+           , notification_body
+           , a.create_time
+           , case when a.create_time  >  date_format(now(),'%Y%m%d')  
+                  then  date_format(a.create_time,'%H:%i')  
+                  when  a.create_time  >  date_format(now() - interval 1 day,'%Y%m%d')
+                  then (select value from dictionary where code = 'yesterday' and p_code ='date_alias' and  language = #{language} ) 
+                  when  a.create_time  >  date_format(now() - interval 2 day,'%Y%m%d')
+                  then (select value from dictionary where code = 'beforeyesterday' and p_code ='date_alias' and  language = #{language} ) 
+                   else  date_format(a.create_time,'%Y-%m-%d')  end   as create_time_alias 
+           , a.already_read       
+      from  notification   a  
+ left join  user_info   b
+        on  a.noti_from = b.user_id 
+ left join  user_info  c 
+        on  a.noti_to  = c.user_id
+ left join  dictionary  d 
+        on  a.noti_category = d.code 
+       and  d.p_code = 'noti_category' 
+       and  d.language = #{language}
+    where  a.is_delete = '0' 
+      and  a.noti_to = #{user_id}
+
+     <if test="search !=null and search !='' ">
+      and  a.notification_body like   concat('%',#{search},'%') 
+     </if>
+     <if test="noti_id !=null and noti_id !='' ">
+      and  a.id = #{noti_id}
+     </if>
+     <if test="category !=null and category !='' ">
+      and  a.noti_category=#{category}
+     </if>
+   order by  create_time desc  
+    </select>
+    
+    <update id="markRead">
+    update notification  
+       set  already_read='1'
+     where  noti_to = #{user_id}
+      <if test="noti_id !=null and noti_id !='' ">
+      and  id = #{noti_id}
+     </if>
+     <if test="category !=null and category !='' ">
+      and  noti_category=#{category}
+     </if> 
+    </update>
+    
+    <update id="logicDelete">
+    update notification  
+       set  is_delete ='1'
+     where id = #{noti_id}
+       and noti_to = #{user_id}
+    </update>
+    
+    <select id="allUserId" resultType="Integer">
+        select 
+            user_id 
+        from user_info 
+        where is_delete = '0'
+    </select>
+
+</mapper>

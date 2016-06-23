@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hongzhi.zswh.app_v5.dao.V5GoodsDao">
+ 
+	<select id="getGoodsById"  resultType="com.hongzhi.zswh.app_v5.entity.V5GoodsEntity">
+    	select 
+        	 id
+            ,goods_code
+            ,category
+            ,name
+            ,goods_describe
+         from                      
+         mall_goods
+         where status='1' 
+    </select>
+    
+ <select id="getAllPropertiesByGoodsId" resultType="com.hongzhi.zswh.app_v5.entity.V5GoodsProperties">
+        select 
+             properties_id      
+            ,goods_id           
+            ,property_code          
+            ,property_value         
+            ,price_effect       
+      from 
+           mall_goods_properties 
+     where goods_id = #{goods_id}     
+    </select>
+    
+
+    <!-- V5GoodsInfoEntity selectGoodsInfoById(@Param("goods_id")Integer goods_id) -->
+	<select id="selectGoodsInfoById" resultType="com.hongzhi.zswh.app_v5.entity.V5GoodsInfoEntity">
+		select 
+			 a.id as goods_id
+			,coalesce(a.name ,'')as goods_name
+			,coalesce(a.goods_describe ,'')as goods_describe
+			,coalesce(b.price ,'')as goods_origin_price
+			,coalesce(b.current_price ,'')as goods_current_price					
+		from mall_goods a
+		left join mall_goods_price b 
+			on 
+				a.id =b.goods_id
+			and 
+				b.discount_id =1
+			where a.id =#{goods_id}
+	</select>
+	<!-- List<V5GoodsImage> selectGoods_image(@Param("goods_id")Integer goods_id); -->
+	<select id="selectGoods_image" resultType="com.hongzhi.zswh.app_v5.entity.V5GoodsImage">
+		select 
+			 c.show_index as show_index
+			,c.picture_url as image_url
+		from mall_goods_picture c
+		where 
+			goods_id =#{goods_id}
+		<![CDATA[ and c.show_index <> 0 ]]>
+  </select>
+     <select id="getAllPriceByGoodsId" resultType="com.hongzhi.zswh.app_v5.entity.V5GoodsPrice">
+           select 
+                 t1.id              
+                ,t1.goods_id          
+                ,t1.properties_id  
+                ,t1.price as goods_origin_price          
+                ,t1.current_price as goods_origin_price              
+                ,t1.discount_id    
+                ,t2.discount_type
+                ,t2.param
+                ,t2.method
+           from 
+                mall_goods_price  t1  
+           left join  mall_discount t2
+                  on  t1.discount_id = t2.id    
+           where goods_id = #{goods_id}     
+    </select>
+    
+    
+    <select id="goodsPicturesByGoodsId"  resultType="com.hongzhi.zswh.app_v5.entity.V5GoodsPicture">
+    <!-- 
+     * @param index   -1:all , 0:=0 , 1:<>0
+    List<V4GoodsPicture> goodsPicturesByGoodsId(@Param("goods_id") Integer goodsId,@Param("index") Integer index);  
+     -->
+          select 
+                id
+               ,picture_url
+               ,show_index
+           from 
+                 mall_goods_picture
+           where status = '1' 
+           <if test="index !=null and index ==0 " >
+             and show_index = 0 
+           </if>
+           <if test="index !=null and index ==1 " >
+      <![CDATA[ and show_index <> 0  ]]>
+           </if>
+             and goods_id = #{goods_id}     
+    </select>
+	<!-- List<V5Coupon> coupon_list(@Param("goods_id")Integer goods_id) -->
+    <select id="coupon_list" resultType="com.hongzhi.zswh.app_v5.entity.V5Coupon">
+    	select 
+			 a.coupon_id
+			,coalesce(a.coupon_name ,'') as coupon_name
+			,coalesce(a.coupon_describe ,'') as coupon_describe
+			,coalesce(a.coupon_type ,0) as coupon_type
+			,coalesce(a.use_scope ,0) as use_scope
+			,coalesce(a.discount_type ,0)	as discount_type
+		from mall_coupon a
+			left join 
+				mall_coupon_properties b 
+			on 
+				a.coupon_id= b.coupon_id 
+			and 
+				b.property_code = "goods_id"
+			and 
+				b.property_value = #{goods_id} 
+		where  ( a.coupon_type = 1 
+			or (a.coupon_type=2 and b.coupon_id is not null) )
+		<![CDATA[    and a.start_time <= now()  ]]>
+		<![CDATA[    and a.end_time >= now()    ]]>
+		    and  a.coupon_status = '1' 
+		order by a.use_scope
+    </select>
+	<!-- Map<String,Object>  coupon_properties(@Param("coupon_id")Integer coupon_id) -->
+	<select id="coupon_properties" resultType="map">
+		select 
+			 a.property_code
+			,a.property_value 
+		from 
+			mall_coupon_properties as a
+		where a.coupon_id=#{coupon_id}
+	</select>
+	
+	<select id="couponPropertiesByGoodsID" resultType="map">
+	   select 
+	         a.coupon_id
+            ,a.property_code
+            ,a.property_value 
+        from 
+            mall_coupon_properties as a
+        where a.coupon_id in (
+            <foreach collection="couponIDList" item="couponId" separator=",">
+                #{couponId}
+            </foreach>
+        )
+	</select>
+	
+	<!-- List<Map<String,Object>> selectGoods_properties(@Param("goods_id")Integer goods_id) -->
+	<select id="selectGoods_properties" resultType="map">
+		select   
+			 a.property_code
+		    ,a.property_value
+		from mall_goods_properties a
+		where a.goods_id =#{goods_id}
+	</select>
+	
+</mapper>

@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+	<html lang="zh-cn">
+	<head>
+		<meta charset="UTF-8">
+		<title style="text-align:center;">城俱杯</title>
+		<meta name="viewport" content="width=device-width,height=device-height, initial-scale=1, maximum-scale=1, 
+		            minimum-scale=1, user-scalable=no" />
+		<link rel="stylesheet" type="text/css" href="../style/font-awesome/css/font-awesome.min.css">
+		<style type="text/css">
+		body{font-family:  "Microsoft Yahei";margin: 0;}
+	            html,body{height: 100%;}
+		a{text-decoration: none;display:block;color:#0e0e0d;-webkit-tap-highlight-color: transparent;
+		           -webkit-touch-callout: none; -webkit-user-select: none;}
+		.main{position: relative; background-image:url(../images/image.jpg);background-size:100% 100%; height: 100%;text-align: center;}
+           	            .phone{position: absolute;left: 20%;top: 61.2%;height: 4.43%;width: 56%;border-style: none;color: #000;font-weight: normal;font-size: 16px;outline:medium;display: inline-block;background-color: rgba(0,0,0,0);}
+		.phone::-webkit-input-placeholder {color: #c7c5c5;font-weight: 500;letter-spacing: 3px;}
+		.hide{position: absolute;left: 78%;top: 62.2%;display: inline-block;color:#666; }
+		.receive{position: absolute;left: 20%;top: 70%;background-color:rgba(0,0,0,0);width: 58%;height: 4.42%;color:#0e0e0d; font-size: 18px;font-weight: 700;text-align: center;letter-spacing: 1px; display: inline-block;}
+		/* 成功领取红包 */
+		.success_receive{ position: absolute;top: 17%; left: 3%; background-image:url(../images/image1a.png);background-size:100% 100%; background-repeat: no-repeat;  height: 58.8%;width: 95%;display: none;z-index: 501;}
+		.img{position: absolute;top: 7% ;left: 80%;background-image:url(../images/image1b.png);background-size:100% 100%;width: 18.33%;height: 16%; display: inline-block;}
+	            .success_receive  a,
+	            .has_received  a{color:#c63630 ; font-size: 20px;font-weight: 400;}
+	            /* 成功领取红包 */
+		.has_received{position: absolute;top: 17%; left: 3%;display: none;z-index: 501;background-image:url(../images/image2.png);background-size:100% 100%; background-repeat: no-repeat;  height: 58.8%;width: 95%;}
+		.share{top: 76.2%; left: 33%;   display: block;position: absolute;} 
+	            /* 验证弹窗 */
+		.mask{position: absolute;left: 0;top: 0;z-index: 500;width: 100%;height: 100%;background: #000;opacity: 0.5;filter:alpha(opacity=50);display:none;}
+		.message{position: absolute;top:51.6%;left: 20%;width:60%;background: #fff;line-height:30px;border-radius:15px;display: inline-block; color: #000;}
+  		.message p{position: relative;display: inline-block;margin:0 auto;}
+		.dialog{ position: absolute;left: 0;top: 0;width: 100%;height: 100%;font-family: "Microsoft Yahei";z-index: 501;display:none;}
+		.time-out{top: 60%; left: 15%; display: none;position: absolute;height: 115px;width: 70%; background-color: #E35138;}
+		.prohibit{display: inline-block;margin-top: 20px;font-size: 20px;color: #fff;}
+		.recharge_success,
+		.recharge_fail{top: 35%; left: 8%; display: none;position: absolute;z-index: 501;height: 35%;width: 85%; background-color: #FDD342;border-radius: 15px;border:1px ;}
+		.success,
+		.fail{display: inline-block;width: 80%; margin-top: 28%;font-size: 25px;color: #D6513F;font-weight: 700;}
+		.suc_close{position: absolute;top: 7%;left: 92%;}		
+ </style>
+</head>
+ <body>
+	<div class="main">
+		<!-- 主内容 -->
+		 <input type="text"  class="phone" id="phone"  placeholder="请输入手机号" maxlength="11" >
+		<i class="fa fa-times hide" aria-hidden="true"></i>		               	
+		<div ><a href="###" class="receive">立即领取</a></div> 
+		<!-- 成功领取红包 -->
+		<div class="success_receive">
+		<a class="img" ></a>	               	
+		<div class="share"><a href="###">分享到朋友圈</a></div>	
+		</div>
+		<!-- 已经领过红包 -->
+		<div class="has_received">
+		<a class="img"></a>	               	
+		<div class="share"><a href="###">分享到朋友圈</a></div>	
+		</div>
+		<!-- 禁止领取弹出框 -->
+		<div class="time-out">
+			<div class="prohibit">请在17:00-21:00时间段领取</div>
+		</div>
+		<!-- 充值成功 -->
+		<div class="recharge_success">
+			<div class="success">恭喜你！领取成功</div>
+		</div>
+		<!-- 充值失败 -->
+		<div class="recharge_fail">
+			<div class="fail">您已经领过啦！不能重复领取哦</div>
+		</div>
+		<!--验证信息弹出框-->
+		<div class="dialog">
+		      <div class="message">
+		            <p ></p>
+		      </div>       
+		</div>	
+		<!--遮罩-->
+    		<div class="mask"></div>
+	</div>
+	<script src="../style/jquery-1.11.3/jquery.min.js"></script>
+	<script  type="text/javascript">
+		$(function() {
+			/*遮罩尺寸获取*/
+			var $win = $(window),
+			            $mask = $('.mask');
+			        function setMask(){
+			            $mask.width($win.width());
+			            $mask.height($win.height() + $win.scrollTop());
+			        }
+			        $win.on('scroll load resize', function() {
+			            setMask();
+			        });
+			$('html').css({height: $(window).height()})
+
+			/*清空输入框js*/
+			$('.hide').css('visibility','hidden');
+			$('.phone').mouseleave(function(){
+			$('.hide').mouseleave(function(){
+			$('.hide').css('visibility','hidden');
+				});			
+			});
+			$('.phone').on('keyup focus',function(){
+				if ($('.phone').val()=="") {
+				       $('.hide').css('visibility','hidden');	
+				}else{
+				       $('.hide').css('visibility','visible');
+				}	
+			});
+			$('.hide').click(function(){
+				$('.phone').val('');
+			});
+		});
+		function clock(){
+				 var curr = new Date();
+				 var time = curr.getHours();
+					 if ( time >= 17 && time <21 ){
+					 	$('.time-out').css("display","none");	
+					 }else{
+					 	$('.time-out').css("display","inline-block");
+					 }
+				};
+		clock();
+
+		/*验证信息弹出框*/
+		$('.receive').click(function(){
+			$('.receive').css("cursor","Pointer")
+			if($(".phone").val() == ""){
+		                $(".dialog").show();
+               	                $(".mask").show();
+		                $(".message p").text("手机号不能为空");
+		                setTimeout(function(){
+		                $(".dialog").hide();
+               	                $(".mask").hide();
+		                },1200);
+		                return false;
+		            } else if(!/^(13[0-9]|15[012356789]|17[6-8]|18[0-9]|14[5-7])[0-9]{8}$/.test($(".phone").val())) {
+		                $(".dialog").show();
+               	                $(".mask").show();
+		                $(".message p").text('请输入正确的手机号');
+		                setTimeout(function(){
+		                $(".dialog").hide();
+               	                $(".mask").hide();
+		                },1200);
+		                return false;
+		            };
+		            /*ajax交互*/
+		            if(/^(13[0-9]|15[012356789]|17[6-8]|18[0-9]|14[5-7])[0-9]{8}$/.test($(".phone").val())) {
+			        $.ajax({
+		               	type : "post",
+		                          url : "http://api.chengjubei.com/a/b.htmls?phone="+$("#phone").val(),
+		                          dataType:"json",
+		                          headers:{'Accept':'*/*'},
+		                          success: function(data){ 
+		                        	  if(data.code==0) {  
+			               	                $(".mask").show();
+			               	                $(".success_receive").show();
+	               	                		$(".img").show();
+			               	                $(".recharge_success").show();
+											$('.img').click(function(){
+												$('.success_receive').hide();
+												$('.recharge_success').hide();
+												$(".img").hide();
+												$(".mask").hide();
+					                		});
+					                		return false;
+							     	  }else {
+											$(".mask").show();
+											$(".success_receive").show();
+											$(".img").show();
+											$(".fail").text(data.message);
+											$(".recharge_fail").show();
+							                $('.img').click(function(){
+							                	$('.success_receive').hide();
+							                	$('.recharge_fail').hide();
+							                	$(".img").hide();
+							                	$(".mask").hide();
+							                });
+							                return false;
+							     	  }
+		                          }    
+	   
+		                  });
+
+			        	 /*领取弹窗*/
+				/*if($(".phone").val()==13733182055) {  
+	               	                $(".mask").show();
+	               	                $(".success_receive").show();
+	               	                $(".img").show();
+			                $('.img').click(function(){
+			                	$('.success_receive').hide();
+			                	$(".mask").hide();
+			                	$(".img").hide();
+			                });
+			                return false;
+			            }else if($(".phone").val()==13733182056){
+			                $(".mask").show();
+	               	                $(".has_received").show();
+	               	                $(".img").show();
+			                $('.img').click(function(){
+			                	$('.has_received').hide();
+			                	$(".mask").hide();
+			                	$(".img").hide();
+			                });
+			                return false;
+			            }*/
+		                return false;
+		            };
+		        
+		})		
+	</script>
+</body>
+</html>
+		
