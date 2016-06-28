@@ -1,5 +1,6 @@
 package com.hongzhi.zswh.app_v6.dao;
 
+import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
 /**
@@ -7,4 +8,5 @@ import org.springframework.stereotype.Repository;
  */
 @Repository
 public interface V6ClubDao {
+    int saveClubPic(@Param("picUrl")String picUrl,@Param("club_id") String club_id);
 }
