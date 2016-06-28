@@ -77,7 +77,7 @@
     <select id="selectNewsById" resultType="com.hongzhi.zswh.app_v5.entity.V5NewsDetailEntity">
         select 
               news_id
-             ,news_titl
+             ,news_title
              ,news_abstract
              ,news_content
              ,DATE_FORMAT(create_time,'%Y-%m-%d %H:%i:%s')  as create_time
