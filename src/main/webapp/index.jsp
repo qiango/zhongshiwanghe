@@ -1,4 +1,4 @@
-WEB-INF<%@ page language="java" pageEncoding="UTF-8"%>
+<%@ page language="java" pageEncoding="UTF-8"%>
 
 <%
 	String path = request.getContextPath();
