@@ -1,7 +1,13 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.hongzhi.zswh.app_v6.dao.V6ClubDao">
-    
+    <update id="saveClubPic">
+        update club a
+        set
+          a.club_pic = #{picUrl}
+        where a.club_id = #{club_id}
+          and a.is_delete = 0
+    </update>
 
 
 </mapper>
