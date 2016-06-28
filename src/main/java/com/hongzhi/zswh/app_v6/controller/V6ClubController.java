@@ -5,7 +5,6 @@ import com.hongzhi.zswh.util.basic.DictionaryUtil;
 import com.hongzhi.zswh.util.basic.ObjectUtil;
 import com.hongzhi.zswh.util.basic.SessionUtil;
 import com.hongzhi.zswh.util.basic.sessionDao.SessionProperty;
-import com.hongzhi.zswh.util.date.DateFormat;
 import com.hongzhi.zswh.util.exception.HongZhiException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -26,6 +25,7 @@ public class V6ClubController {
     private SessionUtil sess;
     @Autowired
     private DictionaryUtil dic;
+
     @ResponseBody
     @RequestMapping("/outofclub")
     public String OutOfClub(HttpSession session, String session_id, Integer userId){
@@ -38,6 +38,24 @@ public class V6ClubController {
         } catch (HongZhiException e) {
             return ObjectUtil.jsonOutError(e.getCode(), dic.getCodeValue(e.getCode(), language ) );
         }
+    }
+
+
+
+    @ResponseBody
+    @RequestMapping("/upClubPic")
+    public String saveClubPic(HttpSession session, String session_id, String picUrl, String club_id){
+
+        SessionProperty properties ;
+        String language = "zh";
+        try {
+            properties = sess.sessionEffective(session,session_id , "/v6/club/upClubPic");
+            language = properties.getLanguage();
+            return ObjectUtil.jsonOut( clubService.saveClubPic(picUrl,club_id) );
+        } catch (HongZhiException e) {
+            return ObjectUtil.jsonOutError(e.getCode(), dic.getCodeValue(e.getCode(), language ) );
+        }
+
     }
 
 }

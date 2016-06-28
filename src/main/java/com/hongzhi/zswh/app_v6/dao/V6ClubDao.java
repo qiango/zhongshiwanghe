@@ -1,6 +1,9 @@
 package com.hongzhi.zswh.app_v6.dao;
 
+
 import com.hongzhi.zswh.app_v6.entity.UserDetailEntity;
+
+
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
@@ -14,6 +17,7 @@ import java.util.Objects;
  */
 @Repository
 public interface V6ClubDao {
+
     /**
      * 查询用户参加过的赛事
      * @param userId
@@ -38,4 +42,7 @@ public interface V6ClubDao {
      * @param userId
      */
     void deleteUserDetailByUserId(@Param("userId") Integer userId);
+
+    int saveClubPic(@Param("picUrl")String picUrl,@Param("club_id") String club_id);
+
 }
