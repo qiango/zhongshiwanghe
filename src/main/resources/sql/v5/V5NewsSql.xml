@@ -14,7 +14,8 @@
 
         from  news  a 
         left join news_range b
-               on a.news_id = b.news_id 
+               on a.news_id = b.news_id
+              and b.is_delete = 0
 
         left join (
                 select news_id,count(user_id) as watch_count 
@@ -82,7 +83,7 @@
              ,DATE_FORMAT(create_time,'%Y-%m-%d %H:%i:%s')  as create_time
              ,news_type
         from news 
-        where news_id = #{news_id} 
+        where news_id = #{news_id}
     </select>
     
     <!--List<Integer> getUserCompetition(@Param("user_id")Integer user_id) -->

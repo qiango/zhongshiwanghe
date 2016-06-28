@@ -14,7 +14,8 @@
 
         from  news  a 
         left join news_range b
-               on a.news_id = b.news_id 
+               on a.news_id = b.news_id
+              and b.is_delete = 0
 
         left join (
                 select news_id,count(user_id) as watch_count 
