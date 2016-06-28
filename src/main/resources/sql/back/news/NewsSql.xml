@@ -89,6 +89,7 @@
 		<if test="other != null">
 			and a.news_title like CONCAT('%', #{other},'%')
 		</if>
+        order by  a.create_time desc
 		<if test="pageStartRow !=null  and   pageRecorders != null">
 			limit #{pageStartRow,jdbcType=INTEGER } ,#{pageRecorders,jdbcType=INTEGER }
 		</if>
