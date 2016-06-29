@@ -259,34 +259,53 @@ public String getLanguage() {
 					+ "saxonPage('" + String.valueOf(i) + "');return false;\">"
 					+ i + "</a></li>";
 			
-			if (i == 1 && this.page > 5 ) {
-				//当前页大于5时需要...	
-				sb.append(spanClzz);
-				sb.append("<li><a href='javascript:void(0);' class='page'>...</a></li>");
-
-			} else if (i == this.page-1 || i == this.page-2 || i == this.page+1 || i == this.page+2 && this.page > 5){
-				//当前页大于5时同时显示当前页的前后各两页
-				sb.append(spanClzz);
-			} else if (this.page == i) {
-				//显示当前页
-				spanClzz = "<li><span class='bg-theme border-theme color-white'>" + i + "</span></li>";
-				sb.append(spanClzz);
-			} else if (i <= 5 && this.page < 6) {
-				//当前页在前5页
-				sb.append(spanClzz);				
-			} else if(i >= 6 && i <= 9){
-				sb.append(spanClzz);				
-			}
-
-			// 当大于9页数的时候才进行分页显示
-			if (this.getTotalPages() - 2 > 7 && this.getTotalPages() - this.page > 2 && i == this.getTotalPages()) {
-//				if (i == 5) {
-//					i = this.getTotalPages() - 2;
-				if(this.getTotalPages() - this.page > 3){
-					sb.append("<li><a href='javascript:void(0);' class='page'>...</a></li>");
+			if(this.getTotalPages()<=9){
+				if (this.page == i) {
+					//显示当前页
+					spanClzz = "<li><span class='bg-theme border-theme color-white'>" + i + "</span></li>";
 				}
+				sb.append(spanClzz);
+			} else {
+				if (i == 1 && this.page >= 4 ) {
+					//当前页大于5时需要...	
 					sb.append(spanClzz);
-//				}
+					if(this.page != 4){
+						
+						sb.append("<li><a href='javascript:void(0);' class='page'>...</a></li>");
+					}
+	
+				} else if (i == this.page-1 || i == this.page-2 || i == this.page+1 || i == this.page+2){
+					//当前页大于5时同时显示当前页的前后各两页
+	//				if( i == this.page-2 && this.page>10){
+	//					sb.append("<li><a href='javascript:void(0);' class='page'>...</a></li>");
+	//				}
+					sb.append(spanClzz);
+				} else if (this.page == i) {
+					//显示当前页
+					spanClzz = "<li><span class='bg-theme border-theme color-white'>" + i + "</span></li>";
+					sb.append(spanClzz);
+				} 
+	//			else if (i <= 5 && this.page < 6) {
+	//				//当前页在前5页
+	//				sb.append(spanClzz);				
+	//			} 
+	//			else if(i <= 8){
+	//				sb.append(spanClzz);
+	//				if(i == 8 && this.page>10){
+	//					sb.append("<li><a href='javascript:void(0);' class='page'>...</a></li>");
+	//				}
+	//			}
+	
+				// 当大于9页数的时候才进行分页显示
+				if (this.getTotalPages() - 2 > 7 && this.getTotalPages() - this.page > 2 && i == this.getTotalPages()) {
+	//				if (i == 5) {
+	//					i = this.getTotalPages() - 2;
+					if(this.getTotalPages() - this.page > 3){
+						sb.append("<li><a href='javascript:void(0);' class='page'>...</a></li>");
+					}
+						sb.append(spanClzz);
+	//				}
+				}
 			}
 		}
 		// 判断是否有下一页
@@ -376,35 +395,53 @@ public String getLanguage() {
 			String spanClzz = "<li><a href=\"javascript:void(0)\" onclick=\""
 					+ "saxonPage('" + String.valueOf(i) + "');return false;\">"
 					+ i + "</a></li>";
-			
-			if (i == 1 && this.page > 5 ) {
-				//当前页大于5时需要...	
-				sb.append(spanClzz);
-				sb.append("<li><a href='javascript:void(0);' class='page'>...</a></li>");
-
-			} else if (i == this.page-1 || i == this.page-2 || i == this.page+1 || i == this.page+2 && this.page > 5){
-				//当前页大于5时同时显示当前页的前后各两页
-				sb.append(spanClzz);
-			} else if (this.page == i) {
-				//显示当前页
-				spanClzz = "<li><span class='bg-theme border-theme color-white'>" + i + "</span></li>";
-				sb.append(spanClzz);
-			} else if (i <= 5 && this.page < 6) {
-				//当前页在前5页
-				sb.append(spanClzz);				
-			} else if(i >= 6 && i <= 8){
-				sb.append(spanClzz);				
-			}
-
-			// 当大于9页数的时候才进行分页显示
-			if (this.getTotalPages() - 2 > 7 && this.getTotalPages() - this.page > 2 && i == this.getTotalPages()) {
-//				if (i == 5) {
-//					i = this.getTotalPages() - 2;
-				if(this.getTotalPages() - this.page > 3){
-					sb.append("<li><a href='javascript:void(0);' class='page'>...</a></li>");
+			if(this.getTotalPages()<=9){
+				if (this.page == i) {
+					//显示当前页
+					spanClzz = "<li><span class='bg-theme border-theme color-white'>" + i + "</span></li>";
 				}
+				sb.append(spanClzz);
+			} else {
+				if (i == 1 && this.page >= 4 ) {
+					//当前页大于5时需要...	
 					sb.append(spanClzz);
-//				}
+					if(this.page != 4){
+						
+						sb.append("<li><a href='javascript:void(0);' class='page'>...</a></li>");
+					}
+	
+				} else if (i == this.page-1 || i == this.page-2 || i == this.page+1 || i == this.page+2){
+					//当前页大于5时同时显示当前页的前后各两页
+	//				if( i == this.page-2 && this.page>10){
+	//					sb.append("<li><a href='javascript:void(0);' class='page'>...</a></li>");
+	//				}
+					sb.append(spanClzz);
+				} else if (this.page == i) {
+					//显示当前页
+					spanClzz = "<li><span class='bg-theme border-theme color-white'>" + i + "</span></li>";
+					sb.append(spanClzz);
+				} 
+	//			else if (i <= 5 && this.page < 6) {
+	//				//当前页在前5页
+	//				sb.append(spanClzz);				
+	//			} 
+	//			else if(i <= 8){
+	//				sb.append(spanClzz);
+	//				if(i == 8 && this.page>10){
+	//					sb.append("<li><a href='javascript:void(0);' class='page'>...</a></li>");
+	//				}
+	//			}
+	
+				// 当大于9页数的时候才进行分页显示
+				if (this.getTotalPages() - 2 > 7 && this.getTotalPages() - this.page > 2 && i == this.getTotalPages()) {
+	//				if (i == 5) {
+	//					i = this.getTotalPages() - 2;
+					if(this.getTotalPages() - this.page > 3){
+						sb.append("<li><a href='javascript:void(0);' class='page'>...</a></li>");
+					}
+						sb.append(spanClzz);
+	//				}
+				}
 			}
 		}
 		// 判断是否有下一页

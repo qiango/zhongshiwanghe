@@ -151,6 +151,7 @@
         submitHandler : function(){
            	if(!$('#ifm')[0].contentWindow.uploadTag){
            		alert('请先上传视频或等待视频上传完成');
+                return;
            	}
             if(confirm("确定要提交数据吗？")) {
             	//提交
