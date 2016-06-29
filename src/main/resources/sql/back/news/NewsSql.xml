@@ -19,6 +19,8 @@
 			,a.news_title
 			,a.news_abstract
 			,a.news_content
+			, a.news_subtitle
+			,a.weights_order
 			
 		from  news a  
 		where 
@@ -42,14 +44,24 @@
 	            	a.news_abstract=#{news_abstract}, 
 	        	</if> 
 	        	<if test="news_content != null">  
-	            	a.news_content=#{news_content}  
-	        	</if> 
+	            	a.news_content=#{news_content},
+	        	</if>
+				<if test="news_subtitle != null">
+					a.news_subtitle=#{news_subtitle},
+				</if>
+				<if test="weights_order != null">
+					a.weights_order=#{weights_order}
+				</if>
 			</set>
 		where 
 			a.news_id=#{news_id}
 	</update>
 	
-	
+	<select id="selectMaxByWeights_order" resultType="Integer">
+		select  coalesce(MAX(a.weights_order),0 )
+		from news a
+
+	</select>
 
 	<select id="listNewsByPageCount" resultType="Integer">
 		select 
@@ -70,6 +82,8 @@
 		   ,a.news_content
 		   ,a.create_user
 		   ,a.news_status
+		   ,a.news_subtitle
+		   ,a.weights_order
 		   ,date_format(a.create_time,'%Y-%m-%d') as create_time
 		   ,b.value as news_type_name
 		   ,c.value as news_status_name
@@ -86,12 +100,12 @@
 			and c.p_code='news_status'
  			and b.language='zh'
 		where a.news_status!=0
-		<if test="other != null">
-			and a.news_title like CONCAT('%', #{other},'%')
+		<if test="pageModel.other != null">
+			and a.news_title like CONCAT('%', #{pageModel.other},'%')
 		</if>
-        order by  a.create_time desc
-		<if test="pageStartRow !=null  and   pageRecorders != null">
-			limit #{pageStartRow,jdbcType=INTEGER } ,#{pageRecorders,jdbcType=INTEGER }
+        order by   coalesce( a.weights_order,#{max}) asc , a.create_time desc
+		<if test="pageModel.pageStartRow !=null  and   pageModel.pageRecorders != null">
+			limit #{pageModel.pageStartRow,jdbcType=INTEGER } ,#{pageModel.pageRecorders,jdbcType=INTEGER }
 		</if>
 	</select>
 	<insert id="newSave" useGeneratedKeys="true" keyProperty="news_id">
@@ -104,6 +118,8 @@
 		   ,news_content
 		   ,create_time
 		   ,create_user
+		   ,news_subtitle
+		   ,weights_order
 		)
 		values
 		(
@@ -115,6 +131,8 @@
 		  ,#{news_content }
 		  ,now()
 		  ,#{create_user}
+		  ,#{news_subtitle}
+		  ,#{weights_order}
 		)
 		
 	</insert>

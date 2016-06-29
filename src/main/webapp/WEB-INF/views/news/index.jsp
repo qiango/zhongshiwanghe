@@ -35,8 +35,10 @@
 				<tr>
 					<th>序号</th>
 					<th>资讯标题</th>
+					<th>资讯副标题</th>
 					<th>资讯类型</th>
-				 	<th>资讯摘要</th> 
+				 	<th>资讯摘要</th>
+					<th>权重排序</th>
 					<th>创建日期</th>
 					<th>资讯状态</th>
 					<th>操作</th>
@@ -60,8 +62,10 @@
 			var tds='<tr>';
 			tds += "<td>"+(Number(i)+1)+"</td>";
 			tds += "<td class='wj-title'>"+data[i].news_title+"</td>";
+			tds += "<td class='wj-title'>"+data[i].news_subtitle +"</td>";
 			tds += "<td>"+data[i].news_type_name+"</td>";
-		 	tds += "<td class='wj-title'>"+data[i].news_abstract+"</td>"; 
+		 	tds += "<td class='wj-title'>"+data[i].news_abstract+"</td>";
+			tds += "<td>"+data[i].weights_order+"</td>";
 			tds += "<td>"+data[i].create_time+"</td>";
 			tds += "<td>"+data[i].news_status_name+"</td>";
 			tds += "<td class='text-ellipsis'><a href='#/news/modify' edit_id='"+data[i].news_id+"' class='fa fa-pencil-square-o v-align wj_edit_data' title='编辑'></a><a href='javascript:void(0);' delete_id='"+data[i].news_id+"' delete_path='/news/delete.htmls?news_id="+ data[i].news_id +"' back_path='/news/index' class='fa fa-trash-o wj_delete_data' title='删除'></a></td>";

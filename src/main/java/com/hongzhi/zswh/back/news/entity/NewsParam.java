@@ -30,6 +30,8 @@ public class NewsParam {
 	private String club_id ;
 	private String  news_range  ;
 	private String file_id;
+	private String news_subtitle;
+	private Integer weights_order;
 	
 	
 	public Integer getNews_id() {
@@ -188,6 +190,21 @@ public class NewsParam {
     public void setFile_id(String file_id) {
         this.file_id = file_id;
     }
-    
-    
+
+
+	public Integer getWeights_order() {
+		return weights_order;
+	}
+
+	public void setWeights_order(Integer weights_order) {
+		this.weights_order = weights_order;
+	}
+
+	public String getNews_subtitle() {
+		return news_subtitle;
+	}
+
+	public void setNews_subtitle(String news_subtitle) {
+		this.news_subtitle = news_subtitle;
+	}
 }
