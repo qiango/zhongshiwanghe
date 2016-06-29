@@ -1,14 +1,13 @@
 package com.hongzhi.zswh.back.news.dao;
 
-import java.util.List;
-import java.util.Map;
-
-import org.apache.ibatis.annotations.Param;
-
 import com.hongzhi.zswh.back.news.entity.NewsImageEntity;
 import com.hongzhi.zswh.back.news.entity.NewsParam;
 import com.hongzhi.zswh.back.news.entity.NewsRangeEntity;
 import com.hongzhi.zswh.util.page.PageModel;
+import org.apache.ibatis.annotations.Param;
+
+import java.util.List;
+import java.util.Map;
 
 public interface NewsDao {
 
@@ -20,7 +19,7 @@ public interface NewsDao {
 
 	int listNewsByPageCount(PageModel pageModel);
 
-	List<NewsParam> listNewsByPage(PageModel pageModel);
+//	List<NewsParam> listNewsByPage(PageModel pageModel);
 
 	int newSave(NewsParam newsParam);
 
@@ -78,4 +77,9 @@ public interface NewsDao {
      * @return
      */
     Map<String ,Object> findNewsRangeById(@Param("news_id") String news_id);
+
+    int selectMaxByWeights_order();
+
+
+    List<NewsParam>  listNewsByPage(@Param("pageModel")PageModel pageModel,@Param("max") int max);
 }
