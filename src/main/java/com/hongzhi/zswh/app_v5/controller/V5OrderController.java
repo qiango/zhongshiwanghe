@@ -1,5 +1,12 @@
 package com.hongzhi.zswh.app_v5.controller;
 
+import javax.servlet.http.HttpSession;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
+
 import com.hongzhi.zswh.app_v4.mall.entity.V4OrderEntity;
 import com.hongzhi.zswh.app_v5.entity.V5OrderEntity;
 import com.hongzhi.zswh.app_v5.service.V5OrderService;
@@ -9,12 +16,6 @@ import com.hongzhi.zswh.util.basic.SessionUtil;
 import com.hongzhi.zswh.util.basic.sessionDao.SessionProperty;
 import com.hongzhi.zswh.util.date.DateFormat;
 import com.hongzhi.zswh.util.exception.HongZhiException;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
-
-import javax.servlet.http.HttpSession;
 
 /**   Twitter : @taylorwang789 
  * Creat time : Jun 12, 2016    4:03:13 PM
@@ -31,8 +32,8 @@ public class V5OrderController {
 	
 	@ResponseBody
 	@RequestMapping("/createOrder")
-	public String createOrder(HttpSession session,String session_id, V5OrderEntity orderEntity){ //票下单
-
+	public String createOrder(HttpSession session,String session_id, V5OrderEntity orderEntity){ //票下单 
+		
 		SessionProperty properties ;
 		String language = "zh";
 		try {
@@ -43,7 +44,7 @@ public class V5OrderController {
 		} catch (HongZhiException e) {
 			return ObjectUtil.jsonOutError(e.getCode(), dic.getCodeValue(e.getCode(), language ) );
 		}
-
+		
 	}
 
 	

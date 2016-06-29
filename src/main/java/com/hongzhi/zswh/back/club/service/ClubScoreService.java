@@ -79,7 +79,7 @@ public class ClubScoreService {
 		clubScore.Vcompetition_id();
 		clubScore.Vrank();
 		int  effCount = scoredao.modifyScore(clubScore);
-		if(effCount==1||effCount==2){
+		if(effCount==1){
 			return "success";
 		}else{
 			throw new HongZhiException("1034");
