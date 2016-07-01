@@ -135,7 +135,7 @@ require(['jquery','ZeroClipboard','datepicker-zh','bs','validate-zh','chosen','a
 
         window.cadleo_data = function(data_url){
             !!location.hash.substring(1) && $.get(url + data_url, function(data) {
-               data.code == 0 && !showData(data) || alert('请求出错，请重试');
+               data.code == 0 && !showData(data) || (data.message && !alert(data.message)||alert('请求出错，请重试'));
             });
         };
 
