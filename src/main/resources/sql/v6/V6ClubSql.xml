@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.hongzhi.zswh.app_v6.dao.V6ClubDao">
+
+
     <update id="saveClubPic">
         update club a
         set
@@ -9,5 +11,57 @@
           and a.is_delete = 0
     </update>
 
+
+    <!--List<Map<String,Objects>> selectCompetitionByUserId(Integer userId);-->
+    <select id="selectCompetitionByUserId" resultType="map">
+        SELECT
+          b.competition_id
+        FROM
+          user_competition a
+        LEFT JOIN
+          competition b
+        on a.competition_id =b.competition_id
+        WHERE a.user_id = #{userId} and b.compertition_live_status =3
+    </select>
+    <!--UserDetailEntity selectUserDetailEntity(Integer userId);-->
+    <select id="selectUserDetailEntity" resultType="com.hongzhi.zswh.app_v6.entity.UserDetailEntity">
+        SELECT
+          club_id,
+          user_id,
+          jump_club_number,
+          join_club_status,
+          user_level,
+          create_time,
+          change_status_time,
+          club_refuse_id
+        FROM user_detail  where user_id=#{userId};
+    </select>
+    <!--void insetIntoUserDetail();-->
+    <insert id="insetIntoUserDetail" parameterType="com.hongzhi.zswh.app_v6.entity.UserDetailEntity">
+        INSERT INTO user_detail_bak(
+          `club_id`,`user_id`,
+          `jump_club_number`,
+          `join_club_status`,
+          `user_level`,
+          `create_time`,
+          `change_status_time`,
+          `club_refuse_id`,
+          `create_time_bak`
+        ) VALUE(
+          #{club_id},
+          #{user_id},
+          #{jump_club_number},
+          #{join_club_status},
+          #{user_level},
+          #{create_time},
+          #{change_status_time},
+          #{club_refuse_id},
+          NOW()
+        )
+    </insert>
+    <!--void deleteUserDetailByUserId(@Param("userId") Integer userId);-->
+    <delete id="deleteUserDetailByUserId">
+        DELETE FROM user_detail WHERE user_id =#{userId}
+    </delete>
 
 </mapper>

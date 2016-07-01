@@ -76,6 +76,23 @@
                 placeholder="输入资讯标题" >
             </div>
         </div>
+
+	   <div class="col-xs-11 stretch form-group float-none">
+		   <span class="col-xs-2 align-right">资讯副标题</span>
+		   <div class="col-xs-10 stretch">
+			   <input type="text" class="form-control width-350 display-align" name="news_subtitle"  value=""
+					  placeholder="输入资讯副标题" >
+		   </div>
+	   </div>
+
+	   <div class="col-xs-11 stretch form-group float-none">
+		   <span class="col-xs-2 align-right">权重排序</span>
+		   <div class="col-xs-10 stretch">
+			   <input type="text" class="form-control width-350 display-align" name="weights_order"  value=""
+					  placeholder="输入权重排序号"  number="true">
+		   </div>
+	   </div>
+
         <div class="col-xs-11 stretch form-group float-none">
             <span class="col-xs-2 align-right">资讯摘要</span>
             <div class="col-xs-10 stretch">

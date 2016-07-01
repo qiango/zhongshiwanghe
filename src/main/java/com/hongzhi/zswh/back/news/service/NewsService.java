@@ -1,31 +1,21 @@
 package com.hongzhi.zswh.back.news.service;
 
-import java.util.Map;
-
-import org.springframework.beans.factory.annotation.Autowired;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
-import com.hongzhi.zswh.back.news.dao.NewsDao;
-
 import com.hongzhi.zswh.back.competition.dao.PlatformDao;
 import com.hongzhi.zswh.back.competition.entity.Platform;
+import com.hongzhi.zswh.back.news.dao.NewsDao;
 import com.hongzhi.zswh.back.news.entity.NEWS;
 import com.hongzhi.zswh.back.news.entity.NewsImageEntity;
 import com.hongzhi.zswh.back.news.entity.NewsParam;
 import com.hongzhi.zswh.back.news.entity.NewsRangeEntity;
 import com.hongzhi.zswh.util.basic.ObjectUtil;
-import com.hongzhi.zswh.util.exception.HongZhiException;
-
 import com.hongzhi.zswh.util.basic.sessionDao.SessionProperty;
-
+import com.hongzhi.zswh.util.exception.HongZhiException;
 import com.hongzhi.zswh.util.page.PageModel;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.*;
 
 /**
  * Twitter : @taylorwang789 Creat time : May 31, 2016 2:07:37 PM
@@ -62,7 +52,8 @@ public class NewsService {
 				params.getLanguage(), "/news/list.htmls");
 		pageModel.setOther(params.getNews_title());
 		pageModel.setTotalDataCount(newsDao.listNewsByPageCount(pageModel));
-		pageModel.setResult(newsDao.listNewsByPage(pageModel));
+		int  max =newsDao.selectMaxByWeights_order()+1;
+		pageModel.setResult(newsDao.listNewsByPage(pageModel,max));
 		pageModel.setPageParam(Arrays.asList("news_title"));
 		pageModel.setPageParamVal(Arrays.asList(params.getNews_title()));
 
