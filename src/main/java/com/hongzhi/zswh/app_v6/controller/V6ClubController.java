@@ -28,13 +28,13 @@ public class V6ClubController {
 
     @ResponseBody
     @RequestMapping("/outofclub")
-    public String OutOfClub(HttpSession session, String session_id, Integer userId){
+    public String OutOfClub(HttpSession session, String session_id, String  club_id){
         SessionProperty properties ;
         String language = "zh";
         try {
             properties = sess.sessionEffective(session,session_id , "/v6/club/outofclub");
             language = properties.getLanguage();
-            return ObjectUtil.jsonOut( clubService.OutOfClub(userId));
+            return ObjectUtil.jsonOut( clubService.OutOfClub(club_id,properties.getUser_id()));
         } catch (HongZhiException e) {
             return ObjectUtil.jsonOutError(e.getCode(), dic.getCodeValue(e.getCode(), language ) );
         }
@@ -51,7 +51,7 @@ public class V6ClubController {
         try {
             properties = sess.sessionEffective(session,session_id , "/v6/club/upClubPic");
             language = properties.getLanguage();
-            return ObjectUtil.jsonOut( clubService.saveClubPic(picUrl,club_id) );
+            return ObjectUtil.jsonOut( clubService.saveClubPic(picUrl,club_id,properties.getUser_id()) );
         } catch (HongZhiException e) {
             return ObjectUtil.jsonOutError(e.getCode(), dic.getCodeValue(e.getCode(), language ) );
         }

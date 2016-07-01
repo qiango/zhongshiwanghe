@@ -63,5 +63,14 @@
     <delete id="deleteUserDetailByUserId">
         DELETE FROM user_detail WHERE user_id =#{userId}
     </delete>
+    <select id="selectClubAdmin" resultType="map">
+       select user_level
+       from user_detail
+       where
+          club_id = #{club_id}
+          and
+          user_id = #{user_id}
+          and user_level=0
 
+    </select>
 </mapper>
