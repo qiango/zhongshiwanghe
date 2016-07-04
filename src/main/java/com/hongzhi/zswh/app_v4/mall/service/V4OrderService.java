@@ -534,7 +534,7 @@ public class V4OrderService {
 			weChatPayService.refund(order_code, ((Double)(amount*returnHistory.getReturn_count()*100)).intValue() ,returnHistory.getDevice(), returnHistory.getRefund_no());
 		}else if("1".equals(way)){//调用支付宝支付
 			//weChatPayService.refund(order_code,Integer.valueOf(amount),returnHistory.getDevice(),String.valueOf(returnHistory_id));
-		    alipayService.refund(order_code,amount*returnHistory.getReturn_count(), returnHistory.getDevice() , String.valueOf(returnHistory_id));
+		    alipayService.refund(order_code,amount*returnHistory.getReturn_count(), returnHistory.getDevice() , returnHistory.getRefund_no() );
 		}
 		
 		return null;
