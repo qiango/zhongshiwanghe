@@ -54,7 +54,8 @@ public class AlipayConfig {
 	// 签名方式 不需修改
 	public static String sign_type = "RSA";
     public static String sign_type_refund = "MD5";
-	
+    public static String sign_type_query= "MD5";
+
 	// refund url 
 	public static String refund_url = "https://openapi.alipay.com/gateway.do";
 	

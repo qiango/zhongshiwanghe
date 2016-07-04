@@ -7,6 +7,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import com.hongzhi.zswh.app_v4.alipay.util.AlipayNotify;
+import com.hongzhi.zswh.app_v4.alipay_refund.util.AlipayRefund;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -113,32 +114,34 @@ public class AlipayService {
      * @return
      */
     public String refund(String order_code, Double  amount ,String device,String refund_no) {
-        AlipayClient alipayClient = new DefaultAlipayClient(AlipayConfig.refund_url,AlipayConfig.appid(device),AlipayConfig.private_key,"json",AlipayConfig.input_charset,AlipayConfig.ali_public_key);
-        AlipayTradeRefundRequest request = new AlipayTradeRefundRequest();
-        Map<String,Object> map = new HashMap<>();
-        map.put("out_trade_no", order_code);
-        map.put("trade_no","" );
-        map.put("refund_amount", amount);
-        map.put("refund_reason", "正常退款");
-        map.put("out_request_no", refund_no);
-//        map.put("operator_id", "OP001");
-//        map.put("store_id", "NJ_S_001");
-//        map.put("terminal_id", "NJ_T_001");
-        request.setBizContent(ObjectUtil.toJson(map));
-        String msg = "";
-        try {
-            AlipayTradeRefundResponse response = alipayClient.execute(request);
-            String return_body = response.getBody();
+//        AlipayClient alipayClient = new DefaultAlipayClient(AlipayConfig.refund_url,AlipayConfig.appid(device),AlipayConfig.private_key,"json",AlipayConfig.input_charset,AlipayConfig.ali_public_key);
+//        AlipayTradeRefundRequest request = new AlipayTradeRefundRequest();
+//        Map<String,Object> map = new HashMap<>();
+//        map.put("out_trade_no", order_code);
+//        map.put("trade_no","" );
+//        map.put("refund_amount", amount);
+//        map.put("refund_reason", "正常退款");
+//        map.put("out_request_no", refund_no);
+////        map.put("operator_id", "OP001");
+////        map.put("store_id", "NJ_S_001");
+////        map.put("terminal_id", "NJ_T_001");
+//        request.setBizContent(ObjectUtil.toJson(map));
+//        String msg = "";
+//        try {
+//            AlipayTradeRefundResponse response = alipayClient.execute(request);
+//            String return_body = response.getBody();
+//
+//            JsonElement jelement = new JsonParser().parse(return_body);
+//            JsonObject  jobject = jelement.getAsJsonObject();
+//            jobject = jobject.getAsJsonObject("alipay_trade_refund_response");
+//            String code = jobject.get("code").toString();
+//            msg = jobject.get("msg").toString().toUpperCase();
+//        } catch (AlipayApiException e) {
+//            e.printStackTrace();
+//        }
+//        return msg;
+        return AlipayRefund.refund(order_code,refund_no,amount.toString());
 
-            JsonElement jelement = new JsonParser().parse(return_body);
-            JsonObject  jobject = jelement.getAsJsonObject();
-            jobject = jobject.getAsJsonObject("alipay_trade_refund_response");
-            String code = jobject.get("code").toString();
-            msg = jobject.get("msg").toString().toUpperCase();
-        } catch (AlipayApiException e) {
-            e.printStackTrace();
-        }
-        return msg;
     }
 
 }
