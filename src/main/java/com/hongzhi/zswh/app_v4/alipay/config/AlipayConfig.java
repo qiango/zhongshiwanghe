@@ -34,6 +34,9 @@ public class AlipayConfig {
 	public static String partner = "2088221740268323";
 	// 商户的私钥
 	public static String private_key = "MIICdwIBADANBgkqhkiG9w0BAQEFAASCAmEwggJdAgEAAoGBAL4oVY3ViYGvmQyFlRsUBcs9mTNqvUR96UPiltaJ1I1wG5n6iM2oMIi0YyLfuxAxoOLTUOHeomtheNGaQFFhSsHIboCUtPG7W6OMdJPRQtEuiQOaPK8DkCPaPNBgGqw77HbYO3aUXnI4SQ1E3b/vgQ8MtUHp0lXv5EBhktDf5YKjAgMBAAECgYAQ/0X2cZni77E8f0w+qWGDMzRYdjgIwUBygvR8pMFNCzJMZyqHR3tfHNCns1vjLKx22fCm3+Ggu4uzIJiTLaEi3bCvuaFBoiXcQyi9IhLb2Ahn/Phg3lFomwLbpQZL9O8+wlXdIJmjcHWfGfzaZo3FgoTnbUZPU04QBDGjQApcUQJBAOU0/dgDJCEkEUkyMiDMLf2IqydS3fjnXRusmX7t/rBxm9xJo83pC5IKj5kb4Teez/SmgTUUcpjS8pR1ee/Q5s0CQQDUYso3zQRt7SyoQIiMMSgXNPXjCK0tK8BYgF2w7meoLr3lzgMWkpdqU9YNH/wcecxo+UEXbhBeb6Phfo4D2a8vAkBdr/9iYEZQVZHLPX1H8q2JyGdNN44Lw2ZHfZFwVI+aR5XRwTf3Xp6gHzj6+G5iccPG2JhPvf/pf7AwBqTE5bqxAkEAgJ0ehjIiF4uD+pOx3Ou7smoA6S6M6IjRHwcFNar5nLBJkQtzdUzqYppISoRvALOFZKBkmZKuWPHUVS51Q8GkQwJBAKAIuo4C5geVY13F4O9r4y22mNNfdW6XPDsRY1gDDla1KlZ/5p3KIJpow/sdb2iIbzrYVw/Sia/OTUxDLCrcQJA=";
+
+    public static String md5_key = "bml0f6p46kgheqs3qlpg6kxd9k9xvnq3";
+
 	
   	// 支付宝的公钥，无需修改该值
 	public static String ali_public_key = "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQDDI6d306Q8fIfCOaTXyiUeJHkrIvYISRcc73s3vF1ZT7XN8RNPwJxo8pWaJMmvyTn9N4HQ632qJBVHf8sxHi/fEsraprwCtzvzQETrNRwVxLO5jVmRGi60j8Ue1efIlzPXV9je9mkjzOmdssymZkh2QhUrCmZYI/FCEa3/cNMW0QIDAQAB";
@@ -50,7 +53,9 @@ public class AlipayConfig {
 	
 	// 签名方式 不需修改
 	public static String sign_type = "RSA";
-	
+    public static String sign_type_refund = "MD5";
+    public static String sign_type_query= "MD5";
+
 	// refund url 
 	public static String refund_url = "https://openapi.alipay.com/gateway.do";
 	

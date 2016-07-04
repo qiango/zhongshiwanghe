@@ -3,31 +3,31 @@ package com.hongzhi.zswh.app_v4.alipay.controller;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.alipay.api.AlipayApiException;
-import com.alipay.api.AlipayClient;
-import com.alipay.api.DefaultAlipayClient;
-import com.alipay.api.request.AlipayTradeQueryRequest;
-import com.alipay.api.response.AlipayTradeQueryResponse;
 import com.hongzhi.zswh.app_v4.alipay.config.AlipayConfig;
-import com.hongzhi.zswh.util.basic.ObjectUtil;
+import com.hongzhi.zswh.app_v4.alipay_refund.util.AlipaySubmit;
+import com.hongzhi.zswh.app_v4.alipay_refund.util.UtilDate;
 
 /**   Twitter : @taylorwang789 
  * Creat time : Jun 12, 2016    11:32:59 AM
  */
 public class Test {
     public static void main(String[] args) {
-        AlipayClient alipayClient = new DefaultAlipayClient("https://openapi.alipay.com/gateway.do",AlipayConfig.appid("Android"),AlipayConfig.private_key,"json",AlipayConfig.input_charset,AlipayConfig.ali_public_key);
-        AlipayTradeQueryRequest request = new AlipayTradeQueryRequest();
-        Map<String,Object> map = new HashMap<>();
-        map.put("out_trade_no", "CJB16061106504574");
-        request.setBizContent(ObjectUtil.toJson(map));
+        Map<String, String> sParaTemp = new HashMap<String, String>();
+        sParaTemp.put("service", "refund_fastpay_by_platform_nopwd");
+        sParaTemp.put("partner", AlipayConfig.partner);
+        sParaTemp.put("_input_charset", AlipayConfig.input_charset);
+        sParaTemp.put("notify_url", AlipayConfig.notify_url);
+        sParaTemp.put("batch_no", UtilDate.getDate()+"32543333");
+        sParaTemp.put("refund_date", UtilDate.getDateFormatter() );
+        sParaTemp.put("batch_num", "1" );
+        sParaTemp.put("detail_data", "2016060221001004070299798549^0.01^正常退款");
         try {
-            AlipayTradeQueryResponse response = alipayClient.execute(request);
-            String return_body = response.getBody();
-            System.out.println(return_body);
-
-        } catch (AlipayApiException e) {
+            String sHtmlText  = AlipaySubmit.buildRequest("","",sParaTemp);
+            System.out.println("aaaaaaaa:"+sHtmlText);
+        } catch (Exception e) {
             e.printStackTrace();
+            System.out.println("bbbbbbb:");
         }
+
     }
 }
