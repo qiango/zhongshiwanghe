@@ -15,7 +15,7 @@ public class QueryTest {
         sParaTemp.put("service", "single_trade_query");
         sParaTemp.put("partner", AlipayConfig.partner);
         sParaTemp.put("_input_charset", AlipayConfig.input_charset);
-        sParaTemp.put("out_trade_no", "CJB160531163364XK");
+        sParaTemp.put("out_trade_no", "CJB1606031100h7Ao");
         try {
             String sHtmlText  = AlipaySubmit.buildRequest("","",sParaTemp);
             System.out.println("aaaaaaaa:"+sHtmlText);
