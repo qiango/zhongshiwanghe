@@ -18,7 +18,9 @@ public class AlipayQuery {
         sParaTemp.put("out_trade_no", out_trade_no);
         try {
             String sHtmlText  = AlipaySubmit.buildRequest("","",sParaTemp);
-            return sHtmlText.substring(sHtmlText.indexOf("<trade_no>")+10,sHtmlText.indexOf("</trade_no>")) ;
+            String trade_no = sHtmlText.substring(sHtmlText.indexOf("<trade_no>")+10,sHtmlText.indexOf("</trade_no>")) ;
+            System.out.println("trade_no:"+trade_no);
+            return trade_no;
         } catch (Exception e) {
             e.printStackTrace();
             return null;

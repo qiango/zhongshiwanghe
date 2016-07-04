@@ -140,6 +140,10 @@ public class AlipayService {
 //            e.printStackTrace();
 //        }
 //        return msg;
+        System.out.println("refund");
+        System.out.println("order_code:"+order_code);
+        System.out.println("refund_no:"+refund_no);
+        System.out.println("amount:"+amount);
         return AlipayRefund.refund(order_code,refund_no,amount.toString());
 
     }
