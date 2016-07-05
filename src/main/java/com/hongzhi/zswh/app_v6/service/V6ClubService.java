@@ -4,16 +4,15 @@ import com.hongzhi.zswh.app_v6.dao.V6ClubDao;
 import com.hongzhi.zswh.app_v6.entity.UserDetailEntity;
 import com.hongzhi.zswh.util.basic.ObjectUtil;
 import com.hongzhi.zswh.util.exception.HongZhiException;
+import com.hongzhi.zswh.util.page.PageModel;
 import com.hongzhi.zswh.util.picture.service.PictureService;
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 
 /**
  * Created by XieCaij on 2016/6/28.
@@ -79,7 +78,11 @@ public class V6ClubService {
             } catch (IOException e) {
                 throw new HongZhiException("1011");
             }
-
+            //{"picUrl":"/2016/0705/1467690672409_touxiang.jpeg"}
+            if (!ObjectUtil.isEmpty(picUrl)){//解析调用图片上传后返回的json字符串
+                JSONObject jsonObject = new JSONObject(picUrl) ;
+                picUrl = jsonObject.getString("picUrl");
+            }
             int clubPic =   v6ClubDao.saveClubPic(picUrl,club_id);
             if (1 == clubPic){
                 Map<String,Object> map = new HashMap<>();
@@ -119,5 +122,22 @@ public class V6ClubService {
         }
 
         return null;
+    }
+
+    /**
+     * 俱乐部列表分页（待定，未完成）
+     * @param page_number
+     * @param club_name
+     * @return
+     */
+    public Object clubList(String page_number, String club_name) {
+        PageModel pageModel = new PageModel(page_number, "20",
+                null, "/v6/club/clubList");
+        pageModel.setOther(club_name);
+        pageModel.setTotalDataCount(v6ClubDao.listClubByPageCount(pageModel));
+        pageModel.setResult(v6ClubDao.listClubByPage(pageModel));
+        pageModel.setPageParam(Arrays.asList("club_name"));
+        pageModel.setPageParamVal(Arrays.asList(club_name));
+        return pageModel;
     }
 }
