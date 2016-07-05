@@ -3,6 +3,7 @@ package com.hongzhi.zswh.app_v6.service;
 import com.hongzhi.zswh.app_v6.dao.V6ClubDao;
 import com.hongzhi.zswh.app_v6.entity.UserDetailEntity;
 import com.hongzhi.zswh.util.basic.ObjectUtil;
+import com.hongzhi.zswh.util.basic.sessionDao.SessionProperty;
 import com.hongzhi.zswh.util.exception.HongZhiException;
 import com.hongzhi.zswh.util.page.PageModel;
 import com.hongzhi.zswh.util.picture.service.PictureService;
@@ -139,5 +140,28 @@ public class V6ClubService {
         pageModel.setPageParam(Arrays.asList("club_name"));
         pageModel.setPageParamVal(Arrays.asList(club_name));
         return pageModel;
+    }
+
+    /**
+     * 判断当前用户是否是俱乐部管理员
+     * @param property
+     * @param club_id
+     * @return
+     * @throws HongZhiException
+     */
+    public Object queryClubAdmin(SessionProperty property,String club_id) throws HongZhiException {
+        if (!ObjectUtil.isEmpty(club_id)) {
+            List list = v6ClubDao.selectClubAdmin(club_id, property.getUser_id());//查看是否是俱乐部管理员
+           // List list = v6ClubDao.selectClubAdmin("32", "375");//查看是否是俱乐部管理员
+            Map<String,Object> map = new HashMap<>();
+            if (list.size() == 0) {
+                map.put("user_level",99);//普通会员
+            }else {
+                map.put("user_level",0);//管理员
+            }
+            return map;
+        }else {
+          throw new HongZhiException("1021");//俱乐部为空
+         }
     }
 }
