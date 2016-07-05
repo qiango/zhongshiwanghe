@@ -73,4 +73,12 @@
           and user_level=0
 
     </select>
+
+    <update id="transferClubByUserId">
+        update user_detail a
+        set
+          a.user_level = #{user_level}
+        where a.club_id = #{club_id}
+          and a.user_id = #{id}
+    </update>
 </mapper>
