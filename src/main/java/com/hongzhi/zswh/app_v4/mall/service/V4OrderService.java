@@ -207,8 +207,7 @@ public class V4OrderService {
 	
 	/**
 	 * @author zhurenkui
-	 * @param id 
-	 * @throws HongZhiException 
+	 * @throws HongZhiException
 	 */
 	public String updateOrderStatusById(V4OrderEntity orderEntity) throws HongZhiException {
 		
@@ -405,7 +404,6 @@ public class V4OrderService {
 	}
 	/**
 	 * @xuejian
-	 * @param voteTickets
 	 * @return
 	 * @throws HongZhiException
 	 */
@@ -435,8 +433,6 @@ public class V4OrderService {
      * Creat time : May 20, 2016    4:03:00 PM
      * @param out_trade_no
      * @param status 
-     * @param string 
-     * @param string
      */
     @Transactional
     public void updatePaymentStatus(String out_trade_no, String way, String status, String transcation) {
@@ -452,7 +448,6 @@ public class V4OrderService {
 
 	/**
 	 * @xuejian
-	 * @param saveReturnHistory
 	 * @return
 	 * @throws HongZhiException
 	 */
@@ -593,7 +588,6 @@ public class V4OrderService {
     /**   Twitter : @taylorwang789 
      * Creat time : May 21, 2016    5:35:56 PM
      * @param order_code
-     * @param string
      */
     public void updateOrderStatus(String order_code, String status) {
         orderDao.updateOrderStatusByOrderCode(order_code,status);

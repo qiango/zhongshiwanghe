@@ -13,6 +13,8 @@ import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.hongzhi.zswh.util.encryption.SHA256;
+import com.hongzhi.zswh.util.picture.dao.PictueUpload;
 import org.apache.ibatis.io.Resources;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -31,6 +33,9 @@ import com.google.gson.JsonObject;
 public class PictureService {
     
     private static String basePath = "";
+
+    @Autowired
+    private PictueUpload pictueUpload;
 
     
     static{
@@ -59,18 +64,21 @@ public class PictureService {
             while (iter.hasNext()) {
                 MultipartFile file = multiRequest.getFile(iter.next() .toString());
                 if (file != null) {
+                    String originName = file.getOriginalFilename();
                     String fileOriginalName = file.getOriginalFilename().replaceAll(",", "-").replaceAll(" ", "-");
 
-                    String type = ".jpg";
+                    String type = "" ;
                     if(fileOriginalName.lastIndexOf(".") == -1){
-                        fileOriginalName+=type;
+                        type = ".jpg";
+                    }else{
+                        type = fileOriginalName.substring(fileOriginalName.lastIndexOf("."));
                     }
                     
-                    file_name =  newFilePath(basePath) + System.currentTimeMillis() +"_"+ fileOriginalName;
+                    file_name =  newFilePath(basePath) + System.currentTimeMillis() +"_"+ SHA256.getSalt(6) + type;
                     // 上传
                     file.transferTo(new File( basePath + file_name ));
                     // save to db 
-//                    file_name = "/pic.htmls?p=" + file_name;
+                    pictueUpload.saveUploadPictureName(originName,file_name);
                 }
             }
         }
