@@ -35,6 +35,14 @@ public class SHA256 {
 		String salt =  list.subList(0, random.nextInt(5)+6).toString().replaceAll(" ", "").replaceAll(",", "").replace("[", "").replace("]", "") ;
 		return salt;
 	}
+
+
+    public static String getSalt(int leng) {
+        Random random = new Random();
+        Collections.shuffle(list);
+        String salt =  list.subList(0,leng).toString().replaceAll(" ", "").replaceAll(",", "").replace("[", "").replace("]", "") ;
+        return salt;
+    }
 	
 	public static String encode(String str, String salt){
 		return sha(salt + sha(str));

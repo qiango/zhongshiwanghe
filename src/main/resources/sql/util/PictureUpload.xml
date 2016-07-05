@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hongzhi.zswh.util.picture.dao.PictueUpload">
+
+
+    <!--
+    int saveUploadPictureName(@Param("originName") String originName,@Param("newName") String newName );
+    -->
+    <insert id="saveUploadPictureName" >
+        insert into picture_upload (
+             origin_name
+            ,new_name
+            ,create_time
+        ) values (
+             #{originName}
+            ,#{newName}
+            ,now()
+        )
+    </insert>
+
+	
+	
+</mapper>

@@ -68,7 +68,6 @@ public class V4GoodsService {
 
     /**   Twitter : @taylorwang789 
      * Creat time : May 24, 2016    7:09:29 PM
-     * @param order_code
      * @return
      */
     public Object canRefundCount(String order_id) {
