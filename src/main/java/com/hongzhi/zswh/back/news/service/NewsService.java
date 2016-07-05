@@ -67,10 +67,10 @@ public class NewsService {
 		List<Map<String,Object>> club_list = newsDao.listClub();
 		List<Platform> platform_list = platformDao.listPlatform();
 		List<Map<String, String>> information_type_list = new ArrayList<>();
-		String[] code_arr = { "0", "1" };
-//		String[] value_arr = { "图文", "图片集", "视频" }; , "2"
-		String[] value_arr = { "图文", "图片集" };
-		for (int i = 0; i < 2; i++) {
+		String[] code_arr = { "0", "1" ,"2"};
+		String[] value_arr = { "图文", "图片集", "视频" };
+//		String[] value_arr = { "图文", "图片集" };
+		for (int i = 0; i < code_arr.length ; i++) {
 			Map<String, String> information_type = new HashMap<>();
 			information_type.put("news_type", code_arr[i]);
 			information_type.put("zh_value", value_arr[i]);

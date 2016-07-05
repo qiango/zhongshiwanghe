@@ -49,7 +49,6 @@
                <label id="circle_id-error" class="error" for="circle_id"></label>
             </div>
         </div>
-        <input type="hidden" name="news_type" value>
         <div class="col-xs-11 stretch form-group float-none">
             <span class="col-xs-2 align-right"><label class="warning-label">*</label>频道</span>
             <div class="col-xs-10 stretch">
@@ -163,6 +162,7 @@
                 })
                 .done(function(data){
                	 	ns.site_back(data);
+                    location.hash='#/news/index'
                 })
                 .fail(internal_error);
             }
