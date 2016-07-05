@@ -89,5 +89,17 @@ public class V6ClubController {
         }
 
     }
-
+    @ResponseBody
+    @RequestMapping("/clubList")
+    public String clubList(HttpSession session,String session_id,String page_number,String club_name){
+        SessionProperty property;
+        String language = "zh";
+        try {
+            property = sess.sessionEffective(session,session_id,"/v6/club/clubList");
+            language = property.getLanguage();
+            return ObjectUtil.jsonOut(clubService.clubList(page_number,club_name));
+        } catch (HongZhiException e) {
+            return ObjectUtil.jsonOutError(e.getCode(), dic.getCodeValue(e.getCode(), language ) );
+        }
+    }
 }

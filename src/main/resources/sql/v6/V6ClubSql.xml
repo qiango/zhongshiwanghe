@@ -81,4 +81,49 @@
         where a.club_id = #{club_id}
           and a.user_id = #{id}
     </update>
+
+    <select id="listClubByPageCount" resultType="Integer" >
+        select
+         count(*) as data_count
+        from club  a
+        left join world_city b
+          on a.id = b.id
+        left join dictionary  c
+          on a.language_id = c.code
+          and c.p_code='language'
+          and c.language= #{language}
+        left join dictionary d
+          on a.club_status = d.code
+          and d.p_code = 'club'
+          and d.language= #{language}
+        where is_delete = '0'
+        <if test=" other !=null ">
+            and  a.club_name  like  CONCAT('%', #{other} ,'%')
+        </if>
+    </select>
+
+    <select id="listClubByPage" resultType="map" >
+        select
+          a.club_id
+          ,a.club_name
+          ,d.value   as club_status
+        from club  a
+        left join world_city b
+          on a.id = b.id
+        left join dictionary  c
+          on a.language_id = c.code
+          and c.p_code='language'
+          and c.language= #{language}
+        left join dictionary d
+          on a.club_status = d.code
+          and d.p_code = 'club'
+          and d.language= #{language}
+        where is_delete = '0'
+        <if test=" other !=null ">
+            and  a.club_name  like  CONCAT('%', #{other} ,'%')
+        </if>
+        <if test=" pageStartRow !=null  and   pageRecorders != null ">
+            limit  #{pageStartRow } , #{pageRecorders }
+        </if>
+    </select>
 </mapper>

@@ -4,6 +4,7 @@ package com.hongzhi.zswh.app_v6.dao;
 import com.hongzhi.zswh.app_v6.entity.UserDetailEntity;
 
 
+import com.hongzhi.zswh.util.page.PageModel;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
@@ -48,4 +49,8 @@ public interface V6ClubDao {
     List selectClubAdmin(@Param("club_id") String club_id,@Param("user_id") String user_id);
 
     int transferClubByUserId(@Param("club_id")String club_id, @Param("id")String id,@Param("user_level") String user_level);
+
+    int listClubByPageCount(PageModel pageModel);
+
+    List<Map<String,Object>>  listClubByPage(PageModel pageModel);
 }
