@@ -102,4 +102,18 @@ public class V6ClubController {
             return ObjectUtil.jsonOutError(e.getCode(), dic.getCodeValue(e.getCode(), language ) );
         }
     }
+
+    @ResponseBody
+    @RequestMapping("/queryClubAdmin")
+    public String queryClubAdmin(HttpSession session,String session_id,String club_id){
+        SessionProperty property;
+        String language = "zh";
+        try {
+            property = sess.sessionEffective(session,session_id,"/v6/club/queryClubAdmin");
+            language = property.getLanguage();
+            return ObjectUtil.jsonOut(clubService.queryClubAdmin(property,club_id));
+        } catch (HongZhiException e) {
+            return ObjectUtil.jsonOutError(e.getCode(), dic.getCodeValue(e.getCode(), language ) );
+        }
+    }
 }
