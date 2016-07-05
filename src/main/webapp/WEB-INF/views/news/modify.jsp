@@ -100,7 +100,7 @@
                 placeholder="输入资讯摘要" >${information.information_abstract }</textarea>
             </div>
         </div>
-        <div class="col-xs-11 stretch form-group float-none img-news">
+        <div class="col-xs-11 stretch form-group float-none img-news uploadPic">
             <span class="col-xs-2 align-right">上传图片</span>
             <div class="col-xs-10 stretch">
             	<div class="col-xs-12 display-table stretch">
@@ -245,6 +245,11 @@
         		$('.img-news-list').removeClass('fly-out').find('#submit_file').prop('disabled',false);//显示图集
         		$('.img-news').addClass('fly-out').find('#submit_file').prop('disabled',true);
         		$('[name="media_information"]').prop('disabled',false);
+        	} else if (this.value == 2){
+                $('.img-news').removeClass('fly-out').find('#submit_file').prop('disabled',false);
+                $('.img-news').not('.uploadPic').addClass('fly-out').find('#submit_file').prop('disabled',true);
+                $('.img-news-list').addClass('fly-out').find('#submit_file').prop('disabled',true);
+                $('[name="media_information"]').prop('disabled',true);
         	}
         }).change();
     	
