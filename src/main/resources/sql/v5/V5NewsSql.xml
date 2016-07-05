@@ -56,7 +56,7 @@
                     )
                </if>
           )
-        ORDER BY a.create_time DESC
+        ORDER BY coalesce( a.weights_order,99999999999999) asc ,a.create_time DESC
         limit #{startRow} , #{pageSize}
     </select>
     
