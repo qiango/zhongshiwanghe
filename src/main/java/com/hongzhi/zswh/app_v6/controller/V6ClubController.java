@@ -72,4 +72,22 @@ public class V6ClubController {
             return ObjectUtil.jsonOutError(e.getCode(), dic.getCodeValue(e.getCode(), language ) );
         }
     }
+    @ResponseBody
+    @RequestMapping("/transferClub")
+    //管理员转让俱乐部权限，成为普通会员
+    public String transferClub(HttpSession session, String session_id, String user_id, String club_id){
+
+        SessionProperty properties ;
+        String language = "zh";
+        try {
+            properties = sess.sessionEffective(session,session_id , "/v6/club/transferClub");
+            language = properties.getLanguage();
+            String userId =  properties.getUser_id();
+            return ObjectUtil.jsonOut( clubService.transferClub(user_id,club_id,userId) );
+        } catch (HongZhiException e) {
+            return ObjectUtil.jsonOutError(e.getCode(), dic.getCodeValue(e.getCode(), language ) );
+        }
+
+    }
+
 }

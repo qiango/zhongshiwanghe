@@ -25,6 +25,13 @@ public class V6ClubService {
     @Autowired
     private PictureService picService;
 
+    /**
+     * 会员退出俱乐部，管理员不能退出
+     * @param club_id
+     * @param userId
+     * @return
+     * @throws HongZhiException
+     */
     public String OutOfClub(String club_id,String userId)throws HongZhiException{
         if (ObjectUtil.isEmpty(club_id)){
            throw new HongZhiException("1021");
@@ -50,7 +57,14 @@ public class V6ClubService {
         return "success";
     }
 
-
+    /**
+     * 俱乐部管理员可以跟换俱乐部头像
+     * @param request
+     * @param club_id
+     * @param user_id
+     * @return
+     * @throws HongZhiException
+     */
     public Object saveClubPic(HttpServletRequest request, String club_id, String user_id) throws HongZhiException {
 
         if (!ObjectUtil.isEmpty(club_id)){
@@ -80,4 +94,30 @@ public class V6ClubService {
         }
     }
 
+    /**
+     * 管理员转让
+     * @param user_id
+     * @param club_id
+     * @param userId
+     * @return
+     * @throws HongZhiException
+     */
+    public Object transferClub(String user_id, String club_id, String userId) throws HongZhiException {
+        if (!ObjectUtil.isEmpty(club_id)){
+            if (ObjectUtil.isEmpty(user_id)){//user_id要转让的用户id
+                throw new HongZhiException("1005");//用户为空
+            }
+            List list =  v6ClubDao.selectClubAdmin(club_id,userId);//查看当前用户是否是俱乐部管理员
+            if (list.size()==0){
+                throw new HongZhiException("1078");//普通管理员无权限转让
+            }
+                v6ClubDao.transferClubByUserId(club_id,userId,"99");//管理员转变成普通用户
+                v6ClubDao.transferClubByUserId(club_id,club_id,"0");//普通用户转变成管理员
+
+        }else {
+            throw new HongZhiException("1021");//俱乐部为空
+        }
+
+        return null;
+    }
 }

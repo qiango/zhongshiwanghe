@@ -46,4 +46,6 @@ public interface V6ClubDao {
     int saveClubPic(@Param("picUrl")String picUrl,@Param("club_id") String club_id);
 
     List selectClubAdmin(@Param("club_id") String club_id,@Param("user_id") String user_id);
+
+    int transferClubByUserId(@Param("club_id")String club_id, @Param("id")String id,@Param("user_level") String user_level);
 }
