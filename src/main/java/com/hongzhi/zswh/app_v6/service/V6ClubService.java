@@ -1,6 +1,8 @@
 package com.hongzhi.zswh.app_v6.service;
 
 import com.hongzhi.zswh.app_v6.dao.V6ClubDao;
+import com.hongzhi.zswh.app_v6.entity.ClubManageEntity;
+import com.hongzhi.zswh.app_v6.entity.ClubQueryEntity;
 import com.hongzhi.zswh.app_v6.entity.UserDetailEntity;
 import com.hongzhi.zswh.util.basic.ObjectUtil;
 import com.hongzhi.zswh.util.basic.sessionDao.SessionProperty;
@@ -113,7 +115,7 @@ public class V6ClubService {
             }
             List list =  v6ClubDao.selectClubAdmin(club_id,userId);//查看当前用户是否是俱乐部管理员
             if (list.size()==0){
-                throw new HongZhiException("1078");//普通管理员无权限转让
+                throw new HongZhiException("1078");//普通无权限转让
             }
                 v6ClubDao.transferClubByUserId(club_id,userId,"99");//管理员转变成普通用户
                 v6ClubDao.transferClubByUserId(club_id,club_id,"0");//普通用户转变成管理员
@@ -163,5 +165,75 @@ public class V6ClubService {
         }else {
           throw new HongZhiException("1021");//俱乐部为空
          }
+    }
+
+    public Object clubMembers(SessionProperty property) {
+        Map<String,Object> club = v6ClubDao.ownClubMemberCount(Integer.parseInt(property.getUser_id()));
+       // String memberCount  = club.get("club_member").toString();
+        List<Map<String,Object>>   club_member = v6ClubDao.ownClubMemberList((Integer)club.get("user_id"),(Integer)club.get("club_id"));
+
+        Map<String,Object> map = new HashMap<>();
+        map.put("manager_flag",  ObjectUtil.getProperty(club.get("user_level") ,"99"));
+        map.put("club_member_list", club_member);
+        return map;
+    }
+
+    public Object loadClubManage(SessionProperty property) throws HongZhiException {
+
+        ClubQueryEntity clubInfo = v6ClubDao.clubInfo( Integer.parseInt(property.getUser_id()),property.getLanguage());
+        if(ObjectUtil.isEmpty(clubInfo)){
+            clubInfo = new ClubQueryEntity();
+
+        }
+        ClubManageEntity out = new ClubManageEntity();
+        List list = v6ClubDao.selectClubAdmin(clubInfo.getClub_id(), property.getUser_id());//查看是否是俱乐部管理员
+        // List list = v6ClubDao.selectClubAdmin("32", "375");//查看是否是俱乐部管理员
+        if (list.size() == 0) {
+            out.setUser_level("99");//普通会员
+        }else {
+            out.setUser_level("0");//管理员
+        }
+        String defaultVal = "0";
+        out.setClub_member_number(ObjectUtil.getProperty(clubInfo.getClub_member(), defaultVal).toString());
+        out.setSports_camp_number(ObjectUtil.getProperty(clubInfo.getSports_camp(), defaultVal).toString());
+        out.setJoin_club_status(ObjectUtil.getProperty(clubInfo.getJoin_club_status(), defaultVal).toString());
+        out.setJoin_club_status_name(ObjectUtil.getProperty(clubInfo.getJoin_club_status_name(), "").toString());
+        out.setActivity_number(defaultVal);
+        out.setComplete_training_number(defaultVal);
+        out.setContinuous_training_number(defaultVal);
+        out.setTotal_training_number(defaultVal);
+        out.setRanking(defaultVal);
+        out.setComprehensive_integral(defaultVal);
+        out.setMy_club_ranking(clubInfo.getMy_club_rank());
+        out.setClub(v6ClubDao.userClub(Integer.parseInt(property.getUser_id())));
+        String club_id ="0";
+        if(!ObjectUtil.isEmpty(clubInfo.getClub_id())){
+            club_id=clubInfo.getClub_id();
+        }
+        out.setClub_ranking_list(v6ClubDao.clubRanking("   limit 3   " ,Integer.parseInt(club_id) ));
+        Map<String,Object> map = new HashMap<>();
+        map.put("club_interface_data", out);
+        return map;
+    }
+    public Object loadClubManageNotLogIn() {
+
+        ClubManageEntity out = new ClubManageEntity();
+        String defaultVal = "0";
+        out.setClub_member_number(defaultVal);
+        out.setSports_camp_number(defaultVal);
+        out.setJoin_club_status(defaultVal);
+        out.setJoin_club_status_name(defaultVal);
+        out.setActivity_number(defaultVal);
+        out.setComplete_training_number(defaultVal);
+        out.setContinuous_training_number(defaultVal);
+        out.setTotal_training_number(defaultVal);
+        out.setRanking(defaultVal);
+        out.setComprehensive_integral(defaultVal);
+        out.setMy_club_ranking(defaultVal);
+        out.setClub(null);
+        out.setClub_ranking_list(v6ClubDao.clubRanking("   limit 3   " ,0));
+        Map<String,Object> map = new HashMap<>();
+        map.put("club_interface_data", out);
+        return map;
     }
 }
