@@ -116,4 +116,29 @@ public class V6ClubController {
             return ObjectUtil.jsonOutError(e.getCode(), dic.getCodeValue(e.getCode(), language ) );
         }
     }
+
+    @ResponseBody
+    @RequestMapping("/loadClubMembers")
+    public String loadClubMembers (HttpSession session,String session_id) {
+        SessionProperty property ;
+        String language = "zh";
+        try {
+            property = sess.sessionEffective(session,session_id,"/v6/club/loadClubMembers");
+            return ObjectUtil.jsonOut(clubService.clubMembers(property));
+        } catch (HongZhiException e) {
+            return ObjectUtil.jsonOutError(e.getCode(), dic.getCodeValue(e.getCode(), language ) );
+        }
+
+    }
+    @ResponseBody
+    @RequestMapping("/loadClubManage")
+    public String loadClubManage ( HttpSession session,String session_id ){
+        SessionProperty property ;
+        try {
+            property = sess.sessionEffective(session,session_id,"/v6/club/loadClubManage");;
+            return ObjectUtil.jsonOut(clubService.loadClubManage(property));
+        } catch (HongZhiException e) {
+            return ObjectUtil.jsonOut(clubService.loadClubManageNotLogIn());
+        }
+    }
 }

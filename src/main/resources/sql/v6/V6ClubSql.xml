@@ -126,4 +126,191 @@
             limit  #{pageStartRow } , #{pageRecorders }
         </if>
     </select>
+
+    <select id="ownClubMemberCount" resultType="map">
+        select
+        a.user_id
+        ,a.club_id
+        ,count(b.user_id)  as club_member
+        ,a.user_level
+        from user_detail  a
+        left join user_detail  b
+        on a.club_id = b.club_id
+        and b.join_club_status = '1'
+        where a.user_id = #{owner}
+        group by
+        a.user_id
+        ,a.club_id
+        ,a.user_level
+    </select>
+
+    <select id="ownClubMemberList" resultType="map">
+        select
+        b.user_id                      as  club_user_id
+        ,c.profile_picture              as  club_user_image
+        ,coalesce(nickname,concat(substr(c.phone,1,3),'****',substr(c.phone,8) ) )
+        as  club_user_name
+        ,coalesce(b.user_level,'99')    as  club_user_level
+        ,coalesce(h.value,g.value)      as  club_role_name
+        ,concat(substr(c.phone,1,3),'****',substr(c.phone,8) )
+        as  club_member_phone
+        ,case  when b.user_id = #{user_id}  then 9
+        when f.follower_id  is null
+        then  1
+        else  0 end                as  is_focus
+        from  user_detail  b
+
+        left join user_info  c
+        on b.user_id = c.user_id
+        <!--
+        left join users_roles d
+               on c.user_id  = d.user_id
+         -->
+        left join follower   f
+        on  f.user_id = b.user_id
+        and  f.follower_id = #{user_id}
+
+        left join dictionary  g
+        on  g.p_code='user_level'
+        and  g.language = 'zh'
+        and  g.code ='other'
+        left join dictionary  h
+        on  h.code = b.user_level
+        and  h.p_code='user_level'
+        and  h.language = 'zh'
+
+        where b.club_id = #{club_id}
+        and b.join_club_status = '99'
+
+        order by   club_user_level  ,  club_user_id
+    </select>
+
+    <select id="clubInfo" resultType="com.hongzhi.zswh.app_v6.entity.ClubQueryEntity">
+        select
+        t1.user_id
+        ,t1.club_id
+        ,t1.join_club_status
+        ,t1.join_club_status_name
+        ,t1.club_member
+        ,coalesce(t2.sports_camp,0)   as sports_camp
+        ,t3.ranking_postion  as my_club_rank
+        from  (
+        select
+        a.user_id
+        ,a.club_id
+        ,a.join_club_status
+        ,c.value as join_club_status_name
+        ,count(*)  as club_member
+        from user_detail  a
+        left join user_detail  b
+        on a.club_id = b.club_id
+        and b.join_club_status  = '99'
+        left join dictionary  c
+        on a.join_club_status = c.code
+        and c.p_code = 'user_detail'
+        and c.language = #{language}
+        where a.user_id = #{userId }
+        group by  a.user_id
+        ,a.club_id
+        ,a.join_club_status
+        ,c.value
+        ) t1
+        left join (
+        select
+        t22.user_id
+        ,count(*)  as sports_camp
+        from club_sports_camp   t21
+        left join user_detail  t22
+        on t21.club_id = t22.club_id
+        left join sports_camp  t23
+        on t21.sports_camp_id = t23.sports_camp_id
+        where t22.user_id =  #{userId }
+        and t23.is_delete= '0'
+        group by t22.user_id
+        )  t2
+        on  t1.user_id = t2.user_id
+
+        left join (
+        select
+        concat(@row_number:=@row_number+1,'' )  AS ranking_postion
+        , a.club_id
+        , a.club_people   as  club_people_number
+
+        from (
+        select
+        a.club_id
+        ,b.club_name
+        ,count(*)  as  club_people
+        from user_detail  a
+        left join club  b
+        on a.club_id = b.club_id
+        where join_club_status = '99'
+        group by
+        a.club_id
+        ,b.club_name
+        ) a
+        ,(SELECT @row_number:=0) t
+        order by club_people desc , convert(club_name USING gbk) COLLATE gbk_chinese_ci
+
+        )  t3
+        on t1.club_id = t3.club_id
+
+    </select>
+
+    <select id="userClub"  resultType="map">
+        select
+        b.club_id
+        ,b.user_id
+        ,b.id
+        ,b.language_id
+        ,b.club_name
+        ,b.club_name_short
+        ,b.club_applicant_name
+        ,b.create_time
+        ,b.create_date
+        ,b.club_status
+        ,b.club_description
+        ,b.club_create_date
+        ,b.club_qq
+        ,coalesce(concat('/pic.htmls?p=',b.club_pic ),'' ) as club_image
+
+        from user_detail a
+        left join club b
+        on a.club_id = b.club_id
+        where b.is_delete = '0'
+        and a.user_id = #{user_id }
+    </select>
+
+    <select id="clubRanking" resultType="map">
+        select
+        concat(@row_number:=@row_number+1,'' )  AS ranking_postion
+        , a.club_id
+        , a.club_image
+        , a.club_name
+        , a.club_people   as  club_people_number
+        , case when  a.club_id = #{userClubId }
+        then  '1'
+        else  '0'
+        end   as  user_belond
+        from (
+        select
+        a.club_id
+        ,b.club_pic  as club_image
+        ,b.club_name
+        ,count(*)  as  club_people
+        from user_detail  a
+        left join club  b
+        on a.club_id = b.club_id
+        where join_club_status = '99'
+        group by
+        a.club_id
+        ,b.club_pic
+        ,b.club_name
+        ) a
+        ,(SELECT @row_number:=0) t
+        order by club_people desc   , convert(club_name USING gbk) COLLATE gbk_chinese_ci
+        <if test="limitSql != null  and  limitSql != '' ">
+            ${limitSql  }
+        </if>
+    </select>
 </mapper>
