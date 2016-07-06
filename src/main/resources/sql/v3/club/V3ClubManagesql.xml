@@ -101,10 +101,10 @@
     <select id="clubRanking" resultType="map">
         select
         concat(@row_number:=@row_number+1,'' )  AS ranking_postion
-        , a.club_id
-        , a.club_image
-        , a.club_name
-        , a.club_people   as  club_people_number
+        ,coalesce( a.club_id,'') as club_id
+        ,coalesce(concat('/pic.htmls?p=',a.club_image ),'' ) as club_image
+        , coalesce(a.club_name,'') as club_name
+        , coalesce(a.club_people,'')   as  club_people_number
         , case when  a.club_id = #{userClubId }
         then  '1'
         else  '0'
