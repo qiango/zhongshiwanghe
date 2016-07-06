@@ -112,7 +112,7 @@
          from ( 
             select 
                  a.club_id 
-                ,''  as club_image 
+                ,b.club_pic  as club_image
                 ,b.club_name  
                 ,count(*)  as  club_people  
             from user_detail  a  
@@ -121,7 +121,7 @@
            where join_club_status = '99'
         group by   
                  a.club_id 
-                ,'' 
+                ,b.club_pic
                 ,b.club_name  
         ) a 
         ,(SELECT @row_number:=0) t 

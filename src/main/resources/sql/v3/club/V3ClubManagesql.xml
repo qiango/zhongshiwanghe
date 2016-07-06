@@ -97,38 +97,38 @@
         where b.is_delete = '0' 
         and a.user_id = #{user_id } 
     </select>
-    
+
     <select id="clubRanking" resultType="map">
-        select 
-           concat(@row_number:=@row_number+1,'' )  AS ranking_postion 
-            , a.club_id 
-            , a.club_image
-            , a.club_name 
-            , a.club_people   as  club_people_number
-            , case when  a.club_id = #{userClubId }
-                   then  '1'  
-                   else  '0' 
-                   end   as  user_belond    
-         from ( 
-            select 
-                 a.club_id 
-                ,''  as club_image 
-                ,b.club_name  
-                ,count(*)  as  club_people  
-            from user_detail  a  
-       left join club  b 
-              on a.club_id = b.club_id  
-           where join_club_status = '99'
-        group by   
-                 a.club_id 
-                ,'' 
-                ,b.club_name  
-        ) a 
-        ,(SELECT @row_number:=0) t 
-        order by club_people desc   , convert(club_name USING gbk) COLLATE gbk_chinese_ci   
-    <if test="limitSql != null  and  limitSql != '' ">
-       ${limitSql  } 
-    </if>
+        select
+        concat(@row_number:=@row_number+1,'' )  AS ranking_postion
+        , a.club_id
+        , a.club_image
+        , a.club_name
+        , a.club_people   as  club_people_number
+        , case when  a.club_id = #{userClubId }
+        then  '1'
+        else  '0'
+        end   as  user_belond
+        from (
+        select
+        a.club_id
+        ,b.club_pic  as club_image
+        ,b.club_name
+        ,count(*)  as  club_people
+        from user_detail  a
+        left join club  b
+        on a.club_id = b.club_id
+        where join_club_status = '99'
+        group by
+        a.club_id
+        ,b.club_pic
+        ,b.club_name
+        ) a
+        ,(SELECT @row_number:=0) t
+        order by club_people desc   , convert(club_name USING gbk) COLLATE gbk_chinese_ci
+        <if test="limitSql != null  and  limitSql != '' ">
+            ${limitSql  }
+        </if>
     </select>
     
     
@@ -150,16 +150,16 @@
     </select>
     
     <select id="ownClubMemberList" resultType="map">
-               select  
-                       b.user_id                      as  club_user_id 
-                      ,c.profile_picture              as  club_user_image 
-                      ,coalesce(nickname,concat(substr(c.phone,1,3),'****',substr(c.phone,8) ) )  
-                                                      as  club_user_name 
-                      ,coalesce(b.user_level,'99')    as  club_user_level 
-                      ,coalesce(h.value,g.value)      as  club_role_name       
-                      ,concat(substr(c.phone,1,3),'****',substr(c.phone,8) ) 
-                                                      as  club_member_phone  
-                      ,case  when b.user_id = #{user}  then 9
+               select
+         coalesce(b.user_id,'')                     as  club_user_id
+        ,coalesce(c.profile_picture,'')              as  club_user_image
+        ,coalesce(nickname,concat(substr(c.phone,1,3),'****',substr(c.phone,8) ) )
+        as  club_user_name
+        ,coalesce(b.user_level,'99')    as  club_user_level
+        ,coalesce(h.value,g.value)      as  club_role_name
+        ,coalesce(concat(substr(c.phone,1,3),'****',substr(c.phone,8) ),'' )
+        as  club_member_phone
+        ,case  when b.user_id = #{user}  then 9
                              when f.follower_id  is null 
                              then  1    
                             else  0 end                as  is_focus  
