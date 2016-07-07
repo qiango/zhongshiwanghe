@@ -62,4 +62,6 @@ public interface V6ClubDao {
     Map<String, Object> userClub(int user_id);
 
     List<Map<String,Object>> clubRanking(@Param("limitSql") String limitSql, @Param("userClubId") int userClubId);
+
+    Map<String,Object>  queryClubLevel(@Param("club_id") String club_id,@Param("user_id") String user_id);
 }

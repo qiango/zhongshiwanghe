@@ -35,12 +35,17 @@ public class V6ClubService {
      * @throws HongZhiException
      */
     public String OutOfClub(String club_id,String userId)throws HongZhiException{
+
         if (ObjectUtil.isEmpty(club_id)){
            throw new HongZhiException("1021");
         }
 
-        List is_club_admin =  v6ClubDao.selectClubAdmin(club_id,userId);//查看是否是俱乐部管理员
+     /*   List is_club_admin =  v6ClubDao.selectClubAdmin(club_id,userId);//查看是否是俱乐部管理员
         if (is_club_admin.size()!=0){
+            throw new HongZhiException("1079");//俱乐部管理员不能退出
+        }*/
+        Map<String,Object> club_map =  v6ClubDao.queryClubLevel(club_id,userId);
+        if ("0".equals(club_map.get("user_level"))){
             throw new HongZhiException("1079");//俱乐部管理员不能退出
         }
 
@@ -56,7 +61,13 @@ public class V6ClubService {
         }
         v6ClubDao.insetIntoUserDetail(userDetail);
         v6ClubDao.deleteUserDetailByUserId(Integer.valueOf(userId));
-        return "success";
+
+         if ("1".equals(club_map.get("join_club_status"))){
+             throw new HongZhiException("1080");//您已取消，欢迎下次再来
+        } else {
+             return "success";
+         }
+
     }
 
     /**
@@ -153,15 +164,18 @@ public class V6ClubService {
      */
     public Object queryClubAdmin(SessionProperty property,String club_id) throws HongZhiException {
         if (!ObjectUtil.isEmpty(club_id)) {
-            List list = v6ClubDao.selectClubAdmin(club_id, property.getUser_id());//查看是否是俱乐部管理员
-           // List list = v6ClubDao.selectClubAdmin("32", "375");//查看是否是俱乐部管理员
-            Map<String,Object> map = new HashMap<>();
-            if (list.size() == 0) {
+            Map<String,Object>  club_map = v6ClubDao.queryClubLevel(club_id, property.getUser_id());//查看是否是俱乐部管理员
+          //  Map<String,Object>  club_list = v6ClubDao.queryClubLevel("44", "280");//查看是否是俱乐部管理员
+
+//            Map<String,Object> map = new HashMap<>();
+//            map.put("user_level", club_list.get(0).("user_level"));//判断当前用户级别
+//            map.put("join_club_status", club_list.get(0).("join_club_status"));//当前用户参加的俱乐部的状态
+         /*   if (list.size() == 0) {
                 map.put("user_level",99);//普通会员
             }else {
                 map.put("user_level",0);//管理员
-            }
-            return map;
+            }*/
+            return club_map;
         }else {
           throw new HongZhiException("1021");//俱乐部为空
          }
