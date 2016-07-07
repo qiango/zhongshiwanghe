@@ -287,7 +287,7 @@
         select
         concat(@row_number:=@row_number+1,'' )  AS ranking_postion
         , a.club_id
-        , a.club_image
+        ,coalesce(concat('/pic.htmls?p=',a.club_image ),'' ) as club_image
         , a.club_name
         , a.club_people   as  club_people_number
         , case when  a.club_id = #{userClubId }
