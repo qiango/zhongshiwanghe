@@ -21,7 +21,9 @@
         LEFT JOIN
           competition b
         on a.competition_id =b.competition_id
-        WHERE a.user_id = #{userId} and b.compertition_live_status =3
+        WHERE a.user_id = #{userId}
+          and b.compertition_live_status !=5
+          and a.user_competition_status IN ('1','99')
     </select>
     <!--UserDetailEntity selectUserDetailEntity(Integer userId);-->
     <select id="selectUserDetailEntity" resultType="com.hongzhi.zswh.app_v6.entity.UserDetailEntity">
@@ -181,7 +183,7 @@
 
         where b.club_id = #{club_id}
         and b.join_club_status = '99'
-
+        and b.user_id !=#{user_id}
         order by   club_user_level  ,  club_user_id
     </select>
 
