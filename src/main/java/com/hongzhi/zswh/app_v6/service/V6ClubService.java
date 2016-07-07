@@ -44,17 +44,16 @@ public class V6ClubService {
         if (is_club_admin.size()!=0){
             throw new HongZhiException("1079");//俱乐部管理员不能退出
         }*/
-        Map<String,Object> clubMap =  v6ClubDao.queryClubLevel(club_id,userId);
-        if ("0".equals(clubMap.get("user_level"))){
-            throw new HongZhiException("1079");//俱乐部管理员不能退出
-        }
-
         List<Map<String, Objects>> list = v6ClubDao.selectCompetitionByUserId(Integer.valueOf(userId));
         if(list.size()>0){
             //不允许退出
             throw new HongZhiException("1077");
         }
-
+        Map<String,Object> clubMap =  v6ClubDao.queryClubLevel(club_id,userId);
+        if ("0".equals(clubMap.get("user_level"))){
+            throw new HongZhiException("1079");//俱乐部管理员不能退出
+        }
+        
         UserDetailEntity userDetail = v6ClubDao.selectUserDetailEntity(Integer.valueOf(userId));
         if(null==userDetail){
             return "success";
