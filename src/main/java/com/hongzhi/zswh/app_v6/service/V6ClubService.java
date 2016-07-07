@@ -40,7 +40,7 @@ public class V6ClubService {
         }
 
         List is_club_admin =  v6ClubDao.selectClubAdmin(club_id,userId);//查看是否是俱乐部管理员
-        if (is_club_admin.size()==0){
+        if (is_club_admin.size()!=0){
             throw new HongZhiException("1079");//俱乐部管理员不能退出
         }
 
