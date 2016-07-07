@@ -53,7 +53,7 @@ public class V6ClubService {
         if ("0".equals(clubMap.get("user_level"))){
             throw new HongZhiException("1079");//俱乐部管理员不能退出
         }
-        
+
         UserDetailEntity userDetail = v6ClubDao.selectUserDetailEntity(Integer.valueOf(userId));
         if(null==userDetail){
             return "success";
