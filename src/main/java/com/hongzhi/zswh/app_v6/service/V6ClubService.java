@@ -129,7 +129,7 @@ public class V6ClubService {
                 throw new HongZhiException("1078");//普通无权限转让
             }
                 v6ClubDao.transferClubByUserId(club_id,userId,"99");//管理员转变成普通用户
-                v6ClubDao.transferClubByUserId(club_id,club_id,"0");//普通用户转变成管理员
+                v6ClubDao.transferClubByUserId(club_id,user_id,"0");//普通用户转变成管理员
 
         }else {
             throw new HongZhiException("1021");//俱乐部为空
