@@ -75,6 +75,16 @@
           and user_level=0
 
     </select>
+   <select id="queryClubLevel" resultType="map">
+      select
+          coalesce(user_level,'99')   user_level
+          ,join_club_status
+       from user_detail
+       where
+          club_id = #{club_id}
+          and
+          user_id = #{user_id}
+   </select>
 
     <update id="transferClubByUserId">
         update user_detail a
