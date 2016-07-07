@@ -15,7 +15,7 @@
 
     <link rel="stylesheet" type="text/css" href="http://static.qiyi.com/css/vip/fuchouzhelianmeng.css"/>
     <link rel="stylesheet" type="text/css" href="http://static.qiyi.com/css/vip/fucengfuchou.css"/>
-    
+
     <link rel="stylesheet" type="text/css" href="http://static.qiyi.com/css/common/global.css" media="all"/>
     <script src="sdkbase_min.js"></script>
 
@@ -27,416 +27,416 @@
 <!-- 奇艺标准二级导航 -->
 <div class="gui_header_qiyue">
 
-<style>
-	body{ font-family: "Microsoft Yahei","SimHei","Helvetica Neue"; font-size: 14px; }
+    <style>
+        body{ font-family: "Microsoft Yahei","SimHei","Helvetica Neue"; font-size: 14px; }
         /*搜索框 suggest*/
-    .suggest_t {
-        position: absolute;
-        left: 20px;
-        top: 50px;
-        border: 1px solid #ccc;
-        padding-top: 5px;
-        width: 266px;
-        background: #fff url(http://www.qiyipic.com/common/fix/images/suggest_tbg.png) repeat-x 0 top;
-        font-size: 12px;
-        color: #000;
-        z-index: 100
-    }
+        .suggest_t {
+            position: absolute;
+            left: 20px;
+            top: 50px;
+            border: 1px solid #ccc;
+            padding-top: 5px;
+            width: 266px;
+            background: #fff url(http://www.qiyipic.com/common/fix/images/suggest_tbg.png) repeat-x 0 top;
+            font-size: 12px;
+            color: #000;
+            z-index: 100
+        }
 
         /*.suggest_t a{padding:4px 8px; display:block; overflow:hidden; zoom:1;}*/
-    .suggest_t a:hover {
-        background: #dfdfdf;
-        color: #000;
-        text-decoration: none;
-    }
+        .suggest_t a:hover {
+            background: #dfdfdf;
+            color: #000;
+            text-decoration: none;
+        }
 
-    .suggest_t em {
-        font-style: normal;
-        color: #999;
-        float: right;
-    }
+        .suggest_t em {
+            font-style: normal;
+            color: #999;
+            float: right;
+        }
 
-    .suggest_t span {
-        color: #999;
-        margin-left: 5px;
-    }
+        .suggest_t span {
+            color: #999;
+            margin-left: 5px;
+        }
 
-    .suggest_t p.text2 {
-        text-indent: 2em;
-    }
+        .suggest_t p.text2 {
+            text-indent: 2em;
+        }
 
-    .suggest_t .selected {
-        background: #F3F3F3;
-    }
+        .suggest_t .selected {
+            background: #F3F3F3;
+        }
 
-    .txtindex {
-        text-indent: .5em;
-    }
+        .txtindex {
+            text-indent: .5em;
+        }
 
-    .suggest_t a {
-        display: block;
-        height: 26px;
-        line-height: 26px;
-        padding-left: 8px;
-    }
+        .suggest_t a {
+            display: block;
+            height: 26px;
+            line-height: 26px;
+            padding-left: 8px;
+        }
 
-    .suggest_t a.otherH {
-        display: block;
-        height: 17px;
-        line-height: 17px;
-        padding-left: 8px;
-    }
+        .suggest_t a.otherH {
+            display: block;
+            height: 17px;
+            line-height: 17px;
+            padding-left: 8px;
+        }
 
-    .mt10 {
-        margin-top: -2px;
-    }
+        .mt10 {
+            margin-top: -2px;
+        }
 
-    * {
-        margin: 0px;
-        padding: 0px;
-    }
+        * {
+            margin: 0px;
+            padding: 0px;
+        }
 
-    a {
-        text-decoration: none;
-    }
+        a {
+            text-decoration: none;
+        }
 
-    li {
-        list-style: none;
-    }
+        li {
+            list-style: none;
+        }
 
-    .container {
-        overflow: hidden;
-        width: 800px;
-        margin: 0px auto;
-        font-family: "微软雅黑", "Microsoft Yahei", "Verdana", "宋体";
-    }
+        .container {
+            overflow: hidden;
+            width: 800px;
+            margin: 0px auto;
+            font-family: "微软雅黑", "Microsoft Yahei", "Verdana", "宋体";
+        }
 
-    .contr {
-        background-color: #5BB75B;
-        color: #FFF;
-        padding: 20px 0;
-        text-align: center;
-        /*
-         border-radius: 10px 10px 0 0;
-         -moz-border-radius: 10px 10px 0 0;
-         -webkit-border-radius: 10px 10px 0 0;
-         */
-    }
+        .contr {
+            background-color: #5BB75B;
+            color: #FFF;
+            padding: 20px 0;
+            text-align: center;
+            /*
+             border-radius: 10px 10px 0 0;
+             -moz-border-radius: 10px 10px 0 0;
+             -webkit-border-radius: 10px 10px 0 0;
+             */
+        }
 
-    .upload_form_cont {
-        /*background: -moz-linear-gradient(#ffffff, #f2f2f2);
-         background: -ms-linear-gradient(#ffffff, #f2f2f2);
-         background: -webkit-gradient(linear, left top, left bottom, color-stop(0%, #ffffff),
-         color-stop(100%, #f2f2f2) );
-         background: -webkit-linear-gradient(#ffffff, #f2f2f2);
-         background: -o-linear-gradient(#ffffff, #f2f2f2);
-         filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ffffff',
-         endColorstr='#f2f2f2' );
-         -ms-filter:
-         "progid:DXImageTransform.Microsoft.gradient(startColorstr='#ffffff', endColorstr='#f2f2f2')";
-         background: linear-gradient(#ffffff, #f2f2f2);  */
-        color: #333;
-        overflow: hidden;
-    }
+        .upload_form_cont {
+            /*background: -moz-linear-gradient(#ffffff, #f2f2f2);
+             background: -ms-linear-gradient(#ffffff, #f2f2f2);
+             background: -webkit-gradient(linear, left top, left bottom, color-stop(0%, #ffffff),
+             color-stop(100%, #f2f2f2) );
+             background: -webkit-linear-gradient(#ffffff, #f2f2f2);
+             background: -o-linear-gradient(#ffffff, #f2f2f2);
+             filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ffffff',
+             endColorstr='#f2f2f2' );
+             -ms-filter:
+             "progid:DXImageTransform.Microsoft.gradient(startColorstr='#ffffff', endColorstr='#f2f2f2')";
+             background: linear-gradient(#ffffff, #f2f2f2);  */
+            color: #333;
+            overflow: hidden;
+        }
 
-    .info {
-        /*background-color: #EEEEEE;*/
-        border: 1px solid #DDDDDD;
-        height: auto;
-        background: #F7F7F7;
-        color: #333;
-    }
+        .info {
+            /*background-color: #EEEEEE;*/
+            border: 1px solid #DDDDDD;
+            height: auto;
+            background: #F7F7F7;
+            color: #333;
+        }
 
-    .info>div {
-        font-size: 14px;
-        font-weight: bold;
-        padding-top: 10px;
-        padding-right: 15px;
-        padding-bottom: 5px;
-        padding-left: 15px;
-        margin-top: 5px;
-        margin-right: 14px;
-        margin-bottom: 10px;
-        margin-left: 14px;
-    }
+        .info>div {
+            font-size: 14px;
+            font-weight: bold;
+            padding-top: 10px;
+            padding-right: 15px;
+            padding-bottom: 5px;
+            padding-left: 15px;
+            margin-top: 5px;
+            margin-right: 14px;
+            margin-bottom: 10px;
+            margin-left: 14px;
+        }
 
-    .info>h2 {
-        padding: 0 15px;
-    }
+        .info>h2 {
+            padding: 0 15px;
+        }
 
-    .info>canvas {
-        height: 20px;
-        width: 425px;
-        margin-top: 10px;
-        margin-right: 14px;
-        margin-bottom: 5px;
-        margin-left: 14px;
-        padding-left: 15px;
-        padding-top: 10px;
-        padding-right: 15px;
-        padding-bottom: 5px;
-    }
+        .info>canvas {
+            height: 20px;
+            width: 425px;
+            margin-top: 10px;
+            margin-right: 14px;
+            margin-bottom: 5px;
+            margin-left: 14px;
+            padding-left: 15px;
+            padding-top: 10px;
+            padding-right: 15px;
+            padding-bottom: 5px;
+        }
 
-    .info #url {
-        width: 660px;
-        margin-top: 0px;
-        margin-right: 0px;
-        margin-bottom: 10px;
-        margin-left: 0px;
-        border: #CCC 1px solid;
-        padding: 2px;
-    }
+        .info #url {
+            width: 660px;
+            margin-top: 0px;
+            margin-right: 0px;
+            margin-bottom: 10px;
+            margin-left: 0px;
+            border: #CCC 1px solid;
+            padding: 2px;
+        }
 
-    #dropZone {
-        border: 3px dashed #CCC;
-        font-size: 36px;
-        font-weight: bold;
-        height: 200px;
-        line-height: 200px;
-        text-align: center;
-        margin-top: 20px;
-    }
+        #dropZone {
+            border: 3px dashed #CCC;
+            font-size: 36px;
+            font-weight: bold;
+            height: 200px;
+            line-height: 200px;
+            text-align: center;
+            margin-top: 20px;
+        }
 
-    #dropZone.hover {
-        background-color: #DDD;
-    }
+        #dropZone.hover {
+            background-color: #DDD;
+        }
 
-    #dropZone.uploading {
-        background: #ffffff url(loading.gif) center 120% no-repeat;
-    }
+        #dropZone.uploading {
+            background: #ffffff url(loading.gif) center 120% no-repeat;
+        }
 
-    #result .s, #result .f {
-        font-size: 12px;
-        margin-bottom: 20px;
-        padding: 10px;
-        /*
-         border-radius: 10px;
-         -moz-border-radius: 10px;
-         -webkit-border-radius: 10px;
-         */
-    }
+        #result .s, #result .f {
+            font-size: 12px;
+            margin-bottom: 20px;
+            padding: 10px;
+            /*
+             border-radius: 10px;
+             -moz-border-radius: 10px;
+             -webkit-border-radius: 10px;
+             */
+        }
 
-    #result .s {
-        background-color: #77fc9f;
-    }
+        #result .s {
+            background-color: #77fc9f;
+        }
 
-    #result .f {
-        background-color: #fcc577;
-    }
+        #result .f {
+            background-color: #fcc577;
+        }
 
-    #fileinfo {
-        color: #333;
-        border: #DDD 1px solid;
-        margin-top: 20px;
-        padding-left: 30px;
-        font-weight: normal;
-        display: none;
-    }
+        #fileinfo {
+            color: #333;
+            border: #DDD 1px solid;
+            margin-top: 20px;
+            padding-left: 30px;
+            font-weight: normal;
+            display: none;
+        }
 
-    #fileinfo h3 {
-        font-size: 14px;
-        margin-bottom: 5px;
-        margin-top: 10px;
-    }
+        #fileinfo h3 {
+            font-size: 14px;
+            margin-bottom: 5px;
+            margin-top: 10px;
+        }
 
-    #controllerBtn {
-        text-align: center;
-        width: 700px;
-        margin: 0px auto;
-    }
+        #controllerBtn {
+            text-align: center;
+            width: 700px;
+            margin: 0px auto;
+        }
 
-    #controllerBtn input {
-        height: 30px;
-        width: 100px;
-        line-height: 30px;
-        background-repeat: repeat-x;
-        border-color: rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.25);
-        color: #FFFFFF;
-        text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.2);
-        border-radius: 3px;
-        border-style: solid;
-        border-width: 1px;
-        box-shadow: 0 1px 0 rgba(255, 255, 255, 0.2) inset, 0 1px 2px rgba(0, 0, 0, 0.05);
-        margin: 10px;
-        cursor: pointer;
-    }
+        #controllerBtn input {
+            height: 30px;
+            width: 100px;
+            line-height: 30px;
+            background-repeat: repeat-x;
+            border-color: rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.25);
+            color: #FFFFFF;
+            text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.2);
+            border-radius: 3px;
+            border-style: solid;
+            border-width: 1px;
+            box-shadow: 0 1px 0 rgba(255, 255, 255, 0.2) inset, 0 1px 2px rgba(0, 0, 0, 0.05);
+            margin: 10px;
+            cursor: pointer;
+        }
 
-    .start_btn {
-        background-color: #5BB75B;
-        background-image: linear-gradient(to bottom, #62C462, #51A351);
-    }
+        .start_btn {
+            background-color: #5BB75B;
+            background-image: linear-gradient(to bottom, #62C462, #51A351);
+        }
 
-    .pause_btn {
-        background-color: #FAA732;
-        background-image: -moz-linear-gradient(center top, #FBB450, #F89406);
-        display: none;
-    }
+        .pause_btn {
+            background-color: #FAA732;
+            background-image: -moz-linear-gradient(center top, #FBB450, #F89406);
+            display: none;
+        }
 
-    .cancel_btn {
-        background-color: #DA4F49;
-        background-image: -moz-linear-gradient(center top, #EE5F5B, #BD362F);
-    }
+        .cancel_btn {
+            background-color: #DA4F49;
+            background-image: -moz-linear-gradient(center top, #EE5F5B, #BD362F);
+        }
 
-    #controllerBtn input:hover {
-        background-image: none;
-    }
+        #controllerBtn input:hover {
+            background-image: none;
+        }
 
-    #fileUpload {
-        display: none;
-    }
+        #fileUpload {
+            display: none;
+        }
 
-    .chooseUpload {
-        width: 100%;
-        height: 100%;
-        color: #AAA;
-        font-size: 26px;
-        font-weight: bold;
-        display: inline-block;
-        text-decoration: none;
-    }
+        .chooseUpload {
+            width: 100%;
+            height: 100%;
+            color: #AAA;
+            font-size: 26px;
+            font-weight: bold;
+            display: inline-block;
+            text-decoration: none;
+        }
 
-    a.chooseUpload:hover {
-        color: #7fb80e;
-    }
+        a.chooseUpload:hover {
+            color: #7fb80e;
+        }
 
-    .all_percent {
-        width: 700px;
-        height: 20px;
-        border: #5BB75B 1px solid;
-        padding: 2px;
-        position: relative;
-    }
+        .all_percent {
+            width: 700px;
+            height: 20px;
+            border: #5BB75B 1px solid;
+            padding: 2px;
+            position: relative;
+        }
 
-    .percent {
-        width: 0px;
-        height: 20px;
-        background: #5BB75B;
-    }
+        .percent {
+            width: 0px;
+            height: 20px;
+            background: #5BB75B;
+        }
 
-    .percent_text {
-        color: #000;
-        width: 100%;
-        height: 20px;
-        line-height: 23px;
-        font-weight: normal;
-        text-align: center;
-        position: absolute;
-        left: 0;
-        top: 0;
-    }
+        .percent_text {
+            color: #000;
+            width: 100%;
+            height: 20px;
+            line-height: 23px;
+            font-weight: normal;
+            text-align: center;
+            position: absolute;
+            left: 0;
+            top: 0;
+        }
 
-    .file_name_info {
-        width: 724px;
-        font-weight: normal;
-        margin-top: 0px;
-        background: #FCFAE0;
-        padding: 5px;
-        border: #DDD 1px solid;
-        border-top: none;
-    }
+        .file_name_info {
+            width: 724px;
+            font-weight: normal;
+            margin-top: 0px;
+            background: #FCFAE0;
+            padding: 5px;
+            border: #DDD 1px solid;
+            border-top: none;
+        }
 
-    .file_name_info span {
-        width: 360px;
-        font-size: 14px;
-        display: inline-block;
-    }
+        .file_name_info span {
+            width: 360px;
+            font-size: 14px;
+            display: inline-block;
+        }
 
-    .file_name_info span em {
-        font-style: normal;
-        color: #51A351;
-        font-weight: bold;
-    }
+        .file_name_info span em {
+            font-style: normal;
+            color: #51A351;
+            font-weight: bold;
+        }
 
-    .file_name, .file_id {
-        color: #51A351;
-        font-size: 14px;
-        font-weight: bold;
-        margin-right: 30px;
-    }
+        .file_name, .file_id {
+            color: #51A351;
+            font-size: 14px;
+            font-weight: bold;
+            margin-right: 30px;
+        }
 
-    .waitlist {
-        width: 730px;
-        font-size: 14px;
-        padding-right: 10px;
-        height: 150px;
-        overflow: auto;
-        border-top: #DDD 1px solid;
-        margin-bottom: 20px;
-    }
+        .waitlist {
+            width: 730px;
+            font-size: 14px;
+            padding-right: 10px;
+            height: 150px;
+            overflow: auto;
+            border-top: #DDD 1px solid;
+            margin-bottom: 20px;
+        }
 
-    .waitlist li {
-        padding: 3px 0px;
-        list-style: decimal;
-        vertical-align: middle;
-        border-bottom: #DDD 1px dashed;
-    }
+        .waitlist li {
+            padding: 3px 0px;
+            list-style: decimal;
+            vertical-align: middle;
+            border-bottom: #DDD 1px dashed;
+        }
 
-    .waitlist li:hover {
-        background: #FCFAE0;
-    }
+        .waitlist li:hover {
+            background: #FCFAE0;
+        }
 
-    .waitlist li span {
-        color: #0052cc;
-        word-wrap: break-word;
-        word-break: normal;
-        margin-right: 30px;
-    }
+        .waitlist li span {
+            color: #0052cc;
+            word-wrap: break-word;
+            word-break: normal;
+            margin-right: 30px;
+        }
 
-    a.deleteupload {
-        margin-left: 50px;
-        color: #FF0000;
-    }
+        a.deleteupload {
+            margin-left: 50px;
+            color: #FF0000;
+        }
 
-    a.deleteupload:hover {
-        text-decoration: underline;
-    }
+        a.deleteupload:hover {
+            text-decoration: underline;
+        }
 
-    .disabled_btn {
-        background-color: #CCC;
-        background-image: linear-gradient(to bottom, #CCC, #CCC);
-    }
+        .disabled_btn {
+            background-color: #CCC;
+            background-image: linear-gradient(to bottom, #CCC, #CCC);
+        }
 
-    .uploadTip, .supportTip, .supportTypeTip {
-        width: 730px;
-        height: auto;
-        font-size: 12px;
-        margin: 20px 0px;
-        border: #FF8247 1px solid;
-        display: none;
-    }
+        .uploadTip, .supportTip, .supportTypeTip {
+            width: 730px;
+            height: auto;
+            font-size: 12px;
+            margin: 20px 0px;
+            border: #FF8247 1px solid;
+            display: none;
+        }
 
-    .tipInfo {
-        width: 720px;
-        height: auto;
-        line-height: 20px;
-        background: #F9F2BA;
-        padding-left: 10px;
-    }
+        .tipInfo {
+            width: 720px;
+            height: auto;
+            line-height: 20px;
+            background: #F9F2BA;
+            padding-left: 10px;
+        }
 
-    .tipContent {
-        color: #FF5235;
-    }
+        .tipContent {
+            color: #FF5235;
+        }
 
-    a.closeTipBox {
-        width: 20px;
-        height: 20px;
-        color: #FFF;
-        text-align: center;
-        float: right;
-        display: block;
-        background: #FF8C00;
-    }
+        a.closeTipBox {
+            width: 20px;
+            height: 20px;
+            color: #FFF;
+            text-align: center;
+            float: right;
+            display: block;
+            background: #FF8C00;
+        }
 
-    a.closeTipBox:hover {
-        background: #FF5500;
-    }
+        a.closeTipBox:hover {
+            background: #FF5500;
+        }
 
 
-</style>
-<form id="j-search-form" action="http://www.qiyi.com/common/searchresult.html" class="headForm" method="get" style="display: none;">
-    <input type="text" class="headText" name="key" id="suggestText" j-cutrange="13" maxlength="36" x-webkit-speech=""/>
-    <input id="searchClick" type="submit" class="headBtn" value="" alt="查询" title="查询"/>
-</form>
+    </style>
+    <form id="j-search-form" action="http://www.qiyi.com/common/searchresult.html" class="headForm" method="get" style="display: none;">
+        <input type="text" class="headText" name="key" id="suggestText" j-cutrange="13" maxlength="36" x-webkit-speech=""/>
+        <input id="searchClick" type="submit" class="headBtn" value="" alt="查询" title="查询"/>
+    </form>
 
 </div>
 
@@ -446,101 +446,101 @@
 
 <!-- 授权相关 -->
 <div style="position:absolute;top:60px;left:40px; display: none;">
-<a href="javascript:void(0);" onclick="getVer();" >获取版本</a>
-<a href="javascript:void(0);" onclick="getEntAuth();" >企业授权</a>
-<a href="javascript:void(0);" onclick="getPerAuth();" style="color:red">个人授权</a><br/>
+    <a href="javascript:void(0);" onclick="getVer();" >获取版本</a>
+    <a href="javascript:void(0);" onclick="getEntAuth();" >企业授权</a>
+    <a href="javascript:void(0);" onclick="getPerAuth();" style="color:red">个人授权</a><br/>
 </div>
 <a href="javascript:void(0);" class="btn btn-default" onclick="refreshauth();" style="line-height: 30px; margin-top: 50px; float: left; margin-left: 180px;"> 刷新token </a><input id="retoken" value="" type="text" style="display: none;"/>
 
 <!-- 视频信息 -->
 <div style="position:absolute;top:30px;left:400px; display: none; ">
-fileid：<input type="text" id="delfileid" value=""/><br/>
-<a href="javascript:void(0);" onclick="getVedios();" >获取视频</a>
-<a href="javascript:void(0);" onclick="getVideoCount();" >获取视频数量</a>
-<a href="javascript:void(0);" onclick="getStatus();" >获取视频状态</a>
-<div ><a href="javascript:void(0);" onclick="getVideosPage();">分页获取视频,每页默认20</a><input
-        type="text" id="pageNum" value="1"/><input type="text" id="pageCount" value="20"/><br/>
-    <a href="javascript:void(0);" onclick="delFile();">删除视频</a>
-    <input type="text" id="deltype" value="1"/>
-</div>
-<div >
-    <input type="text" id="mgrUrl" value="https://openapi.iqiyi.com/" /> <a href="javascript:void(0);" onclick="changeMgrUrl();">更改openapi服务器地址</a>
-</div>
+    fileid：<input type="text" id="delfileid" value=""/><br/>
+    <a href="javascript:void(0);" onclick="getVedios();" >获取视频</a>
+    <a href="javascript:void(0);" onclick="getVideoCount();" >获取视频数量</a>
+    <a href="javascript:void(0);" onclick="getStatus();" >获取视频状态</a>
+    <div ><a href="javascript:void(0);" onclick="getVideosPage();">分页获取视频,每页默认20</a><input
+            type="text" id="pageNum" value="1"/><input type="text" id="pageCount" value="20"/><br/>
+        <a href="javascript:void(0);" onclick="delFile();">删除视频</a>
+        <input type="text" id="deltype" value="1"/>
+    </div>
+    <div >
+        <input type="text" id="mgrUrl" value="https://openapi.iqiyi.com/" /> <a href="javascript:void(0);" onclick="changeMgrUrl();">更改openapi服务器地址</a>
+    </div>
 </div>
 
 <!-- 上传相关 -->
 <style>
-.btn {
-  display: inline-block;
-  padding: 6px 12px;
-  margin-bottom: 0;
-  font-size: 14px;
-  font-weight: normal;
-  line-height: 1.42857143;
-  text-align: center;
-  white-space: nowrap;
-  vertical-align: middle;
-  -ms-touch-action: manipulation;
-      touch-action: manipulation;
-  cursor: pointer;
-  -webkit-user-select: none;
-     -moz-user-select: none;
-      -ms-user-select: none;
-          user-select: none;
-  background-image: none;
-  border: 1px solid transparent;
-  border-radius: 4px;
-}
-.btn:focus,
-.btn:active:focus,
-.btn.active:focus,
-.btn.focus,
-.btn:active.focus,
-.btn.active.focus {
-  outline: thin dotted;
-  outline: 5px auto -webkit-focus-ring-color;
-  outline-offset: -2px;
-}
-.btn:hover,
-.btn:focus,
-.btn.focus {
-  color: #333;
-  text-decoration: none;
-}
-.btn:active,
-.btn.active {
-  background-image: none;
-  outline: 0;
-  -webkit-box-shadow: inset 0 3px 5px rgba(0, 0, 0, .125);
-          box-shadow: inset 0 3px 5px rgba(0, 0, 0, .125);
-}
-.btn-default {
-  color: #333;
-  background-color: #fff;
-  border-color: #ccc;
-}
-.btn-default:focus,
-.btn-default.focus {
-  color: #333;
-  background-color: #e6e6e6;
-  border-color: #8c8c8c;
-}
-.btn-default:hover {
-  color: #333;
-  background-color: #e6e6e6;
-  border-color: #adadad;
-}
-.btn-default:active,
-.btn-default.active,
-.open > .dropdown-toggle.btn-default {
-  color: #333;
-  background-color: #e6e6e6;
-  border-color: #adadad;
-}
-.btn a{ color: #000; }
+    .btn {
+        display: inline-block;
+        padding: 6px 12px;
+        margin-bottom: 0;
+        font-size: 14px;
+        font-weight: normal;
+        line-height: 1.42857143;
+        text-align: center;
+        white-space: nowrap;
+        vertical-align: middle;
+        -ms-touch-action: manipulation;
+        touch-action: manipulation;
+        cursor: pointer;
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        user-select: none;
+        background-image: none;
+        border: 1px solid transparent;
+        border-radius: 4px;
+    }
+    .btn:focus,
+    .btn:active:focus,
+    .btn.active:focus,
+    .btn.focus,
+    .btn:active.focus,
+    .btn.active.focus {
+        outline: thin dotted;
+        outline: 5px auto -webkit-focus-ring-color;
+        outline-offset: -2px;
+    }
+    .btn:hover,
+    .btn:focus,
+    .btn.focus {
+        color: #333;
+        text-decoration: none;
+    }
+    .btn:active,
+    .btn.active {
+        background-image: none;
+        outline: 0;
+        -webkit-box-shadow: inset 0 3px 5px rgba(0, 0, 0, .125);
+        box-shadow: inset 0 3px 5px rgba(0, 0, 0, .125);
+    }
+    .btn-default {
+        color: #333;
+        background-color: #fff;
+        border-color: #ccc;
+    }
+    .btn-default:focus,
+    .btn-default.focus {
+        color: #333;
+        background-color: #e6e6e6;
+        border-color: #8c8c8c;
+    }
+    .btn-default:hover {
+        color: #333;
+        background-color: #e6e6e6;
+        border-color: #adadad;
+    }
+    .btn-default:active,
+    .btn-default.active,
+    .open > .dropdown-toggle.btn-default {
+        color: #333;
+        background-color: #e6e6e6;
+        border-color: #adadad;
+    }
+    .btn a{ color: #000; }
 </style>
 <div class="btn btn-default" style="position:absolute;top:50px;left:30px;line-height:30px;" id="testupload" >
-	<a href="javascript:void(0);" onclick="initUpload();">点击选择视频</a>
+    <a href="javascript:void(0);" onclick="initUpload();">点击选择视频</a>
 </div>
 <div class="all_percent btn" style="padding: 0; display:none; position:absolute;top:250px; margin-left: 30px; box-shadow: inset 0 1px 1px rgba(0,0,0,.075), 0 0 8px rgba(102, 175, 233, .6);" id="divstartup">
     <a href="javascript:void(0);" class="btn btn-default" onclick="sartUpload();" style="position:absolute;top:50px;" id="btnstart">开始上传</a>
@@ -548,11 +548,11 @@ fileid：<input type="text" id="delfileid" value=""/><br/>
     <a href="javascript:void(0);" class="btn btn-default" onclick="resumeUpload();" style="position:absolute;top:50px;left:170px;">恢复</a>
     <a href="javascript:void(0);" class="btn btn-default" onclick="cancelUpload();" style="position:absolute;top:50px;left:240px;">取消</a>
     <a href="javascript:void(0);" class="btn btn-default" onclick="setMeta();" style="position:absolute;top:50px;left:310px;">设置信息</a>
-    
-    
+
+
     <div class="percent" id="percent"></div>
     <div class="percent_text" ><span></span></div>
-    
+
 
 </div>
 <div style="position:absolute;top:450px;  ">更新：<p style="color:red;font-size:12px;">20141127. 上传完手动调用"uoploader.delLocal(fileinfo.file_name,fileinfo.file_id);"</p></div>
@@ -581,7 +581,7 @@ fileid：<input type="text" id="delfileid" value=""/><br/>
     var deltype = document.getElementById("deltype");
     var retoken=document.getElementById("retoken");
     var mgrurl=document.getElementById("mgrUrl");
-    
+
     var vcop = new Q.vcopClient({
         uploadBtn:{
             dom:btn,
@@ -591,27 +591,27 @@ fileid：<input type="text" id="delfileid" value=""/><br/>
             btnL:"100px",
             btnZ:"999",
             hasBind:false},
-            appKey:"8b830c2fe10b44bc9c4a400f032f8ee4",  // 填写申请的app key 
-            appSecret:"b4178d68469d4fe550ffba6a37a78325", // 填写app secret
+        appKey:"8b830c2fe10b44bc9c4a400f032f8ee4",  // 填写申请的app key
+        appSecret:"b4178d68469d4fe550ffba6a37a78325", // 填写app secret
         managerUrl:"http://openapi.iqiyi.com/",
         uploadUrl:"http://upload.iqiyi.com/",
-		needMeta:false
+        needMeta:false
     });
     var fileinfo = {};
     var _refresh=null;
-    
+
     // 8-28 服务器地址修改
     function changeMgrUrl(){
         if(mgrurl.value){
             vcop.resetApiUrl(mgrurl.value);
         }
     }
-    
+
     // 8-27 获取版本号
     function getVer(){
         info.innerHTML = vcop.getSDKVersion();
     }
-        
+
     // 5-27 企业级授权
     function getEntAuth(){
         vcop.getAuthEnterprise(function (data) {
@@ -628,7 +628,7 @@ fileid：<input type="text" id="delfileid" value=""/><br/>
             }
         });
     }
-    
+
     // 8-06 个人授权
     function getPerAuth(){
         vcop.getAuthPerson({uid:"1016614329"},function (data) {
@@ -648,8 +648,8 @@ fileid：<input type="text" id="delfileid" value=""/><br/>
 
     function refreshauth(){
         vcop.refreshToken({
-        grant_type:'refresh_token',
-        refresh_token:retoken.value
+            grant_type:'refresh_token',
+            refresh_token:retoken.value
         },function(data){
             if(data.code !== 'A00000'){
                 info.innerHTML = data.msg;
@@ -659,9 +659,9 @@ fileid：<input type="text" id="delfileid" value=""/><br/>
             }
         })
     }
-    
+
     var uoploader=null;  // 上传
-    
+
     // 5/3 重置按钮
     var btn2=document.getElementById("resetBtn");
     function resetBtn(){
@@ -677,45 +677,50 @@ fileid：<input type="text" id="delfileid" value=""/><br/>
         });
         var f= document.getElementsByTagName("objcet");
     }
-    
+
     function initUpload() {
         if (!vcop.authtoken) {
             getEntAuth();;
         }
         else {
             uoploader=vcop.initUpload({
-				slicesize:1024*128,
-                access_token:vcop.authtoken, 
-                device_id:"test", 
-                uid:"test",
-                allowType:["xv","avi","dat","mpg","mpeg","vob","mkv","mov","wmv","asf","rm","rmvb","ram","flv","mp4","3gp","dv","qt","divx","cpk","fli","flc","m4v","pfv"]  // 重置类型
-                }, {
-                onSuccess:function (data) {
-                    if(data && data.data){
-                        info.innerHTML = data.data.file_id;
-                        $('[name="file_id"]',window.parent.document).val(data.data.file_id);
-                        fileinfo = data.data;
-                        btnstar.style.display = "block";
-                        btnStartUpload.style.display="block";
-                    }
-                },
-                onError:function (data) {
-                    if (data && data.msg) {
-                        info.innerHTML = data.msg;
-                    }
-                    else{
-                        info.innerHTML = "网络错误"
-                    }
-                }}
+                        slicesize:1024*128,
+                        access_token:vcop.authtoken,
+                        device_id:"test",
+                        uid:"test",
+                        allowType:["xv","avi","dat","mpg","mpeg","vob","mkv","mov","wmv","asf","rm","rmvb","ram","flv","mp4","3gp","dv","qt","divx","cpk","fli","flc","m4v","pfv"]  // 重置类型
+                    }, {
+                        onSuccess:function (data) {
+                            if(data && data.data){
+                                info.innerHTML = data.data.file_id;
+                                $('[name="file_id"]',window.parent.document).val(data.data.file_id);
+                                fileinfo = data.data;
+                                btnstar.style.display = "block";
+                                btnStartUpload.style.display="block";
+                            }
+                        },
+                        onError:function (data) {
+                            if (data && data.msg) {
+                                info.innerHTML = data.msg;
+                            }
+                            else{
+                                info.innerHTML = "网络错误"
+                            }
+                        }}
             );
         }
 
     }
 
     var breakdown=false;
-    function sartUpload() {     
-    // 20130819 需手工设置meta(调用setMeta函数),否则返回错误
-    // 20130830 隐藏上传按钮
+    function sartUpload() {
+        // 20130819 需手工设置meta(调用setMeta函数),否则返回错误
+        // 20130830 隐藏上传按钮
+        if(!$.trim($('[name="news_title"]',window.parent.document).val()) || !$.trim($('[name="news_abstract"]',window.parent.document).val())){
+            alert('请先填写资讯标题和资讯摘要');
+            return;
+        }
+        setMeta();//设置上传信息
         uoploader.startUpload(fileinfo, {
             onFinish:function (data) {
                 if (data && data.manualFinish === true) {
@@ -748,7 +753,7 @@ fileid：<input type="text" id="delfileid" value=""/><br/>
                 else{
                     info.innerHTML = "上传失败";
                 }
-                
+
             },
             onProgress:function (data) {    // 5/7 增加速度，剩余时间
                 per.style.width = data.percent + "%";
@@ -758,7 +763,7 @@ fileid：<input type="text" id="delfileid" value=""/><br/>
         btnStartUpload.style.display="none";
         btn.style.display="none";
     }
-    
+
     function pauseUpload() {
         uoploader.pauseUpload(function(data){
             breakdown=data;
@@ -793,7 +798,7 @@ fileid：<input type="text" id="delfileid" value=""/><br/>
             }
         },breakdown);   // 续传传参
     }
-    
+
     function startBreakPoint(){
         if(!breakdown){
             return;
@@ -833,7 +838,7 @@ fileid：<input type="text" id="delfileid" value=""/><br/>
 
     function cancelUpload() {
         uoploader.cancelUpload({
-            onSuccess:function (data) {                
+            onSuccess:function (data) {
                 info.innerHTML = "已取消";
                 setTimeout(function () {
                     resetPer();
@@ -849,12 +854,14 @@ fileid：<input type="text" id="delfileid" value=""/><br/>
     }
 
     function setMeta() {
-        vcop.setMetadata({
+
+        var set = {
             file_id:fileinfo.file_id,
-            file_name:"哈喽哈喽哈喽哈喽哈喽_1",
-            description:"哈喽哈喽哈喽_2", 
+            file_name:$('[name="news_title"]',window.parent.document).val(),
+            description:$('[name="news_abstract"]',window.parent.document).val(),
             uploader:uoploader          // 20130819 需手工设置meta
-        }, function (data) {
+        };
+        vcop.setMetadata(set, function (data) {
             info.innerHTML = data.code;
         })
     }
@@ -869,11 +876,11 @@ fileid：<input type="text" id="delfileid" value=""/><br/>
 
     function getVideoCount() {
         vcop.getVideoCount({},
-            function (data) {
-                if(data)    info.innerHTML = JSON.stringify(data);
-            })
+                function (data) {
+                    if(data)    info.innerHTML = JSON.stringify(data);
+                })
     }
-    
+
     function getStatus(){   // 20130827 查状态
         vcop.getFileStatus({
             file_id:delfile.value!=="" ? delfile.value : ""
@@ -884,16 +891,16 @@ fileid：<input type="text" id="delfileid" value=""/><br/>
 
     function getVideosPage() {
         vcop.getVideoListPage({page_size:pagecount.value, page:page.value},
-            function (data) {
-                if(data)    info.innerHTML = JSON.stringify(data);
-            })
+                function (data) {
+                    if(data)    info.innerHTML = JSON.stringify(data);
+                })
     }
 
     function delFile() {
         vcop.delVideoById({delete_type:deltype.value, file_ids:delfile.value},
-            function (data) {
-                if(data)    info.innerHTML = JSON.stringify(data);
-            })
+                function (data) {
+                    if(data)    info.innerHTML = JSON.stringify(data);
+                })
     }
 
     function resetPer() {
@@ -902,17 +909,17 @@ fileid：<input type="text" id="delfileid" value=""/><br/>
         info.innerHTML='';
         uoploader=null;
         btn.style.display='';
-        
+
     }
-    
+
     // 5-8 ie下初始化页面的时候获取token，取得token后调用initUpload，返回uploader，调用uploader.initOneFile({位置})
     window.onload=function(){
         if(/msie/.test(navigator.userAgent.toLowerCase())){
-             getEntAuth();
+            getEntAuth();
         }
         if(window.parent){
-	        $ = window.parent.$;
-	       setTimeout(initUpload);
+            $ = window.parent.$;
+            setTimeout(initUpload);
         }
     };
 </script>
