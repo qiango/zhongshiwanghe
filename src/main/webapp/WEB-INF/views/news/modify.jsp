@@ -204,7 +204,7 @@
         	$('select').each(function(){
         		$(this).find('option[value="'+ data.data.news[$(this).attr('name')] +'"]').prop('selected',true);
     	    });
-        	if(data.data.news.newsrang){    		
+        	if(data.data.news.newsrang){ debugger;
 	        	$('[name="news_range"]').find('option[value="'+ data.data.news.newsrang["news_range"] +'"]').prop('selected',true).end().change();
 	        	setTimeout(function(){
 		        	$('[name="news_range"]').siblings('select:visible').find('option[value="'+ data.data.news.newsrang["circle_id"] +'"]').prop('selected',true);
@@ -216,8 +216,8 @@
 	    	$(':input').not('select,input[type="checkbox"]').each(function(){
 	    		$(this).val(data.data.news[$(this).attr('name')]);
 	    	});
-	    	if($('[name="news_type"]').val() == 0){
-	    		//图文图片
+	    	if($('[name="news_type"]').val() !== 1){
+	    		//图文或者视频图片
 	    		$('.img-news').find('.viewImg').attr('src','pic.htmls?p=' + (data.data.news.picture[0]?data.data.news.picture[0].media_url:'')).removeClass('collapse');
 	    		$('.img-news').find('#submit_file').val((data.data.news.picture[0]?data.data.news.picture[0].media_url:''));
 	    		
@@ -264,9 +264,11 @@
     	
 	    var editor = new UE.ui.Editor();
 	    editor.render("editor");
-    	UE.getEditor('editor').addListener("ready", function () {
-    	   UE.getEditor('editor').setContent(data.data.news.news_content, false);
-    	});
+		if($('[name="news_type"]').val() == 0) {//图文才需要回显富文本编辑器
+			UE.getEditor('editor').addListener("ready", function () {
+				UE.getEditor('editor').setContent(data.data.news.news_content, false);
+			});
+		}
     }	
     $("#submit_form").validate({
         submitHandler : function(){
