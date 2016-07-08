@@ -173,8 +173,20 @@
 				a.is_delete=0
 				
 	</select>
-	
-	<!-- 根据news_id找到图片列表news_multimedia -->
+
+
+    <select id="getVideoFileId" resultType="String">
+        select
+            media_information
+        from  news_multimedia
+		where
+		      is_delete =0
+		  and news_id =#{news_id}
+		limit 1
+    </select>
+
+
+        <!-- 根据news_id找到图片列表news_multimedia -->
 	<update id="logicDeletePictureBynew_id">
 		update 
 			news_multimedia  a
