@@ -82,7 +82,7 @@
                   else '' end ) as language
                ,max(case when a.key_name='platform' then value_content  
                   else '' end ) as   platform  
-            from v_session_attribute  a  
+            from session_attribute  a
           left join session_time  b 
           on a.id= b.id 
           where   b.due_time  > now() 
