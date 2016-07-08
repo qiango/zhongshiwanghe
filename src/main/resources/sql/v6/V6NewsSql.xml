@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hongzhi.zswh.app_v6.dao.V6NewsDao">
+    
+    <select id="latestNewsList" resultType="com.hongzhi.zswh.app_v6.entity.V6LatestNewsEntity">
+        select 
+            a.news_id
+           ,coalesce(a.news_type    ,'')  as  news_type
+           ,coalesce(a.news_title   ,'')  as  news_title
+           ,coalesce(a.news_subtitle   ,'')  as  news_subtitle
+           ,coalesce(a.news_abstract,'')  as  news_abstract
+           ,a.create_time
+           ,coalesce(c.watch_count,0)  as watch_count
+           ,concat('HEAD',coalesce(d.media_url,''))  as preview_image
+
+        from  news  a 
+        left join news_range b
+               on a.news_id = b.news_id
+              and b.is_delete = 0
+
+        left join (
+                select news_id,count(user_id) as watch_count 
+                from news_watch_history
+                group by news_id 
+                )c
+               on a.news_id = c.news_id 
+
+        left join news_multimedia  d 
+               on a.news_id = d.news_id 
+              and d.media_index = 0
+              and d.is_delete = 0 
+        
+        where a.platform_id = #{platformId}
+          and a.news_type in (
+                <foreach collection="newsType" item="newst" separator="," >
+                    #{newst}
+                </foreach>
+          )
+          and a.news_status = '1' 
+          and (b.range_type=0
+               <if test="competitionList.size() > 0 ">
+               or (  b.range_type=2
+                    and  b.circle_id in (
+                        <foreach collection="competitionList" item="competition" separator=",">
+                            #{competition} 
+                        </foreach>
+                         ) 
+                    )
+               </if>
+               <if test="clubList.size()  > 0 ">
+               or ( b.range_type=1
+                    and  b.circle_id in (
+                        <foreach collection="clubList" item="club" separator=",">
+                            #{club} 
+                        </foreach>
+                         ) 
+                    )
+               </if>
+          )
+        ORDER BY coalesce( a.weights_order,99999999999999) asc ,a.create_time DESC
+        limit #{startRow} , #{pageSize}
+    </select>
+    
+    <select id="newsImageByNewsIdList" resultType="com.hongzhi.zswh.app_v6.entity.V6NewsImageEntity">
+        select 
+             news_id
+            ,concat('HEAD',coalesce(media_url,''))  as  media_url
+            ,coalesce(media_information ,'')  as  media_information
+            ,coalesce(media_index       ,0 )  as  media_index
+        from  news_multimedia 
+        where is_delete = 0 and news_id in (
+            <foreach collection="newsIDList" item="newsID" separator=",">
+                #{newsID}
+            </foreach>
+        )
+    </select>
+    
+
+    
+    <!--List<Integer> getUserCompetition(@Param("user_id")Integer user_id) -->
+    
+    <select id="getUserCompetition" resultType="string">
+    	SELECT
+    		 a.competition_id
+		from 
+			user_competition a
+		WHERE  
+			a.user_id =#{user_id}
+    </select>
+    <!--  List<Integer> getUserClub(@Param("user_id")Integer user_id) -->
+    <select id="getUserClub" resultType="string" >
+   		select
+   			 a.club_id 	
+		from 
+			user_detail a
+		where 
+			a.user_id =#{user_id}
+    </select>
+
+</mapper>

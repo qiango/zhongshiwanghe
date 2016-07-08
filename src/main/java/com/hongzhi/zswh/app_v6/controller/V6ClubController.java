@@ -141,4 +141,5 @@ public class V6ClubController {
             return ObjectUtil.jsonOut(clubService.loadClubManageNotLogIn());
         }
     }
+
 }
