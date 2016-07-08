@@ -174,6 +174,12 @@ public class V6ClubService {
             }else {
                 map.put("user_level",0);//管理员
             }*/
+            List<Map<String, Objects>> list = v6ClubDao.selectCompetitionByUserId(Integer.valueOf( property.getUser_id()));
+            if(list.size()>0){
+                clubMap.put("user_competition_status","1");//1表示有赛事没结束
+            }else {
+                clubMap.put("user_competition_status","0");//0表示没有赛事
+            }
             return clubMap;
         }else {
           throw new HongZhiException("1021");//俱乐部为空
