@@ -41,7 +41,7 @@ public class V6NewsController {
     }
     
     @ResponseBody
-    @RequestMapping("/momentRecommend")
+    @RequestMapping("/moment_recommend")
     public String momentReconnand(HttpSession session , String session_id ,Integer page_number,Integer news_id){
         SessionProperty properties ;
         String language = "zh";
