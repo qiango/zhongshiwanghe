@@ -26,7 +26,9 @@ public interface NewsDao {
 	void saveNewsMultimedia(@Param("imageList") List<NewsImageEntity> list);
 	
 	List<Map<String,Object>> findPictureBynews_id(@Param("news_id") String news_id);
-	
+
+
+    String getVideoFileId(@Param("news_id") int news_id);
 	int logicDeletePictureBynew_id(@Param("news_id") int news_id);
 
     /**   Twitter : @taylorwang789 

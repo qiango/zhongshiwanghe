@@ -238,7 +238,8 @@ public class NewsService {
 		newsDao.logicDeletePictureBynew_id(newsParam.getNews_id());
 		newsDao.logicDeleteRangeByNewsID(newsParam.getNews_id());
 		newsDao.logicDeleteCategoryByNewsID(newsParam.getNews_id());
-		
+
+        newsParam.setMedia_information(ObjectUtil.getProperty(newsDao.getVideoFileId(newsParam.getNews_id()),"").toString());
 		saveImageRangeCategory(newsParam);
 
 //		//重新保存图片
