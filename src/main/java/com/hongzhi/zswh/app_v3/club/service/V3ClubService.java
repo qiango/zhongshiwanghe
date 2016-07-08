@@ -1,24 +1,20 @@
 package com.hongzhi.zswh.app_v3.club.service;
 
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
 import com.hongzhi.zswh.app_v3.club.dao.V3ClubAuditDao;
 import com.hongzhi.zswh.app_v3.club.dao.V3ClubManageDao;
 import com.hongzhi.zswh.app_v3.club.entity.ClubManageEntity;
 import com.hongzhi.zswh.app_v3.club.entity.ClubParam;
 import com.hongzhi.zswh.app_v3.club.entity.ClubQueryEntity;
 import com.hongzhi.zswh.app_v3.notification.service.NotificationService;
+import com.hongzhi.zswh.util.basic.DictionaryUtil;
 import com.hongzhi.zswh.util.basic.ObjectUtil;
 import com.hongzhi.zswh.util.basic.sessionDao.SessionProperty;
 import com.hongzhi.zswh.util.exception.HongZhiException;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.util.*;
 
 /**   Twitter : @taylorwang789 
  * Creat time : Apr 26, 2016    1:32:30 PM
@@ -30,7 +26,10 @@ public class V3ClubService {
 	private V3ClubManageDao  dao ;
 	@Autowired
 	private V3ClubAuditDao  auditDao;
-	
+	@Autowired
+	private DictionaryUtil dictionaryUtil;
+
+
 	private int defaultPageSize=30;
 	
 	
@@ -275,7 +274,9 @@ public class V3ClubService {
 		if(insert_count==1 || insert_count==2){
 			List<Integer> mgrId = dao.getClubMgrId(Integer.parseInt(vclub_id));
 			String userName = dao.getUserName(Integer.parseInt(properties.getUser_id()));
-			notiSender.sendNoti(Integer.parseInt(properties.getUser_id()), mgrId , null , "1" , userName+"申请加入俱乐部，请尽快处理。");
+			if (mgrId.size()>0){
+				notiSender.sendNoti(Integer.parseInt(properties.getUser_id()), mgrId , null , "1" , userName+ dictionaryUtil.getCodeValue("noti_join_club","data_alias",properties.getLanguage()));
+			}
 			return "success";
 		}else{
 			throw new HongZhiException("1041");
