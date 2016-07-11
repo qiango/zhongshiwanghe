@@ -32,7 +32,7 @@
      <select id="sessionUsable" resultType="Integer">
      select 
          count(*)  as data_count 
-         from v_session_time 
+         from session_time
         where due_time > now() 
           and id = #{s_id} 
      </select>
@@ -54,7 +54,7 @@
                   else null end ) as language
                ,max(case when a.key_name='platform' then value_content  
                   else null end ) as   platform  
-            from v_session_attribute  a
+            from session_attribute  a
           where id =   #{s_id } 
           group by id 
      </select>
