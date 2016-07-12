@@ -279,7 +279,8 @@ public class V3ClubService {
 			}
 			List<Integer> club_members_list = dao.selectClubMembers(vclub_id);//根据俱乐部id查询俱乐部当前人数
 			if (!ObjectUtil.isEmpty(club_members_list)) {
-				if (club_members_list.size() >= 3) {
+				int club_min_member = Integer.valueOf(dictionaryUtil.getCodeValue("club_min_member", "data_alias", properties.getLanguage()));
+				if (club_members_list.size() >= club_min_member) {
 					dao.updateClubStatusByClubId(vclub_id);//组建的俱乐部成员达到三个人（加入状态）时，改变club的状态（2筹备中--99启用）
 				}
 			}
