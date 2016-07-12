@@ -271,19 +271,19 @@ public class V6ClubService {
         club.Vclub_name();
         club.Vcity_id();
 
-        String picUrl = null;
+        String pic_url = null;
         try {
-            picUrl = picService.picUpload(request).toString();
+            pic_url = picService.picUpload(request).toString();
         } catch (IOException e) {
             throw new HongZhiException("1011");
         }
 
         //解析调用图片上传后返回的json字符串
-        JSONObject jsonObject = new JSONObject(picUrl);
-        picUrl = jsonObject.getString("picUrl");
+        JSONObject jsonObject = new JSONObject(pic_url);
+        pic_url = jsonObject.getString("picUrl");
 
-        if (!ObjectUtil.isEmpty(picUrl)) {
-            club.setClub_pic(picUrl);
+        if (!ObjectUtil.isEmpty(pic_url)) {
+            club.setClub_pic(pic_url);
         }
         club.setUser_id(Integer.valueOf(property.getUser_id()));
 
