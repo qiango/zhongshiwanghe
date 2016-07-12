@@ -325,4 +325,55 @@
             ${limitSql  }
         </if>
     </select>
+    <insert id="saveSetClub" useGeneratedKeys="true" keyProperty="club_id">
+         insert into club(
+              id
+             ,user_id
+             ,club_name
+             ,club_applicant_name
+             ,create_time
+             ,create_date
+             ,club_status
+             ,club_pic
+             ,club_description
+            )
+            values(
+             #{city_id,jdbcType=INTEGER}
+            ,#{user_id,jdbcType=INTEGER}
+            ,#{club_name,jdbcType=VARCHAR}
+            ,#{club_applicant_name,jdbcType=VARCHAR}
+            ,DATE_FORMAT(now(),'%H%i%s')
+            ,DATE_FORMAT(now(),'%Y%m%d')
+            ,#{club_status}
+            ,#{club_pic}
+            ,#{club_description}
+            )
+    </insert>
+    <select id="selectUserInfoByUserId" resultType="String">
+        select
+          coalesce(case WHEN a.user_real_name='' THEN NULL ELSE a.user_real_name end ,a.user_login_name) as club_applicant_name
+        from
+        user_info a
+        where
+          user_id = #{user_id}
+        and
+          is_delete = 0
+        and
+          user_status = 1
+    </select>
+    <insert id="saveUserDetail">
+        insert into user_detail(
+          club_id
+          ,user_id
+          ,join_club_status
+          ,user_level
+          ,create_time
+        )values(
+            #{club_id}
+            ,#{user_id}
+            ,'99'
+            ,'0'
+            ,now()
+        )
+    </insert>
 </mapper>
