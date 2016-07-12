@@ -109,4 +109,7 @@ public interface V3ClubManageDao {
 	String getUserName(int parseInt);
 
 
+	List<Integer> selectClubMembers(String club_id);
+
+	void updateClubStatusByClubId(String club_id);
 }

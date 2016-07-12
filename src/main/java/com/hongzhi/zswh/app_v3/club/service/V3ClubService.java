@@ -271,14 +271,20 @@ public class V3ClubService {
 	 */
 	public Object saveUserClub(SessionProperty properties, String vclub_id) throws HongZhiException {
 		int insert_count = dao.saveUserClub(Integer.parseInt(properties.getUser_id()), Integer.parseInt(vclub_id));
-		if(insert_count==1 || insert_count==2){
+		if (insert_count == 1 || insert_count == 2) {
 			List<Integer> mgrId = dao.getClubMgrId(Integer.parseInt(vclub_id));
 			String userName = dao.getUserName(Integer.parseInt(properties.getUser_id()));
-			if (mgrId.size()>0){
-				notiSender.sendNoti(Integer.parseInt(properties.getUser_id()), mgrId , null , "1" , userName+ dictionaryUtil.getCodeValue("noti_join_club","data_alias",properties.getLanguage()));
+			if (mgrId.size() > 0) {
+				notiSender.sendNoti(Integer.parseInt(properties.getUser_id()), mgrId, null, "1", userName + dictionaryUtil.getCodeValue("noti_join_club", "data_alias", properties.getLanguage()));
+			}
+			List<Integer> club_members_list = dao.selectClubMembers(vclub_id);//根据俱乐部id查询俱乐部当前人数
+			if (!ObjectUtil.isEmpty(club_members_list)) {
+				if (club_members_list.size() >= 3) {
+					dao.updateClubStatusByClubId(vclub_id);//组建的俱乐部成员达到三个人（加入状态）时，改变club的状态（2筹备中--99启用）
+				}
 			}
 			return "success";
-		}else{
+		} else {
 			throw new HongZhiException("1041");
 		}
 		

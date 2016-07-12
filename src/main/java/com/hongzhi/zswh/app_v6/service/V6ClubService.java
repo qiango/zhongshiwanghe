@@ -273,19 +273,20 @@ public class V6ClubService {
 
         String picUrl = null;
         try {
-            picUrl =  picService.picUpload(request).toString();
+            picUrl = picService.picUpload(request).toString();
         } catch (IOException e) {
             throw new HongZhiException("1011");
         }
 
-       //解析调用图片上传后返回的json字符串
-        JSONObject jsonObject = new JSONObject(picUrl) ;
+        //解析调用图片上传后返回的json字符串
+        JSONObject jsonObject = new JSONObject(picUrl);
         picUrl = jsonObject.getString("picUrl");
 
-        if (!ObjectUtil.isEmpty(picUrl)){
+        if (!ObjectUtil.isEmpty(picUrl)) {
             club.setClub_pic(picUrl);
         }
-        club.setUser_id( Integer.valueOf(property.getUser_id()));
+        club.setUser_id(Integer.valueOf(property.getUser_id()));
+
         String club_applicant_name = v6ClubDao.selectUserInfoByUserId(property.getUser_id());//查询创建俱乐部人
 
         club.setClub_applicant_name(club_applicant_name);
@@ -294,9 +295,9 @@ public class V6ClubService {
         v6ClubDao.saveSetClub(club); //保存club表
 
         int temp = v6ClubDao.saveUserDetail(club);//保存user_detail表
-        if (1== temp){
+        if (1 == temp) {
             return null;
-        }else{
+        } else {
             throw new HongZhiException("1011");//保存失败
         }
 
