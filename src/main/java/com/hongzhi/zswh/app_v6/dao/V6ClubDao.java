@@ -3,6 +3,7 @@ package com.hongzhi.zswh.app_v6.dao;
 
 import com.hongzhi.zswh.app_v6.entity.ClubQueryEntity;
 import com.hongzhi.zswh.app_v6.entity.UserDetailEntity;
+import com.hongzhi.zswh.app_v6.entity.V6Club;
 import com.hongzhi.zswh.util.page.PageModel;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
@@ -64,4 +65,10 @@ public interface V6ClubDao {
     List<Map<String,Object>> clubRanking(@Param("limitSql") String limitSql, @Param("userClubId") int userClubId);
 
     Map<String,Object>  queryClubLevel(@Param("club_id") String club_id,@Param("user_id") String user_id);
+
+    int  saveSetClub(V6Club club);
+
+    String selectUserInfoByUserId(String user_id);
+
+    int  saveUserDetail(V6Club club);
 }

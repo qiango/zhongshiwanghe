@@ -4,6 +4,7 @@ import com.hongzhi.zswh.app_v6.dao.V6ClubDao;
 import com.hongzhi.zswh.app_v6.entity.ClubManageEntity;
 import com.hongzhi.zswh.app_v6.entity.ClubQueryEntity;
 import com.hongzhi.zswh.app_v6.entity.UserDetailEntity;
+import com.hongzhi.zswh.app_v6.entity.V6Club;
 import com.hongzhi.zswh.util.basic.ObjectUtil;
 import com.hongzhi.zswh.util.basic.sessionDao.SessionProperty;
 import com.hongzhi.zswh.util.exception.HongZhiException;
@@ -254,5 +255,51 @@ public class V6ClubService {
         Map<String,Object> map = new HashMap<>();
         map.put("club_interface_data", out);
         return map;
+    }
+
+    /**
+     * 组建俱乐部
+     *
+     * @param request
+     * @param property
+     * @param club
+     * @return
+     * @throws HongZhiException
+     */
+    public Object setClub(HttpServletRequest request, SessionProperty property, V6Club club) throws HongZhiException {
+
+        club.Vclub_name();
+        club.Vcity_id();
+
+        String pic_url = null;
+        try {
+            pic_url = picService.picUpload(request).toString();
+        } catch (IOException e) {
+            throw new HongZhiException("1011");
+        }
+
+        //解析调用图片上传后返回的json字符串
+        JSONObject jsonObject = new JSONObject(pic_url);
+        pic_url = jsonObject.getString("picUrl");
+
+        if (!ObjectUtil.isEmpty(pic_url)) {
+            club.setClub_pic(pic_url);
+        }
+        club.setUser_id(Integer.valueOf(property.getUser_id()));
+
+        String club_applicant_name = v6ClubDao.selectUserInfoByUserId(property.getUser_id());//查询创建俱乐部人
+
+        club.setClub_applicant_name(club_applicant_name);
+        club.setClub_status("2");//刚组建时候俱乐部状态：筹备中
+
+        v6ClubDao.saveSetClub(club); //保存club表
+
+        int temp = v6ClubDao.saveUserDetail(club);//保存user_detail表
+        if (1 == temp) {
+            return null;
+        } else {
+            throw new HongZhiException("1011");//保存失败
+        }
+
     }
 }

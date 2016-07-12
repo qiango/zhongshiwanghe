@@ -1,5 +1,6 @@
 package com.hongzhi.zswh.app_v6.controller;
 
+import com.hongzhi.zswh.app_v6.entity.V6Club;
 import com.hongzhi.zswh.app_v6.service.V6ClubService;
 import com.hongzhi.zswh.util.basic.DictionaryUtil;
 import com.hongzhi.zswh.util.basic.ObjectUtil;
@@ -89,6 +90,15 @@ public class V6ClubController {
         }
 
     }
+
+    /**
+     * 功能待定，未完成
+     * @param session
+     * @param session_id
+     * @param page_number
+     * @param club_name
+     * @return
+     */
     @ResponseBody
     @RequestMapping("/clubList")
     public String clubList(HttpSession session,String session_id,String page_number,String club_name){
@@ -141,5 +151,16 @@ public class V6ClubController {
             return ObjectUtil.jsonOut(clubService.loadClubManageNotLogIn());
         }
     }
-
+    @ResponseBody
+    @RequestMapping("/set_club")
+    public String setClub(HttpServletRequest request,HttpSession session,String session_id,V6Club club){
+        SessionProperty property;
+        String language = "zh";
+        try {
+            property = sess.sessionEffective(session,session_id,"/v6/club/set_club");
+            return ObjectUtil.jsonOut(clubService.setClub(request,property,club));
+        }catch (HongZhiException e){
+            return ObjectUtil.jsonOutError(e.getCode(), dic.getCodeValue(e.getCode(), language ) );
+        }
+    }
 }
