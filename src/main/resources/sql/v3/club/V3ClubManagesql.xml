@@ -269,7 +269,7 @@
         select
           user_id
         from
-        user_detail
+          user_detail
         where
           club_id = #{club_id}
         and
@@ -277,7 +277,7 @@
     </select>
     <update id="updateClubStatusByClubId">
         update
-        club
+          club
         <trim prefix="SET" suffixOverrides=",">
             <if test=" ad_name != null"> club_status='99',</if>
         </trim>
