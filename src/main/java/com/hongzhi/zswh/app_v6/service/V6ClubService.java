@@ -290,7 +290,7 @@ public class V6ClubService {
         String club_applicant_name = v6ClubDao.selectUserInfoByUserId(property.getUser_id());//查询创建俱乐部人
 
         club.setClub_applicant_name(club_applicant_name);
-        club.setClub_status("1");//刚组建时候俱乐部状态：筹备中
+        club.setClub_status("2");//刚组建时候俱乐部状态：筹备中
 
         v6ClubDao.saveSetClub(club); //保存club表
 
