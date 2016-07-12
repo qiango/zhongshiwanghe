@@ -265,5 +265,25 @@
         from user_info
         where user_id = #{user_di}
    </select>
-   
+    <select id="selectClubMembers" resultType="Integer">
+        select
+          user_id
+        from
+          user_detail
+        where
+          club_id = #{club_id}
+        and
+          join_club_status ='99'
+    </select>
+    <update id="updateClubStatusByClubId">
+        update
+          club
+        <trim prefix="SET" suffixOverrides=",">
+            <if test=" ad_name != null"> club_status='99',</if>
+        </trim>
+        <if test="club_id !=null and club_id!=0 ">
+            where club_id = #{club_id}
+        </if>
+
+    </update>
 </mapper>
