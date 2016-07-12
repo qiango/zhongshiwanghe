@@ -267,13 +267,13 @@
    </select>
     <select id="selectClubMembers" resultType="Integer">
         select
-        user_id
+          user_id
         from
         user_detail
         where
-        club_id = #{club_id}
+          club_id = #{club_id}
         and
-        join_club_status ='99'
+          join_club_status ='99'
     </select>
     <update id="updateClubStatusByClubId">
         update
