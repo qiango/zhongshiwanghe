@@ -285,6 +285,8 @@
         ,b.club_create_date
         ,b.club_qq
         ,coalesce(concat('/pic.htmls?p=',b.club_pic ),'' ) as club_image
+        ,b.club_level
+        ,b.club_rank
 
         from user_detail a
         left join club b
@@ -300,6 +302,8 @@
         ,coalesce(concat('/pic.htmls?p=',a.club_image ),'' ) as club_image
         , a.club_name
         , a.club_people   as  club_people_number
+        ,a.club_level
+        ,a.club_rank
         , case when  a.club_id = #{userClubId }
         then  '1'
         else  '0'
@@ -309,6 +313,8 @@
         a.club_id
         ,b.club_pic  as club_image
         ,b.club_name
+        ,b.club_level
+        ,b.club_rank
         ,count(*)  as  club_people
         from user_detail  a
         left join club  b
