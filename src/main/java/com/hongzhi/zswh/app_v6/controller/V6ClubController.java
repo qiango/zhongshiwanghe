@@ -152,6 +152,17 @@ public class V6ClubController {
         }
     }
     @ResponseBody
+    @RequestMapping("/loadClubManage")
+    public String loadClubManageOlder ( HttpSession session,String session_id ){
+        SessionProperty property ;
+        try {
+            property = sess.sessionEffective(session,session_id,"/v6/club/loadClubManage");
+            return ObjectUtil.jsonOut(clubService.loadClubManage(property));
+        } catch (HongZhiException e) {
+            return ObjectUtil.jsonOut(clubService.loadClubManageNotLogIn());
+        }
+    }
+    @ResponseBody
     @RequestMapping("/set_club")
     public String setClub(HttpServletRequest request,HttpSession session,String session_id,V6Club club){
         SessionProperty property;
