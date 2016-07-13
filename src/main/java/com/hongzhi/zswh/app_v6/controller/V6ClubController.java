@@ -141,11 +141,11 @@ public class V6ClubController {
 
     }
     @ResponseBody
-    @RequestMapping("/loadClubManage")
+    @RequestMapping("/load_club_manage")
     public String loadClubManage ( HttpSession session,String session_id ){
         SessionProperty property ;
         try {
-            property = sess.sessionEffective(session,session_id,"/v6/club/loadClubManage");;
+            property = sess.sessionEffective(session,session_id,"/v6/club/load_club_manage");
             return ObjectUtil.jsonOut(clubService.loadClubManage(property));
         } catch (HongZhiException e) {
             return ObjectUtil.jsonOut(clubService.loadClubManageNotLogIn());
