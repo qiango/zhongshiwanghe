@@ -30,13 +30,13 @@ public class V6ClubController {
     private DictionaryUtil dic;
     @ResponseBody
     @RequestMapping("/outofclub")
-    public String OutOfClub(HttpSession session, String session_id, String  club_id){
+    public String OutOfClub(HttpSession session, String session_id){
         SessionProperty properties ;
         String language = "zh";
         try {
             properties = sess.sessionEffective(session,session_id , "/v6/club/outofclub");
             language = properties.getLanguage();
-            return ObjectUtil.jsonOut( clubService.OutOfClub(club_id,properties.getUser_id()));
+            return ObjectUtil.jsonOut( clubService.OutOfClub(properties.getUser_id()));
         } catch (HongZhiException e) {
             return ObjectUtil.jsonOutError(e.getCode(), dic.getCodeValue(e.getCode(), language ) );
         }

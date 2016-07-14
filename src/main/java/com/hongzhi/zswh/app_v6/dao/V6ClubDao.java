@@ -71,4 +71,8 @@ public interface V6ClubDao {
     String selectUserInfoByUserId(String user_id);
 
     int  saveUserDetail(V6Club club);
+
+    List<Integer> selectClubMembers(String club_id);
+
+    void updateClubStatus(@Param("club_status")String club_status,@Param("club_id") String club_id);
 }
