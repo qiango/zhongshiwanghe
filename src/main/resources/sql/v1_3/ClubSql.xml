@@ -151,28 +151,32 @@
 
     <select id="userClub"  resultType="map">
         select
-        b.club_id
-        ,b.user_id
-        ,b.id
-        ,b.language_id
-        ,b.club_name
-        ,b.club_name_short
-        ,b.club_applicant_name
-        ,b.create_time
-        ,b.create_date
-        ,b.club_status
-        ,b.club_description
-        ,b.club_create_date
-        ,b.club_qq
-        ,coalesce(concat('/pic.htmls?p=',b.club_pic ),'' ) as club_image
-        ,b.club_level
-        ,b.club_rank
-
-        from user_detail a
-        left join club b
-        on a.club_id = b.club_id
-        where b.is_delete = '0'
-        and a.user_id = #{user_id }
+          b.club_id
+          ,b.user_id
+          ,b.id
+          ,b.language_id
+          ,b.club_name
+          ,b.club_name_short
+          ,b.club_applicant_name
+          ,b.create_time
+          ,b.create_date
+          ,b.club_status
+          ,b.club_description
+          ,b.club_create_date
+          ,b.club_qq
+          ,coalesce(concat('/pic.htmls?p=',b.club_pic ),'' ) as club_image
+          ,b.club_level
+          ,b.club_rank
+        from
+          user_detail a
+        left join
+          club b
+        on
+          a.club_id = b.club_id
+        where
+          b.is_delete = '0'
+        and
+          a.user_id = #{user_id }
     </select>
 
     <select id="clubRanking" resultType="map">
@@ -265,88 +269,110 @@
 
     <select id="clubInfo" resultType="com.hongzhi.zswh.app_1_3.entity.ClubQueryEntity">
         select
-        t1.user_id
-        ,t1.club_id
-        ,t1.join_club_status
-        ,t1.join_club_status_name
-        ,t1.club_member
-        ,coalesce(t2.sports_camp,0)   as sports_camp
-        ,t3.ranking_postion  as my_club_rank
+          t1.user_id
+          ,t1.club_id
+          ,t1.join_club_status
+          ,t1.join_club_status_name
+          ,t1.club_member
+          ,coalesce(t2.sports_camp,0)   as sports_camp
+          ,t3.ranking_postion  as my_club_rank
         from  (
         select
-        a.user_id
-        ,a.club_id
-        ,a.join_club_status
-        ,c.value as join_club_status_name
-        ,count(*)  as club_member
-        from user_detail  a
-        left join user_detail  b
-        on a.club_id = b.club_id
-        and b.join_club_status  = '99'
-        left join dictionary  c
-        on a.join_club_status = c.code
-        and c.p_code = 'user_detail'
-        and c.language = #{language}
-        where a.user_id = #{userId }
-        group by  a.user_id
-        ,a.club_id
-        ,a.join_club_status
-        ,c.value
+          a.user_id
+          ,a.club_id
+          ,a.join_club_status
+          ,c.value as join_club_status_name
+          ,count(*)  as club_member
+        from
+          user_detail  a
+        left join
+          user_detail  b
+        on
+          a.club_id = b.club_id
+        and
+          b.join_club_status  = '99'
+        left join
+          dictionary  c
+        on
+          a.join_club_status = c.code
+        and
+          c.p_code = 'user_detail'
+        and
+          c.language = #{language}
+        where
+          a.user_id = #{userId }
+        group by
+          a.user_id
+          ,a.club_id
+          ,a.join_club_status
+          ,c.value
         ) t1
         left join (
         select
-        t22.user_id
-        ,count(*)  as sports_camp
-        from club_sports_camp   t21
-        left join user_detail  t22
+          t22.user_id
+          ,count(*)  as sports_camp
+        from
+          club_sports_camp   t21
+        left join
+          user_detail  t22
         on t21.club_id = t22.club_id
-        left join sports_camp  t23
-        on t21.sports_camp_id = t23.sports_camp_id
-        where t22.user_id =  #{userId }
-        and t23.is_delete= '0'
-        group by t22.user_id
+        left join
+          sports_camp  t23
+        on
+          t21.sports_camp_id = t23.sports_camp_id
+        where
+          t22.user_id =  #{userId }
+        and
+          t23.is_delete= '0'
+        group by
+          t22.user_id
         )  t2
         on  t1.user_id = t2.user_id
 
         left join (
         select
-        concat(@row_number:=@row_number+1,'' )  AS ranking_postion
-        , a.club_id
-        , a.club_people   as  club_people_number
-
+          concat(@row_number:=@row_number+1,'' )  AS ranking_postion
+          ,a.club_id
+          ,a.club_people   as  club_people_number
         from (
         select
-        a.club_id
-        ,b.club_name
-        ,count(*)  as  club_people
-        from user_detail  a
-        left join club  b
-        on a.club_id = b.club_id
-        where join_club_status = '99'
+          a.club_id
+          ,b.club_name
+          ,count(*)  as  club_people
+        from
+          user_detail  a
+        left join
+          club  b
+        on
+          a.club_id = b.club_id
+        where
+          join_club_status = '99'
         group by
-        a.club_id
-        ,b.club_name
+          a.club_id
+          ,b.club_name
         ) a
         ,(SELECT @row_number:=0) t
         order by club_people desc , convert(club_name USING gbk) COLLATE gbk_chinese_ci
-
         )  t3
         on t1.club_id = t3.club_id
-
     </select>
 
     <!--List<Map<String,Objects>> selectCompetitionByUserId(Integer userId);-->
     <select id="selectCompetitionByUserId" resultType="map">
         SELECT
-        b.competition_id
+          b.competition_id
         FROM
-        user_competition a
+          user_competition a
         LEFT JOIN
-        competition b
-        on a.competition_id =b.competition_id
-        WHERE a.user_id = #{userId}
-        and b.compertition_live_status !=5
-        and a.user_competition_status IN ('1','99')
+          competition b
+        on
+          a.competition_id =b.competition_id
+        WHERE
+          a.user_id = #{userId}
+        and
+          b.compertition_live_status !=5
+        and
+          a.user_competition_status IN ('1','99')
     </select>
     <select id="queryClubLevel" resultType="map">
         select
