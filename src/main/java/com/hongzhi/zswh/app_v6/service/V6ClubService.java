@@ -27,7 +27,6 @@ public class V6ClubService {
     private V6ClubDao v6ClubDao;
     @Autowired
     private PictureService picService;
-
     /**
      * 会员退出俱乐部，管理员不能退出
      * @param club_id
@@ -35,11 +34,11 @@ public class V6ClubService {
      * @return
      * @throws HongZhiException
      */
-    public String OutOfClub(String club_id,String userId)throws HongZhiException{
+    public String OutOfClub(String userId)throws HongZhiException{
 
-        if (ObjectUtil.isEmpty(club_id)){
-           throw new HongZhiException("1021");
-        }
+/*        if (ObjectUtil.isEmpty(club_id)) {
+            throw new HongZhiException("1021");
+        }*/
 
      /*   List is_club_admin =  v6ClubDao.selectClubAdmin(club_id,userId);//查看是否是俱乐部管理员
         if (is_club_admin.size()!=0){
@@ -50,9 +49,21 @@ public class V6ClubService {
             //不允许退出
             throw new HongZhiException("1077");
         }
-        Map<String,Object> clubMap =  v6ClubDao.queryClubLevel(club_id,userId);
+        Map<String,Object> clubMap =  v6ClubDao.queryClubLevel(null,userId);
         if ("0".equals(clubMap.get("user_level"))){
-            throw new HongZhiException("1079");//俱乐部管理员不能退出
+
+            String club_id =  clubMap.get("club_id").toString();
+            List<Integer> club_member_list  =   v6ClubDao.selectClubMembers(club_id);
+
+            if (club_member_list.size()==1){
+                //只剩下管理员一个人可以退出俱乐部，且俱乐部解散
+                String club_status = "3";
+                v6ClubDao.updateClubStatus(club_status,club_id);
+            }else if (club_member_list.size()!=1){
+
+                throw new HongZhiException("1079");//俱乐部管理员不能退出
+            }
+
         }
 
         UserDetailEntity userDetail = v6ClubDao.selectUserDetailEntity(Integer.valueOf(userId));

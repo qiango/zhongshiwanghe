@@ -37,7 +37,7 @@
 					and d.p_code = 'club'  
 					and d.language='zh'
 		where 
-			is_delete = '0'  and  a.club_status ='99' 
+			is_delete = '0'  and  a.club_status IN ('99','2')
 		order by 
 			convert(a.club_name USING gbk) COLLATE gbk_chinese_ci 
   </select>
