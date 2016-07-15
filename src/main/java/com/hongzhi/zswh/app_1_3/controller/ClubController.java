@@ -19,7 +19,7 @@ import javax.servlet.http.HttpSession;
  * Created by XieCaij on 2016/6/28.
  */
 @Controller("app_1_3_ClubController")
-@RequestMapping("/v1_3/club")
+@RequestMapping("/v1.3/club")
 public class ClubController {
     @Autowired
     private ClubService clubService;

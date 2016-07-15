@@ -206,46 +206,50 @@ public class V3ClubService {
 	 * @throws HongZhiException 
 	 */
 	public Object clubJoin(SessionProperty properties, String vclub_id, String vclub_user_id,
-			String vjoin_club_status, ClubParam clubParam) throws HongZhiException {
-		String reason = null ;
+						   String vjoin_club_status, ClubParam clubParam) throws HongZhiException {
+		String reason = null;
 		Integer reasonID = null;
-		if(vjoin_club_status.equals("0") || vjoin_club_status.equals("97")){
+		if (vjoin_club_status.equals("0") || vjoin_club_status.equals("97")) {
 			reason = clubParam.Vreason();
 			vjoin_club_status = "97";
 			reasonID = auditDao.refuseReason(reason);
 		}
-		
+
 		int loginUserRole = auditDao.userRole(Integer.parseInt(properties.getUser_id()));
-		if(loginUserRole == 0 ){
+		if (loginUserRole == 0) {
 			throw new HongZhiException("1044");
 		}
 
 		List<String> userIdList = Arrays.asList(vclub_user_id.split(","));
 		List<Integer> userId = new ArrayList<>();
-		for(int i =0;i<userIdList.size();i++){
+		for (int i = 0; i < userIdList.size(); i++) {
 			userId.add(Integer.parseInt(userIdList.get(i)));
 		}
-		
-		int effectiveCount = auditDao.apply(Integer.parseInt(vclub_id),vjoin_club_status,userId,reasonID);
-		
-		if(effectiveCount == userId.size()){
-			String club_name = dao.getClubName(Integer.parseInt(vclub_id));
-			if(vjoin_club_status.equals("0") || vjoin_club_status.equals("97")){
-				notiSender.sendNoti(Integer.parseInt(properties.getUser_id()), userId ,null, "1" ,dictionaryUtil.getCodeValue("check_join_club_f", "data_alias", properties.getLanguage()) +club_name+dictionaryUtil.getCodeValue("join_club_f", "data_alias", properties.getLanguage()) + ( ObjectUtil.isEmpty(reason) ?"":dictionaryUtil.getCodeValue("join_club_reason", "data_alias", properties.getLanguage())+reason ) );
-			}else if(vjoin_club_status.equals("99")){
-				notiSender.sendNoti(Integer.parseInt(properties.getUser_id()), userId ,null, "1" , dictionaryUtil.getCodeValue("check_join_club_t", "data_alias", properties.getLanguage())+club_name+dictionaryUtil.getCodeValue("join_club_t", "data_alias", properties.getLanguage()));
+
+		int effectiveCount = auditDao.apply(Integer.parseInt(vclub_id), vjoin_club_status, userId, reasonID);
+
+		if (effectiveCount == userId.size()) {
+			Map<String, String> map = dao.getClubName(Integer.parseInt(vclub_id));
+
+			if (vjoin_club_status.equals("0") || vjoin_club_status.equals("97")) {
+				notiSender.sendNoti(Integer.parseInt(properties.getUser_id()), userId, null, "1", dictionaryUtil.getCodeValue("check_join_club_f", "data_alias", properties.getLanguage()) + map.get("club_name") + dictionaryUtil.getCodeValue("join_club_f", "data_alias", properties.getLanguage()) + (ObjectUtil.isEmpty(reason) ? "" : dictionaryUtil.getCodeValue("join_club_reason", "data_alias", properties.getLanguage()) + reason));
+			} else if (vjoin_club_status.equals("99")) {
+				notiSender.sendNoti(Integer.parseInt(properties.getUser_id()), userId, null, "1", dictionaryUtil.getCodeValue("check_join_club_t", "data_alias", properties.getLanguage()) + map.get("club_name") + dictionaryUtil.getCodeValue("join_club_t", "data_alias", properties.getLanguage()));
 			}
 
-			List<Integer> club_members_list = dao.selectClubMembers(vclub_id);//根据俱乐部id查询俱乐部当前人数
-			if (!ObjectUtil.isEmpty(club_members_list)) {
-				int club_min_member = Integer.valueOf(dictionaryUtil.getCodeValue("club_min_member", "data_alias", properties.getLanguage()));
-				if (club_members_list.size() == club_min_member) {
-					dao.updateClubStatusByClubId(vclub_id);//组建的俱乐部成员达到三个人（加入状态）时，改变club的状态（2筹备中--99启用）
+			if ("2".equals(map.get("club_status"))) {
+				List<Integer> club_members_list = dao.selectClubMembers(vclub_id);//根据俱乐部id查询俱乐部当前人数
+				if (!ObjectUtil.isEmpty(club_members_list)) {
+					int club_min_member = Integer.valueOf(dictionaryUtil.getCodeValue("club_min_member", "data_alias", properties.getLanguage()));
+					if (club_members_list.size() >= club_min_member) {
+						dao.updateClubStatusByClubId(vclub_id);//组建的俱乐部成员达到三个人（加入状态）时，改变club的状态（2筹备中--99启用）
+					}
 				}
 			}
 
+
 			return "success";
-		}else{
+		} else {
 			throw new HongZhiException("1011");
 		}
 	}
