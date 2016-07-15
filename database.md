@@ -59,71 +59,6 @@ property_value| varchar(200) | NULL| 属性值
 
 
 
-DROP TABLE IF EXISTS |advertising|;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE |advertising| (
-  |advertising_id| int(11) NOT NULL AUTO_INCREMENT | 广告位编号
-  |advertising_fodder_category_id| int(11) | NULL | 广告素材类型编号
-  |advertising_name| varchar(255) COLLATE utf8_bin | NULL | 广告位名称
-  |advertising_type| varchar(2) COLLATE utf8_bin | NULL | 广告位类型
-  |advertising_status| varchar(2) COLLATE utf8_bin | NULL | 广告位状态
-  |advertising_fodder_id| int(11) | NULL
-  PRIMARY KEY (|advertising_id|)
-  KEY |FK_Relationship_33| (|advertising_fodder_category_id|)
-  CONSTRAINT |FK_Relationship_33| FOREIGN KEY (|advertising_fodder_category_id|) REFERENCES |advertising_fodder_category| (|advertising_fodder_category_id|)
-) ENGINE=InnoDB AUTO_INCREMENT=2 | CHARSET=utf8 COLLATE=utf8_bin ROW_FORMAT=COMPACT |=广告位;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
-
-DROP TABLE IF EXISTS |advertising_fodder|;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE |advertising_fodder| (
-  |advertising_fodder_id| int(11) NOT NULL AUTO_INCREMENT | 广告素材编号
-  |advertising_fodder_category_id| int(11) | NULL | 广告素材类型编号
-  |user_id| int(11) | NULL | 用户编号
-  |advertising_fodder_name| varchar(255) COLLATE utf8_bin | NULL | 广告素材名
-  |advertising_fodder_start_date| varchar(14) COLLATE utf8_bin | NULL | 广告素材开始时间
-  |advertising_fodder_end_date| varchar(14) COLLATE utf8_bin | NULL | 广告素材结束时间
-  |advertising_fodder_url| varchar(255) COLLATE utf8_bin | NULL | 广告素材指向
-  PRIMARY KEY (|advertising_fodder_id|)
-  KEY |FK_Relationship_31| (|advertising_fodder_category_id|)
-  KEY |FK_Relationship_32| (|user_id|)
-  CONSTRAINT |FK_Relationship_31| FOREIGN KEY (|advertising_fodder_category_id|) REFERENCES |advertising_fodder_category| (|advertising_fodder_category_id|)
-  CONSTRAINT |FK_Relationship_32| FOREIGN KEY (|user_id|) REFERENCES |user_info| (|user_id|)
-) ENGINE=InnoDB AUTO_INCREMENT=2 | CHARSET=utf8 COLLATE=utf8_bin ROW_FORMAT=COMPACT |=广告素材;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
-
-DROP TABLE IF EXISTS |advertising_fodder_category|;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE |advertising_fodder_category| (
-  |advertising_fodder_category_id| int(11) NOT NULL AUTO_INCREMENT | 广告素材类型编号
-  |platform_id| int(11) | NULL | 平台编号
-  |user_id| int(11) | NULL | 用户编号
-  |advertising_fodder_size| varchar(255) COLLATE utf8_bin | NULL | 广告素材尺寸
-  PRIMARY KEY (|advertising_fodder_category_id|)
-  KEY |FK_Relationship_29| (|user_id|)
-  KEY |FK_Relationship_30| (|platform_id|)
-  CONSTRAINT |FK_Relationship_29| FOREIGN KEY (|user_id|) REFERENCES |user_info| (|user_id|)
-  CONSTRAINT |FK_Relationship_30| FOREIGN KEY (|platform_id|) REFERENCES |platform| (|platform_id|)
-) ENGINE=InnoDB | CHARSET=utf8 COLLATE=utf8_bin ROW_FORMAT=COMPACT |=广告素材类型;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
-DROP TABLE IF EXISTS |advertising_fodder_image|;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE |advertising_fodder_image| (
-  |advertising_fodder_image_id| int(11) NOT NULL AUTO_INCREMENT | 广告素材图片编号
-  |advertising_fodder_image| varchar(255) | NULL | 广告素材图片
-  |advertising_fodder_id| int(11) | NULL | 广告素材编号
-  PRIMARY KEY (|advertising_fodder_image_id|)
-) ENGINE=InnoDB AUTO_INCREMENT=2 | CHARSET=utf8 ROW_FORMAT=DYNAMIC |=广告素材图片;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
-
 
 ### 俱乐部
 club
@@ -150,23 +85,6 @@ latitude| decimal(1310) | NULL | 俱乐部所在地纬度
 club_level| varchar(2) COLLATE utf8_bin | 1 | 俱乐部級別
 club_rank| varchar(2) COLLATE utf8_bin | 1 | 俱乐部等級, (官方 / 认证)
 
-
-DROP TABLE IF EXISTS |club_applicant_log|;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE |club_applicant_log| (
-  |club_applicant_log_id| int(11) NOT NULL AUTO_INCREMENT | 俱乐部申请日志编号
-  |user_id| int(11) | NULL | 用户编号
-  |club_id| int(11) | NULL | 俱乐部编号
-  |from_club_status| varchar(2) COLLATE utf8_bin | NULL | 原俱乐部状态
-  |to_club_status| varchar(2) COLLATE utf8_bin | NULL | 新俱乐部状态
-  PRIMARY KEY (|club_applicant_log_id|)
-  KEY |FK_Relationship_6| (|user_id|)
-  KEY |FK_Relationship_7| (|club_id|)
-  CONSTRAINT |FK_Relationship_6| FOREIGN KEY (|user_id|) REFERENCES |user_info| (|user_id|)
-  CONSTRAINT |FK_Relationship_7| FOREIGN KEY (|club_id|) REFERENCES |club| (|club_id|)
-) ENGINE=InnoDB | CHARSET=utf8 COLLATE=utf8_bin ROW_FORMAT=COMPACT |=俱乐部申请日志;
-/*!40101 SET character_set_client = @saved_cs_client */;
 
 
 ### 俱乐部的赛事成绩
@@ -662,373 +580,211 @@ picture_upload
 
 字段|类型|默认值|中文名
 ---|---|---|--
-id| int(11) unsigned NOT NULL AUTO_INCREMENT
-origin_name| varchar(40) COLLATE utf8_bin | NULL
-new_name| varchar(40) COLLATE utf8_bin | NULL
-create_time| timestamp NULL | NULL
+id| int(11) | NOT NULL AUTO_INCREMENT | ID
+origin_name| varchar(40) COLLATE utf8_bin | NULL | 原图片名
+new_name| varchar(40) COLLATE utf8_bin | NULL | 新图片名
+create_time| timestamp NULL | NULL |创建时间
+
+
+### 角色
+role_info
+
+字段|类型|默认值|中文名
+---|---|---|--
+role_id| int(11)| NOT NULL AUTO_INCREMENT | 角色编号
+role_name| varchar(100) COLLATE utf8_bin | NULL | 角色名称
+remark| varchar(500) COLLATE utf8_bin | NULL | 备注
+is_delete| char(1) COLLATE utf8_bin | 0 |  是否删除  1:已删 , 0:未删
+
+
+### 角色菜单关系
+roles_menus
+
+字段|类型|默认值|中文名
+---|---|---|--
+role_id| int(11)| NOT NULL | 角色编号
+menu_id| int(11)| NOT NULL | 菜单编号
+
+
+### session中綁定数据
+session_attribute
+
+字段|类型|默认值|中文名
+---|---|---|--
+id| int(11) | NULL | session_time -> table_id
+key_name| varchar(20) | NULL | 键名
+value_content| varchar(300) | NULL | 数值
+
+
+### session日志
+session_log
+
+字段|类型|默认值|中文名
+---|---|---|--
+id| int(11) | NULL | session_time -> id
+function_name| varchar(100) | NULL | 用户访问的功能名
+visit_time| timestamp NULL | NULL | 访问时间
+
+
+### session时间
+session_time
+
+字段|类型|默认值|中文名
+---|---|---|--
+id| int(11) NOT NULL AUTO_INCREMENT
+session_id| varchar(300) NOT NULL | session_id
+create_time| timestamp NULL | NULL | 创建时间
+last_use_time| timestamp NULL | NULL | 上次使用时间
+due_time| timestamp NULL | NULL | 到期时间
+
+
+### 配送地址
+shipping_address
+
+字段|类型|默认值|中文名
+---|---|---|--
+shipping_id| int(11) NOT NULL AUTO_INCREMENT | 配送地址ID
+user_id| int(11) | NULL | 用户ID  user_info > user_id
+city_code| varchar(20) | NULL | 地点标记   world_city > remark
+detail_address| varchar(200) | NULL | 详细地址
+receiver_name| varchar(50) | NULL | 收货人
+receiver_phone| varchar(20) | NULL | 收货人电话
+is_default| char(1) | NULL | 是否是默认地址  0: 否 1: 是
+is_delete| char(1) | 0 | 删除标记 0: 未删除 1: 己删除
+
+
+### 运动派
+sports_camp
+
+字段|类型|默认值|中文名
+---|---|---|--
+sports_camp_id| int(11) NOT NULL AUTO_INCREMENT | 运动派编号
+language_id| int(11) | NULL | 语言编号
+user_id| int(11) | NULL | 用户编号
+sports_camp_name| varchar(255) COLLATE utf8_bin | NULL | 运动派名称
+remark| varchar(500) COLLATE utf8_bin | NULL | 备注
+is_delete| char(1) COLLATE utf8_bin | 0
+
+
+### 版本信息
+upgrade_version
+
+字段|类型|默认值|中文名
+---|---|---|--
+iOS_current_version| varchar(30) COLLATE utf8_bin | NULL| iOS 版本
+android_current_version| varchar(30) COLLATE utf8_bin | NULL| Android 版本
+iOS| varchar(10) COLLATE utf8_bin | NULL| iOS 是否更新 , F:更新 ,  N:不更新
+Android| varchar(10) COLLATE utf8_bin | NULL| Android 是否更新 , F:更新 ,  N:不更新
+iOS_open| varchar(10) COLLATE utf8_bin | NULL| iOS 启用更新  yes:启用,  no:不启用
+android_open| varchar(10) COLLATE utf8_bin | NULL| Android 启用更新  yes:启用,  no:不启用
+
+
+### 用户参加的赛事
+user_competition
+
+字段|类型|默认值|中文名
+---|---|---|--
+competition_id| int(11) | 0 | 赛事编号
+user_id| int(11) | 0 | 用户编号
+user_competition_status| varchar(2) COLLATE utf8_bin | NULL | 用户赛事状态
+create_time| timestamp | CURRENT_TIMESTAMP |  创建时间
+apply_or_refuse_time| timestamp | NULL | 同意或拒绝时间
 
 
 
+### 用户参加赛事被拒绝原因
+user_competition_refuse_reason
 
-DROP TABLE IF EXISTS |platform|;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE |platform| (
-  |platform_id| int(11) NOT NULL AUTO_INCREMENT | 平台编号
-  |platform_name| varchar(50) COLLATE utf8_bin | NULL | 平台名称
-  PRIMARY KEY (|platform_id|)
-) ENGINE=InnoDB AUTO_INCREMENT=3 | CHARSET=utf8 COLLATE=utf8_bin ROW_FORMAT=COMPACT |=平台表;
-/*!40101 SET character_set_client = @saved_cs_client */;
+字段|类型|默认值|中文名
+---|---|---|--
+id| int(11) | NOT NULL AUTO_INCREMENT | 主键
+user_id| int(11) | NULL| 用户ID
+competition_id| int(11) | NULL| 赛事ID
+refuse_reason| varchar(200) | NULL| 原因
+create_time| timestamp NULL | CURRENT_TIMESTAMP| 创建时间
 
---
--- Table structure for table |role_info|
---
 
-DROP TABLE IF EXISTS |role_info|;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE |role_info| (
-  |role_id| int(11) NOT NULL AUTO_INCREMENT | 角色编号
-  |role_name| varchar(100) COLLATE utf8_bin | NULL | 角色名称
-  |remark| varchar(500) COLLATE utf8_bin | NULL | 备注
-  |is_delete| char(1) COLLATE utf8_bin | 0
-  PRIMARY KEY (|role_id|)
-) ENGINE=InnoDB AUTO_INCREMENT=11 | CHARSET=utf8 COLLATE=utf8_bin ROW_FORMAT=COMPACT |=角色表;
-/*!40101 SET character_set_client = @saved_cs_client */;
 
---
--- Table structure for table |roles_menus|
---
+### 用户参加俱乐部狀态
+user_detail
 
-DROP TABLE IF EXISTS |roles_menus|;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE |roles_menus| (
-  |role_id| int(11) NOT NULL | 角色编号
-  |menu_id| int(11) NOT NULL | 菜单编号
-  PRIMARY KEY (|role_id||menu_id|)
-  KEY |FK_roles_menus2| (|menu_id|)
-  CONSTRAINT |FK_roles_menus| FOREIGN KEY (|role_id|) REFERENCES |role_info| (|role_id|)
-  CONSTRAINT |FK_roles_menus2| FOREIGN KEY (|menu_id|) REFERENCES |menu_info| (|menu_id|)
-) ENGINE=InnoDB | CHARSET=utf8 COLLATE=utf8_bin ROW_FORMAT=COMPACT |=角色菜单关系表;
-/*!40101 SET character_set_client = @saved_cs_client */;
+字段|类型|默认值|中文名
+---|---|---|--
+club_id| int(11) | NULL | 俱乐部编号
+user_id| int(11)| NOT NULL | 用户编号
+jump_club_number| int(11) | NULL | 选择俱乐部跳过次数
+join_club_status| varchar(2) COLLATE utf8_bin | NULL | 加入俱乐部状态
+user_level| varchar(3) COLLATE utf8_bin | 99 | 用户级別
+create_time| timestamp NULL | NULL | 创建时间
+change_status_time| timestamp NULL | NULL | 狀态改变时间
+club_refuse_id| int(11) | NULL | 拒绝原因ID
 
---
--- Table structure for table |session_attribute|
---
 
-DROP TABLE IF EXISTS |session_attribute|;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE |session_attribute| (
-  |id| int(11) | NULL | session_time -> table_id
-  |key_name| varchar(20) | NULL | 键名
-  |value_content| varchar(300) | NULL | 数值
-) ENGINE=InnoDB | CHARSET=utf8 ROW_FORMAT=DYNAMIC;
-/*!40101 SET character_set_client = @saved_cs_client */;
+### 用户被拒绝加入俱乐部原因
+user_detail_refuse_club_reason
 
---
--- Table structure for table |session_log|
---
+字段|类型|默认值|中文名
+---|---|---|--
+club_reason_id| int(11) | NOT NULL AUTO_INCREMENT | 主键
+reason_content| text | NULL  | 原因
+create_time| timestamp NULL | CURRENT_TIMESTAMP | 创建时间
 
-DROP TABLE IF EXISTS |session_log|;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE |session_log| (
-  |id| int(11) | NULL | session_time -> id
-  |function_name| varchar(100) | NULL | 用户访問的功能名
-  |visit_time| timestamp NULL | NULL | 访問时間
-) ENGINE=InnoDB | CHARSET=utf8 ROW_FORMAT=DYNAMIC;
-/*!40101 SET character_set_client = @saved_cs_client */;
 
---
--- Table structure for table |session_time|
---
+### 用户
+user_info
 
-DROP TABLE IF EXISTS |session_time|;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE |session_time| (
-  |id| int(11) NOT NULL AUTO_INCREMENT
-  |session_id| varchar(300) NOT NULL | session_id
-  |create_time| timestamp NULL | NULL | 创建时間
-  |last_use_time| timestamp NULL | NULL | 上次使用时間
-  |due_time| timestamp NULL | NULL | 到期时間
-  PRIMARY KEY (|id|)
-) ENGINE=InnoDB AUTO_INCREMENT=1495 | CHARSET=utf8 ROW_FORMAT=DYNAMIC;
-/*!40101 SET character_set_client = @saved_cs_client */;
+字段|类型|默认值|中文名
+---|---|---|--
+user_id| int(11) NOT NULL AUTO_INCREMENT | 用户编号
+platform_id| int(11) | NULL | 平台编号
+user_real_name| varchar(200) COLLATE utf8_bin | NULL | 用户真实姓名
+user_login_name| varchar(200) COLLATE utf8_bin | NULL | 用户登录名
+user_password| varchar(1024) COLLATE utf8_bin | NULL | 登录密码
+phone| varchar(50) COLLATE utf8_bin | NULL | 手机
+mail_address| varchar(200) COLLATE utf8_bin | NULL | 邮箱
+user_status| varchar(2) COLLATE utf8_bin | NULL | 用户状态
+remark| varchar(500) COLLATE utf8_bin | NULL | 备注
+create_time| varchar(6) COLLATE utf8_bin | NULL | 创建时间
+create_date| varchar(8) COLLATE utf8_bin | NULL | 创建日期
+is_delete| varchar(1) COLLATE utf8_bin | NULL | 是否删除
+nickname| varchar(200) COLLATE utf8_bin | NULL | 昵称
+gender| char(1) COLLATE utf8_bin | NULL | 性別
+birthdate| date | NULL | 生日
+address| varchar(500) COLLATE utf8_bin | NULL | 地址
+profile_picture| varchar(300) COLLATE utf8_bin | NULL | 头像
+create_timestamp| timestamp NULL | CURRENT_TIMESTAMP | 创建时间
+salt| varchar(20) COLLATE utf8_bin | NULL | 盐
 
---
--- Table structure for table |shipping_address|
---
 
-DROP TABLE IF EXISTS |shipping_address|;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE |shipping_address| (
-  |shipping_id| int(11) NOT NULL AUTO_INCREMENT | 配送地址ID
-  |user_id| int(11) | NULL | 用户ID  user_info > user_id
-  |city_code| varchar(20) | NULL | 地点标记   world_city > remark
-  |detail_address| varchar(200) | NULL | 详细地址
-  |receiver_name| varchar(50) | NULL | 收货人
-  |receiver_phone| varchar(20) | NULL | 收货人电话
-  |is_default| char(1) | NULL | 是否是默认地址  0: 否 1: 是
-  |is_delete| char(1) | 0 | 删除标记 0: 未删除 1: 己删除
-  PRIMARY KEY (|shipping_id|)
-) ENGINE=InnoDB AUTO_INCREMENT=94 | CHARSET=utf8 ROW_FORMAT=DYNAMIC |=配送地址;
-/*!40101 SET character_set_client = @saved_cs_client */;
 
---
--- Table structure for table |sports_camp|
---
+### 用户加入的运动派
+user_sports_camp
 
-DROP TABLE IF EXISTS |sports_camp|;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE |sports_camp| (
-  |sports_camp_id| int(11) NOT NULL AUTO_INCREMENT | 运动派编号
-  |language_id| int(11) | NULL | 语言编号
-  |user_id| int(11) | NULL | 用户编号
-  |sports_camp_name| varchar(255) COLLATE utf8_bin | NULL | 运动派名称
-  |remark| varchar(500) COLLATE utf8_bin | NULL | 备注
-  |is_delete| char(1) COLLATE utf8_bin | 0
-  PRIMARY KEY (|sports_camp_id|)
-  KEY |FK_Relationship_10| (|language_id|)
-  KEY |FK_Relationship_9| (|user_id|)
-  CONSTRAINT |FK_Relationship_10| FOREIGN KEY (|language_id|) REFERENCES |language| (|language_id|)
-  CONSTRAINT |FK_Relationship_9| FOREIGN KEY (|user_id|) REFERENCES |user_info| (|user_id|)
-) ENGINE=InnoDB AUTO_INCREMENT=12 | CHARSET=utf8 COLLATE=utf8_bin ROW_FORMAT=COMPACT |=运动派表;
-/*!40101 SET character_set_client = @saved_cs_client */;
+字段|类型|默认值|中文名
+---|---|---|--
+sports_camp_id| int(11) |NOT NULL | 运动派编号
+user_id| int(11)| NOT NULL | 用户编号
 
---
--- Table structure for table |traffic|
---
 
-DROP TABLE IF EXISTS |traffic|;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE |traffic| (
-  |order_id| varchar(50) NOT NULL
-  |level_id| varchar(10) | NULL
-  |phone| varchar(50) | NULL
-  |create_time| datetime | NULL
-  |traffic_status| varchar(10) | NULL
-  |traffic_code| varchar(10) | NULL
-  PRIMARY KEY (|order_id|)
-) ENGINE=InnoDB | CHARSET=utf8;
-/*!40101 SET character_set_client = @saved_cs_client */;
+### 用户角色
+users_roles
 
---
--- Table structure for table |upgrade_version|
---
+字段|类型|默认值|中文名
+---|---|---|--
+user_id| int(11)  | NOT NULL | 用户编号
+role_id| int(11)  | NOT NULL | 角色编号
 
-DROP TABLE IF EXISTS |upgrade_version|;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE |upgrade_version| (
-  |iOS_current_version| varchar(30) COLLATE utf8_bin | NULL
-  |android_current_version| varchar(30) COLLATE utf8_bin | NULL
-  |iOS| varchar(10) COLLATE utf8_bin | NULL
-  |Android| varchar(10) COLLATE utf8_bin | NULL
-  |iOS_open| varchar(10) COLLATE utf8_bin | NULL
-  |android_open| varchar(10) COLLATE utf8_bin | NULL
-) ENGINE=InnoDB | CHARSET=utf8 COLLATE=utf8_bin ROW_FORMAT=DYNAMIC;
-/*!40101 SET character_set_client = @saved_cs_client */;
 
---
--- Table structure for table |user_competition|
---
+### 城市
+world_city
 
-DROP TABLE IF EXISTS |user_competition|;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE |user_competition| (
-  |competition_id| int(11) NOT NULL | 0 | 赛事编号
-  |user_id| int(11) NOT NULL | 0 | 用户编号
-  |user_competition_status| varchar(2) COLLATE utf8_bin | NULL | 用户赛事状态
-  |create_time| timestamp NOT NULL | CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
-  |apply_or_refuse_time| timestamp NULL | NULL
-  PRIMARY KEY (|user_id||competition_id|)
-) ENGINE=InnoDB | CHARSET=utf8 COLLATE=utf8_bin ROW_FORMAT=COMPACT |=用户赛事关系;
-/*!40101 SET character_set_client = @saved_cs_client */;
+字段|类型|默认值|中文名
+---|---|---|--
+id| int(11)| NOT NULL AUTO_INCREMENT | 编号
+name| varchar(255) COLLATE utf8_bin | NULL | 名称
+parent_id| int(11) | NULL | 父编号
+remark| varchar(500) COLLATE utf8_bin | NULL | 备注
+name_en| varchar(255) COLLATE utf8_bin |NULL  | 英文名
 
---
--- Table structure for table |user_competition_refuse_reason|
---
 
-DROP TABLE IF EXISTS |user_competition_refuse_reason|;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE |user_competition_refuse_reason| (
-  |id| int(11) NOT NULL AUTO_INCREMENT
-  |user_id| int(11) | NULL
-  |competition_id| int(11) | NULL
-  |refuse_reason| varchar(200) | NULL
-  |create_time| timestamp NULL | CURRENT_TIMESTAMP
-  PRIMARY KEY (|id|)
-) ENGINE=InnoDB AUTO_INCREMENT=27 | CHARSET=utf8 ROW_FORMAT=DYNAMIC;
-/*!40101 SET character_set_client = @saved_cs_client */;
 
---
--- Table structure for table |user_detail|
---
-
-DROP TABLE IF EXISTS |user_detail|;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE |user_detail| (
-  |club_id| int(11) | NULL | 俱乐部编号
-  |user_id| int(11) NOT NULL | 用户编号
-  |jump_club_number| int(11) | NULL | 选择俱乐部跳过次数
-  |join_club_status| varchar(2) COLLATE utf8_bin |  | 加入俱乐部状态
-  |user_level| varchar(3) COLLATE utf8_bin | 99
-  |create_time| timestamp NULL | NULL
-  |change_status_time| timestamp NULL | NULL
-  |club_refuse_id| int(11) | NULL
-  PRIMARY KEY (|user_id|)
-) ENGINE=InnoDB | CHARSET=utf8 COLLATE=utf8_bin ROW_FORMAT=COMPACT |=用户详细表;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Table structure for table |user_detail_bak|
---
-
-DROP TABLE IF EXISTS |user_detail_bak|;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE |user_detail_bak| (
-  |club_id| int(11) | NULL | 俱乐部编号
-  |user_id| int(11) NOT NULL | 用户编号
-  |jump_club_number| int(11) | NULL | 选择俱乐部跳过次数
-  |join_club_status| varchar(2) COLLATE utf8_bin |  | 加入俱乐部状态
-  |user_level| varchar(3) COLLATE utf8_bin | 99
-  |create_time| timestamp NULL | NULL
-  |change_status_time| timestamp NULL | NULL
-  |club_refuse_id| int(11) | NULL
-  |create_time_bak| timestamp NOT NULL | 0000-00-00 00:00:00
-) ENGINE=InnoDB | CHARSET=utf8 COLLATE=utf8_bin ROW_FORMAT=DYNAMIC |=用户详细表;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Table structure for table |user_detail_refuse_club_reason|
---
-
-DROP TABLE IF EXISTS |user_detail_refuse_club_reason|;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE |user_detail_refuse_club_reason| (
-  |club_reason_id| int(11) NOT NULL AUTO_INCREMENT
-  |reason_content| text
-  |create_time| timestamp NULL | CURRENT_TIMESTAMP
-  PRIMARY KEY (|club_reason_id|)
-) ENGINE=InnoDB | CHARSET=utf8 ROW_FORMAT=DYNAMIC;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Table structure for table |user_info|
---
-
-DROP TABLE IF EXISTS |user_info|;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE |user_info| (
-  |user_id| int(11) NOT NULL AUTO_INCREMENT | 用户编号
-  |platform_id| int(11) | NULL | 平台编号
-  |user_real_name| varchar(200) COLLATE utf8_bin | NULL | 用户真实姓名
-  |user_login_name| varchar(200) COLLATE utf8_bin | NULL | 用户登录名
-  |user_password| varchar(1024) COLLATE utf8_bin | NULL | 登录密码
-  |phone| varchar(50) COLLATE utf8_bin | NULL | 手机
-  |mail_address| varchar(200) COLLATE utf8_bin | NULL | 邮箱
-  |user_status| varchar(2) COLLATE utf8_bin | NULL | 用户状态
-  |remark| varchar(500) COLLATE utf8_bin | NULL | 备注
-  |create_time| varchar(6) COLLATE utf8_bin | NULL | 创建时间
-  |create_date| varchar(8) COLLATE utf8_bin | NULL | 创建日期
-  |is_delete| varchar(1) COLLATE utf8_bin | NULL | 是否删除
-  |nickname| varchar(200) COLLATE utf8_bin | NULL
-  |gender| char(1) COLLATE utf8_bin | NULL
-  |birthdate| date | NULL
-  |address| varchar(500) COLLATE utf8_bin | NULL
-  |profile_picture| varchar(300) COLLATE utf8_bin | NULL | 头像
-  |create_timestamp| timestamp NULL | CURRENT_TIMESTAMP
-  |salt| varchar(20) COLLATE utf8_bin | NULL
-  PRIMARY KEY (|user_id|)
-  KEY |FK_Relationship_1| (|platform_id|)
-  CONSTRAINT |FK_Relationship_1| FOREIGN KEY (|platform_id|) REFERENCES |platform| (|platform_id|)
-) ENGINE=InnoDB AUTO_INCREMENT=804 | CHARSET=utf8 COLLATE=utf8_bin ROW_FORMAT=COMPACT |=用户表;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Table structure for table |user_online|
---
-
-DROP TABLE IF EXISTS |user_online|;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE |user_online| (
-  |online_id| int(11) NOT NULL AUTO_INCREMENT | 在线编号
-  |user_id| int(11) | NULL | 用户编号
-  |session_id| varchar(100) COLLATE utf8_bin | NULL | session_id
-  |online_time| timestamp NOT NULL | CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
-  PRIMARY KEY (|online_id|)
-) ENGINE=InnoDB | CHARSET=utf8 COLLATE=utf8_bin ROW_FORMAT=COMPACT |=用户在线;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Table structure for table |user_sports_camp|
---
-
-DROP TABLE IF EXISTS |user_sports_camp|;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE |user_sports_camp| (
-  |sports_camp_id| int(11) NOT NULL | 运动派编号
-  |user_id| int(11) NOT NULL | 用户编号
-  PRIMARY KEY (|sports_camp_id||user_id|)
-) ENGINE=InnoDB | CHARSET=utf8 COLLATE=utf8_bin ROW_FORMAT=COMPACT |=用户与运动派关系表;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Table structure for table |users_roles|
---
-
-DROP TABLE IF EXISTS |users_roles|;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE |users_roles| (
-  |user_id| int(11) NOT NULL | 用户编号
-  |role_id| int(11) NOT NULL | 角色编号
-  PRIMARY KEY (|user_id||role_id|)
-  KEY |FK_users_roles2| (|role_id|)
-  CONSTRAINT |FK_users_roles| FOREIGN KEY (|user_id|) REFERENCES |user_info| (|user_id|)
-  CONSTRAINT |FK_users_roles2| FOREIGN KEY (|role_id|) REFERENCES |role_info| (|role_id|)
-) ENGINE=InnoDB | CHARSET=utf8 COLLATE=utf8_bin ROW_FORMAT=COMPACT |=用户角色关系表;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Table structure for table |world_city|
---
-
-DROP TABLE IF EXISTS |world_city|;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE |world_city| (
-  |id| int(11) NOT NULL AUTO_INCREMENT | 编号
-  |name| varchar(255) COLLATE utf8_bin | NULL | 名称
-  |parent_id| int(11) | NULL | 父编号\r\n
-  |remark| varchar(500) COLLATE utf8_bin | NULL | 备注
-  |name_en| varchar(255) COLLATE utf8_bin |  | 英文名
-  PRIMARY KEY (|id|)
-) ENGINE=InnoDB AUTO_INCREMENT=3690 | CHARSET=utf8 COLLATE=utf8_bin ROW_FORMAT=COMPACT |=世界城市表;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
-/*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
-
-/*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
-/*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;
-/*!40014 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS */;
-/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
-/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
-/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
-/*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
-
--- Dump completed on 2016-07-14 11:28:36
