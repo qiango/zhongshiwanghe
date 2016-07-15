@@ -177,7 +177,7 @@ competition_club
 字段|类型|默认值|中文名
 ---|---|---|--
 club_id| int(11) | NOT NULL | 俱乐部编号
-competition_id| int(11) NOT NULL | 赛事编号
+competition_id| int(11)| NOT NULL | 赛事编号
 
 
 
@@ -203,7 +203,7 @@ cpu| varchar(50) | NULL | cpu info
 memory| double | NULL | 內存大小(GB)
 os| varchar(50) | NULL | 操作系统  ios x.x  /  android x.x
 ui_version| varchar(50) | NULL | android  miui x.x / xxxuix.x
-serial_number| varchar(100) | NULL
+serial_number| varchar(100) | NULL |  序列号
 carrier| varchar(50) | NULL | 运营商
 wifi_mac_address| varchar(100) | NULL | wifi MAC 地址
 screen_size| double | NULL | 屏幕大小(英吋)
@@ -249,7 +249,7 @@ mall_coupon
 ---|---|---|--
 coupon_id| int(11) |unsigned NOT NULL AUTO_INCREMENT | 优惠券id
 coupon_name| varchar(200)  | NULL | 优惠券名称
-coupon_describe| text  | 优惠券描述
+coupon_describe| text |NULL | 优惠券描述
 use_scope| int(11) | NULL | 使用范围 0:所有用户可用 1:分配給用户可用 2:俱乐部成员可用
 coupon_type| int(11) | NULL |优惠类型  1:对订单的优惠 ; 2:对商品的优惠
 start_time| timestamp NULL | NULL | 开始时间
@@ -289,7 +289,7 @@ id| int(11)| NOT NULL AUTO_INCREMENT
 goods_code| varchar(30) | NULL | 商品编号
 category| int(11) | NULL | 商品分类
 name| varchar(30) | NULL | 商品名
-goods_describe| text | 商品描述
+goods_describe| text|NULL | 商品描述
 status| char(1) | NULL | 狀态  1:上架 2:下架 3:删除
 create_time| timestamp NULL | NULL | 创建时間
 create_user| int(11) | NULL | 创建者
@@ -337,8 +337,8 @@ mall_goods_properties
 
 字段|类型|默认值|中文名
 ---|---|---|--
-properties_id| int(11) NOT NULL | 商品属性ID
-goods_id| int(11) NOT NULL | 商品ID
+properties_id| int(11)| NOT NULL | 商品属性ID
+goods_id| int(11) |NOT NULL | 商品ID
 property_code| varchar(30) | NULL | 属性名
 property_value| varchar(30) | NULL | 属性值
 price_effect| int(11) | NULL | 是否影响价格 ; 1:影响 0:不影响
@@ -404,7 +404,7 @@ mall_payment_histroy
 id| int(11)| NOT NULL AUTO_INCREMENT
 order_code| varchar(50)| NOT NULL |订单编号
 return_code| int(11) | NULL | 返回值 1: 客户端成功  2: 客户端失败  4: 服务端成功  8: 服务端失败
-return_time| timestamp | NULL | NULL |  时间
+return_time| timestamp | NULL |  时间
 data_source| int(11) | NULL | 数据來源  1: 客户端 2: 服务端
 
 
@@ -472,7 +472,7 @@ news_type| char(1) | NULL | 0图文 1图片集 2视频
 news_title| varchar(300) | NULL | 标题
 news_abstract| varchar(500) | NULL | 摘要
 news_status| char(1) | NULL |狀态 0:删除 1: 发布 2:临时关闭
-news_content| text | 內容 富文本
+news_content| text |NULL| 內容 富文本
 create_time| timestamp NULL | CURRENT_TIMESTAMP | 资讯创建时间
 create_user| int(11) | NULL | 创建者ID
 news_subtitle| varchar(255) | NULL | 副标题
@@ -509,7 +509,7 @@ news_comment
 ---|---|---|--
 comment_id| int(11) NOT NULL AUTO_INCREMENT | 评论id
 news_id| int(11) | NULL | 资讯id
-comment_content| text | 评论内容
+comment_content| text | NULL | 评论内容
 comment_status| char(1) | NULL |狀态 0:删除 1: 发布 2:临时关闭
 create_time| timestamp NULL | NULL | 创建时间
 create_user| int(11) | NULL | 作者
@@ -523,7 +523,7 @@ news_multimedia
 media_id| int(11) | NOT NULL AUTO_INCREMENT | 媒体id
 news_id| int(11) | NULL | 资讯id
 media_url| varchar(300) | NULL | image_url
-media_information| text | 对每个文件的介绍 图集中的每个图片 , 视频 fileid
+media_information| text|NULL | 对每个文件的介绍 图集中的每个图片 , 视频 fileid
 media_index| int(11) | NULL | 排序
 is_delete| int(11) | 0 |狀态 0: 未删除  1: 删除
 
