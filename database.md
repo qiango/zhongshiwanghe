@@ -43,7 +43,7 @@ advertisement_preset_location
 字段|类型|默认值|中文名
 ---|---|---|--
 location_id| int(11) | NOT NULL AUTO_INCREMENT | 广告位置主键
-location_name| varchar(11) COLLATE utf8_bin | NULL | 位置名称
+location_name| varchar(11)  | NULL | 位置名称
 status| int(11) | NULL | 位置狀态  0:未使用 1:使用中
 
 
@@ -69,21 +69,21 @@ club_id| int(11)| NOT NULL AUTO_INCREMENT | 俱乐部编号
 user_id| int(11) | NULL | 俱乐部申请人编号
 id| int(11) | NULL | 编号
 language_id| int(11) | NULL | 语言编号
-club_name| varchar(255) COLLATE utf8_bin | NULL | 俱乐部名称
-club_applicant_name| varchar(255) COLLATE utf8_bin | NULL | 俱乐部名称
-create_time| varchar(6) COLLATE utf8_bin | NULL | 创建时间
-create_date| varchar(10) COLLATE utf8_bin | NULL | 创建日期
-club_status| varchar(2) COLLATE utf8_bin | NULL | 俱乐部状态
-club_description| text COLLATE utf8_bin | 俱乐部描述
-club_create_date| varchar(8) COLLATE utf8_bin | NULL | 俱乐部成立时间
-club_qq| varchar(50) COLLATE utf8_bin | NULL | 俱乐部qq群
-club_name_short| varchar(100) COLLATE utf8_bin | NULL | 俱乐部间称
-is_delete| char(1) COLLATE utf8_bin | 0 | 是否删除 , 0: 未删除, 1:已删除
-club_pic| varchar(255) COLLATE utf8_bin | NULL | 俱乐部头像
-longitude| decimal(1310) | NULL | 俱乐部所在地经度
-latitude| decimal(1310) | NULL | 俱乐部所在地纬度
-club_level| varchar(2) COLLATE utf8_bin | 1 | 俱乐部級別
-club_rank| varchar(2) COLLATE utf8_bin | 1 | 俱乐部等級, (官方 / 认证)
+club_name| varchar(255)  | NULL | 俱乐部名称
+club_applicant_name| varchar(255)  | NULL | 俱乐部名称
+create_time| varchar(6)  | NULL | 创建时间
+create_date| varchar(10)  | NULL | 创建日期
+club_status| varchar(2)  | NULL | 俱乐部状态
+club_description| text  | NULL |俱乐部描述
+club_create_date| varchar(8)  | NULL | 俱乐部成立时间
+club_qq| varchar(50)  | NULL | 俱乐部qq群
+club_name_short| varchar(100)  | NULL | 俱乐部间称
+is_delete| char(1)  | 0 | 是否删除 , 0: 未删除, 1:已删除
+club_pic| varchar(255)  | NULL | 俱乐部头像
+longitude| decimal(13,10) | NULL | 俱乐部所在地经度
+latitude| decimal(13,10) | NULL | 俱乐部所在地纬度
+club_level| varchar(2)  | 1 | 俱乐部級別
+club_rank| varchar(2)  | 1 | 俱乐部等級, (官方 / 认证)
 
 
 
@@ -115,22 +115,22 @@ competition_id| int(11)| NOT NULL AUTO_INCREMENT | 赛事编号
 user_id| int(11) | NULL | 用户编号
 language_id| int(11) | NULL | 语言编号
 platform_id| int(11) | NULL | 平台编号
-competition_name| varchar(255) COLLATE utf8_bin | NULL | 赛事名称
-competition_level| varchar(2) COLLATE utf8_bin | NULL | 赛事级别
+competition_name| varchar(255)  | NULL | 赛事名称
+competition_level| varchar(2)  | NULL | 赛事级别
 competition_description| text | NULL | 赛事描述
-competition_status| varchar(2) COLLATE utf8_bin | NULL | 赛事状态
-create_time| varchar(6) COLLATE utf8_bin | NULL | 创建时间
-create_date| varchar(8) COLLATE utf8_bin | NULL | 创建日期
-competition_publicity_pictures| varchar(255) COLLATE utf8_bin | NULL | 赛事宣传图片
+competition_status| varchar(2)  | NULL | 赛事状态
+create_time| varchar(6)  | NULL | 创建时间
+create_date| varchar(8)  | NULL | 创建日期
+competition_publicity_pictures| varchar(255)  | NULL | 赛事宣传图片
 competition_primary_id| int(11) | NULL | 赛事主编号
-registration_start_date| varchar(14) COLLATE utf8_bin | NULL | 报名开始时间
-registration_end_date| varchar(14) COLLATE utf8_bin | NULL | 报名结束时间
-competition_start_date| varchar(14) COLLATE utf8_bin | NULL | 比赛开始时间
-competition_end_date| varchar(14) COLLATE utf8_bin | NULL | 比赛结束时间
+registration_start_date| varchar(14)  | NULL | 报名开始时间
+registration_end_date| varchar(14)  | NULL | 报名结束时间
+competition_start_date| varchar(14)  | NULL | 比赛开始时间
+competition_end_date| varchar(14)  | NULL | 比赛结束时间
 id| int(11) | NULL | 城市ID
-is_delete| varchar(1) COLLATE utf8_bin | NULL | 是否删除 0:未删除 , 1:已删除
-compertition_live_status| varchar(2) COLLATE utf8_bin | NULL | 赛事进行状态
-club_score_publish| char(1) COLLATE utf8_bin | NULL | 赛事成绩是否发布 , 1:发布 , 0/NULL:未发布
+is_delete| varchar(1)  | NULL | 是否删除 0:未删除 , 1:已删除
+compertition_live_status| varchar(2)  | NULL | 赛事进行状态
+club_score_publish| char(1)  | NULL | 赛事成绩是否发布 , 1:发布 , 0/NULL:未发布
 
 
 ### 赛事报名表单
@@ -143,11 +143,11 @@ controls_id| int(11) | NULL | 控件编号
 user_id| int(11) | NULL | 用户编号
 competition_id| int(11) | NULL | 赛事编号
 language_id| int(11) | NULL | 语言编号
-create_time| varchar(6) COLLATE utf8_bin | NULL | 创建时间
-create_date| varchar(8) COLLATE utf8_bin | NULL | 创建日期
-controls_placeholder| varchar(255) COLLATE utf8_bin | NULL | 控件占位符
-title_name| varchar(255) COLLATE utf8_bin | NULL | 标题名称
-controls_data| varchar(255) COLLATE utf8_bin | NULL | 控件数据
+create_time| varchar(6)  | NULL | 创建时间
+create_date| varchar(8)  | NULL | 创建日期
+controls_placeholder| varchar(255)  | NULL | 控件占位符
+title_name| varchar(255)  | NULL | 标题名称
+controls_data| varchar(255)  | NULL | 控件数据
 controls_order| int(11) | NULL | 控件顺序
 
 
@@ -163,12 +163,12 @@ controls_id| int(11) | NULL | 控件编号
 competition_application_id| int(11) | NULL | 赛事报名编号
 user_id| int(11) | NULL | 用户编号
 competition_id| int(11) | NULL | 赛事编号
-create_time| varchar(6) COLLATE utf8_bin | NULL | 创建时间
-create_date| varchar(8) COLLATE utf8_bin | NULL | 创建日期
-title_name| varchar(255) COLLATE utf8_bin | NULL | 标题名称
+create_time| varchar(6)  | NULL | 创建时间
+create_date| varchar(8)  | NULL | 创建日期
+title_name| varchar(255)  | NULL | 标题名称
 controls_order| int(11) | NULL | 控件顺序
-user_value| varchar(255) COLLATE utf8_bin | NULL | 用户数据
-is_delete| char(1) COLLATE utf8_bin | 0 | 删除标志 1:删除 0:未删
+user_value| varchar(255)  | NULL | 用户数据
+is_delete| char(1)  | 0 | 删除标志 1:删除 0:未删
 
 
 ### 赛事与俱乐部关系
@@ -187,8 +187,8 @@ controls
 字段|类型|默认值|中文名
 ---|---|---|--
 controls_id| int(11)| NOT NULL AUTO_INCREMENT | 控件编号
-controls_name| varchar(50) COLLATE utf8_bin | NULL | 控件名称
-remark| varchar(500) COLLATE utf8_bin | NULL | 备注
+controls_name| varchar(50)  | NULL | 控件名称
+remark| varchar(500)  | NULL | 备注
 
 
 ### 设备信息
@@ -227,10 +227,10 @@ dictionary
 
 字段|类型|默认值|中文名
 ---|---|---|--
-code| varchar(20) COLLATE utf8_bin | NOT NULL|编号
-value| varchar(100) COLLATE utf8_bin | NULL|值
-p_code| varchar(20) COLLATE utf8_bin | NULL|父级编号
-language| varchar(7) COLLATE utf8_bin | NULL| 语言
+code| varchar(20)  | NOT NULL|编号
+value| varchar(100)  | NULL|值
+p_code| varchar(20)  | NULL|父级编号
+language| varchar(7)  | NULL| 语言
 
 
 ### 用户粉丝
@@ -248,13 +248,13 @@ mall_coupon
 字段|类型|默认值|中文名
 ---|---|---|--
 coupon_id| int(11) |unsigned NOT NULL AUTO_INCREMENT | 优惠券id
-coupon_name| varchar(200) COLLATE utf8_bin | NULL | 优惠券名称
-coupon_describe| text COLLATE utf8_bin | 优惠券描述
+coupon_name| varchar(200)  | NULL | 优惠券名称
+coupon_describe| text  | 优惠券描述
 use_scope| int(11) | NULL | 使用范围 0:所有用户可用 1:分配給用户可用 2:俱乐部成员可用
 coupon_type| int(11) | NULL |优惠类型  1:对订单的优惠 ; 2:对商品的优惠
 start_time| timestamp NULL | NULL | 开始时间
 end_time| timestamp NULL | NULL | 结束时间
-coupon_status| char(1) COLLATE utf8_bin | NULL |狀态 1:可用 0:不可用
+coupon_status| char(1)  | NULL |狀态 1:可用 0:不可用
 discount_type| int(11) unsigned | NULL | 1:直接调用公式  2:数量大于 min_amount 时调用公式  3: 数量在 min_amount 和 max_amount 之間时调用公式 \n
 
 
@@ -265,8 +265,8 @@ mall_coupon_properties
 ---|---|---|--
 id| int(11) | NOT NULL AUTO_INCREMENT | ID
 coupon_id| int(11) | NULL | 优惠券id
-property_code| varchar(20) COLLATE utf8_bin | NULL | 优惠券属性编码
-property_value| varchar(30) COLLATE utf8_bin | NULL | 优惠券属性值
+property_code| varchar(20)  | NULL | 优惠券属性编码
+property_value| varchar(30)  | NULL | 优惠券属性值
 
 
 ### 打折
@@ -276,7 +276,7 @@ mall_discount
 ---|---|---|--
 id| int(11) | NOT NULL AUTO_INCREMENT
 discount_type| int(11) | NULL |  折扣类型 1: 立减 XXX 元  2:滿 param XXXX  3:XX 折
-param| decimal(202) | NULL | 参数
+param| decimal(20,2) | NULL | 参数
 method| varchar(30) | NULL | 方程式
 
 
@@ -327,9 +327,9 @@ mall_goods_price
 id| int(11) |NOT NULL AUTO_INCREMENT
 goods_id| int(11) | NULL | 商品ID
 properties_id| int(11) | NULL | 商品属性ID
-price| decimal(202) | NULL | 价格
+price| decimal(20,2) | NULL | 价格
 discount_id| int(11) | NULL | 折扣
-current_price| decimal(202) | NULL | 现价
+current_price| decimal(20,2) | NULL | 现价
 
 
 ### 商品属性
@@ -355,7 +355,7 @@ user_id| int(11) | NULL | 用户ID
 create_time| timestamp NULL | NULL | 创建时間
 status| char(1) | NULL | 订单狀态;  1: 已下单 2:已付款 3:已取消  跟据app数据
 delivery| int(11) | NULL | 物流ID 票务无物流置空
-price| decimal(202) | NULL | 订单总价
+price| decimal(20,2) | NULL | 订单总价
 discount_id| int(11) | NULL | 折扣ID
 
 
@@ -380,7 +380,7 @@ goods_id| int(11) | NULL | 商品ID
 properties_id| int(11) | NULL | 商品属性ID
 total_counts| int(11) | NULL | 订单中本商品数量
 effect_counts| int(11) | NULL | 有效数量
-single_price| decimal(202) | NULL | 单价
+single_price| decimal(20,2) | NULL | 单价
 
 
 ### 订单支付方式
@@ -455,8 +455,8 @@ menu_info
 字段|类型|默认值|中文名
 ---|---|---|--
 menu_id| int(11)| NOT NULL AUTO_INCREMENT | 菜单编号
-menu_name| varchar(200) COLLATE utf8_bin | NULL | 菜单名称
-menu_url| varchar(500) COLLATE utf8_bin | NULL | 菜单地址
+menu_name| varchar(200)  | NULL | 菜单名称
+menu_url| varchar(500)  | NULL | 菜单地址
 menu_parent_id| int(11) | NULL | 菜单父节点
 
 
@@ -581,8 +581,8 @@ picture_upload
 字段|类型|默认值|中文名
 ---|---|---|--
 id| int(11) | NOT NULL AUTO_INCREMENT | ID
-origin_name| varchar(40) COLLATE utf8_bin | NULL | 原图片名
-new_name| varchar(40) COLLATE utf8_bin | NULL | 新图片名
+origin_name| varchar(40)  | NULL | 原图片名
+new_name| varchar(40)  | NULL | 新图片名
 create_time| timestamp NULL | NULL |创建时间
 
 
@@ -592,9 +592,9 @@ role_info
 字段|类型|默认值|中文名
 ---|---|---|--
 role_id| int(11)| NOT NULL AUTO_INCREMENT | 角色编号
-role_name| varchar(100) COLLATE utf8_bin | NULL | 角色名称
-remark| varchar(500) COLLATE utf8_bin | NULL | 备注
-is_delete| char(1) COLLATE utf8_bin | 0 |  是否删除  1:已删 , 0:未删
+role_name| varchar(100)  | NULL | 角色名称
+remark| varchar(500)  | NULL | 备注
+is_delete| char(1)  | 0 |  是否删除  1:已删 , 0:未删
 
 
 ### 角色菜单关系
@@ -661,9 +661,9 @@ sports_camp
 sports_camp_id| int(11) NOT NULL AUTO_INCREMENT | 运动派编号
 language_id| int(11) | NULL | 语言编号
 user_id| int(11) | NULL | 用户编号
-sports_camp_name| varchar(255) COLLATE utf8_bin | NULL | 运动派名称
-remark| varchar(500) COLLATE utf8_bin | NULL | 备注
-is_delete| char(1) COLLATE utf8_bin | 0
+sports_camp_name| varchar(255)  | NULL | 运动派名称
+remark| varchar(500)  | NULL | 备注
+is_delete| char(1)  | 0
 
 
 ### 版本信息
@@ -671,12 +671,12 @@ upgrade_version
 
 字段|类型|默认值|中文名
 ---|---|---|--
-iOS_current_version| varchar(30) COLLATE utf8_bin | NULL| iOS 版本
-android_current_version| varchar(30) COLLATE utf8_bin | NULL| Android 版本
-iOS| varchar(10) COLLATE utf8_bin | NULL| iOS 是否更新 , F:更新 ,  N:不更新
-Android| varchar(10) COLLATE utf8_bin | NULL| Android 是否更新 , F:更新 ,  N:不更新
-iOS_open| varchar(10) COLLATE utf8_bin | NULL| iOS 启用更新  yes:启用,  no:不启用
-android_open| varchar(10) COLLATE utf8_bin | NULL| Android 启用更新  yes:启用,  no:不启用
+iOS_current_version| varchar(30)  | NULL| iOS 版本
+android_current_version| varchar(30)  | NULL| Android 版本
+iOS| varchar(10)  | NULL| iOS 是否更新 , F:更新 ,  N:不更新
+Android| varchar(10)  | NULL| Android 是否更新 , F:更新 ,  N:不更新
+iOS_open| varchar(10)  | NULL| iOS 启用更新  yes:启用,  no:不启用
+android_open| varchar(10)  | NULL| Android 启用更新  yes:启用,  no:不启用
 
 
 ### 用户参加的赛事
@@ -686,7 +686,7 @@ user_competition
 ---|---|---|--
 competition_id| int(11) | 0 | 赛事编号
 user_id| int(11) | 0 | 用户编号
-user_competition_status| varchar(2) COLLATE utf8_bin | NULL | 用户赛事状态
+user_competition_status| varchar(2)  | NULL | 用户赛事状态
 create_time| timestamp | CURRENT_TIMESTAMP |  创建时间
 apply_or_refuse_time| timestamp | NULL | 同意或拒绝时间
 
@@ -713,8 +713,8 @@ user_detail
 club_id| int(11) | NULL | 俱乐部编号
 user_id| int(11)| NOT NULL | 用户编号
 jump_club_number| int(11) | NULL | 选择俱乐部跳过次数
-join_club_status| varchar(2) COLLATE utf8_bin | NULL | 加入俱乐部状态
-user_level| varchar(3) COLLATE utf8_bin | 99 | 用户级別
+join_club_status| varchar(2)  | NULL | 加入俱乐部状态
+user_level| varchar(3)  | 99 | 用户级別
 create_time| timestamp NULL | NULL | 创建时间
 change_status_time| timestamp NULL | NULL | 狀态改变时间
 club_refuse_id| int(11) | NULL | 拒绝原因ID
@@ -737,23 +737,23 @@ user_info
 ---|---|---|--
 user_id| int(11) NOT NULL AUTO_INCREMENT | 用户编号
 platform_id| int(11) | NULL | 平台编号
-user_real_name| varchar(200) COLLATE utf8_bin | NULL | 用户真实姓名
-user_login_name| varchar(200) COLLATE utf8_bin | NULL | 用户登录名
-user_password| varchar(1024) COLLATE utf8_bin | NULL | 登录密码
-phone| varchar(50) COLLATE utf8_bin | NULL | 手机
-mail_address| varchar(200) COLLATE utf8_bin | NULL | 邮箱
-user_status| varchar(2) COLLATE utf8_bin | NULL | 用户状态
-remark| varchar(500) COLLATE utf8_bin | NULL | 备注
-create_time| varchar(6) COLLATE utf8_bin | NULL | 创建时间
-create_date| varchar(8) COLLATE utf8_bin | NULL | 创建日期
-is_delete| varchar(1) COLLATE utf8_bin | NULL | 是否删除
-nickname| varchar(200) COLLATE utf8_bin | NULL | 昵称
-gender| char(1) COLLATE utf8_bin | NULL | 性別
+user_real_name| varchar(200)  | NULL | 用户真实姓名
+user_login_name| varchar(200)  | NULL | 用户登录名
+user_password| varchar(1024)  | NULL | 登录密码
+phone| varchar(50)  | NULL | 手机
+mail_address| varchar(200)  | NULL | 邮箱
+user_status| varchar(2)  | NULL | 用户状态
+remark| varchar(500)  | NULL | 备注
+create_time| varchar(6)  | NULL | 创建时间
+create_date| varchar(8)  | NULL | 创建日期
+is_delete| varchar(1)  | NULL | 是否删除
+nickname| varchar(200)  | NULL | 昵称
+gender| char(1)  | NULL | 性別
 birthdate| date | NULL | 生日
-address| varchar(500) COLLATE utf8_bin | NULL | 地址
-profile_picture| varchar(300) COLLATE utf8_bin | NULL | 头像
+address| varchar(500)  | NULL | 地址
+profile_picture| varchar(300)  | NULL | 头像
 create_timestamp| timestamp NULL | CURRENT_TIMESTAMP | 创建时间
-salt| varchar(20) COLLATE utf8_bin | NULL | 盐
+salt| varchar(20)  | NULL | 盐
 
 
 
@@ -781,10 +781,10 @@ world_city
 字段|类型|默认值|中文名
 ---|---|---|--
 id| int(11)| NOT NULL AUTO_INCREMENT | 编号
-name| varchar(255) COLLATE utf8_bin | NULL | 名称
+name| varchar(255)  | NULL | 名称
 parent_id| int(11) | NULL | 父编号
-remark| varchar(500) COLLATE utf8_bin | NULL | 备注
-name_en| varchar(255) COLLATE utf8_bin |NULL  | 英文名
+remark| varchar(500)  | NULL | 备注
+name_en| varchar(255)  |NULL  | 英文名
 
 
 
