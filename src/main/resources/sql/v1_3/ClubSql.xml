@@ -401,4 +401,14 @@
         and
           join_club_status ='99'
     </select>
+    <select id="checkClubName" resultType="String">
+        select
+          a.club_name
+        from
+          club a
+        where
+          a.club_name = #{club_name}
+        and
+        a.is_delete = 0
+    </select>
 </mapper>

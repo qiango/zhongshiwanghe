@@ -37,4 +37,6 @@ public interface ClubDao {
     Map<String,Object> queryClubLevel(String user_id);
 
     List<Integer> selectClubMembers(String club_id);
+
+    List<String> checkClubName(String club_name);
 }
