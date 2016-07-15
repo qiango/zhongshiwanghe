@@ -231,10 +231,19 @@ public class V3ClubService {
 		if(effectiveCount == userId.size()){
 			String club_name = dao.getClubName(Integer.parseInt(vclub_id));
 			if(vjoin_club_status.equals("0") || vjoin_club_status.equals("97")){
-				notiSender.sendNoti(Integer.parseInt(properties.getUser_id()), userId ,null, "1" , "尊敬的用户，很抱歉，您申请加入"+club_name+"未通过。" + ( ObjectUtil.isEmpty(reason) ?"":"原因为:"+reason ) );
+				notiSender.sendNoti(Integer.parseInt(properties.getUser_id()), userId ,null, "1" ,dictionaryUtil.getCodeValue("check_join_club_f", "data_alias", properties.getLanguage()) +club_name+dictionaryUtil.getCodeValue("join_club_f", "data_alias", properties.getLanguage()) + ( ObjectUtil.isEmpty(reason) ?"":dictionaryUtil.getCodeValue("join_club_reason", "data_alias", properties.getLanguage())+reason ) );
 			}else if(vjoin_club_status.equals("99")){
-				notiSender.sendNoti(Integer.parseInt(properties.getUser_id()), userId ,null, "1" , "尊敬的用户，您的俱乐部申请已通过，您现在是"+club_name+"的一员了。");
+				notiSender.sendNoti(Integer.parseInt(properties.getUser_id()), userId ,null, "1" , dictionaryUtil.getCodeValue("check_join_club_t", "data_alias", properties.getLanguage())+club_name+dictionaryUtil.getCodeValue("join_club_t", "data_alias", properties.getLanguage()));
 			}
+
+			List<Integer> club_members_list = dao.selectClubMembers(vclub_id);//根据俱乐部id查询俱乐部当前人数
+			if (!ObjectUtil.isEmpty(club_members_list)) {
+				int club_min_member = Integer.valueOf(dictionaryUtil.getCodeValue("club_min_member", "data_alias", properties.getLanguage()));
+				if (club_members_list.size() == club_min_member) {
+					dao.updateClubStatusByClubId(vclub_id);//组建的俱乐部成员达到三个人（加入状态）时，改变club的状态（2筹备中--99启用）
+				}
+			}
+
 			return "success";
 		}else{
 			throw new HongZhiException("1011");
@@ -276,13 +285,6 @@ public class V3ClubService {
 			String userName = dao.getUserName(Integer.parseInt(properties.getUser_id()));
 			if (mgrId.size() > 0) {
 				notiSender.sendNoti(Integer.parseInt(properties.getUser_id()), mgrId, null, "1", userName + dictionaryUtil.getCodeValue("noti_join_club", "data_alias", properties.getLanguage()));
-			}
-			List<Integer> club_members_list = dao.selectClubMembers(vclub_id);//根据俱乐部id查询俱乐部当前人数
-			if (!ObjectUtil.isEmpty(club_members_list)) {
-				int club_min_member = Integer.valueOf(dictionaryUtil.getCodeValue("club_min_member", "data_alias", properties.getLanguage()));
-				if (club_members_list.size() >= club_min_member) {
-					dao.updateClubStatusByClubId(vclub_id);//组建的俱乐部成员达到三个人（加入状态）时，改变club的状态（2筹备中--99启用）
-				}
 			}
 			return "success";
 		} else {

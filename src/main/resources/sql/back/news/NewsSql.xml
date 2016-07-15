@@ -30,31 +30,19 @@
 	<!-- 根据news_id 修改数据库中对应的记录 -->
 	<update id="modifySave" parameterType="com.hongzhi.zswh.back.news.entity.NewsParam">
 		update news a
-			<set>
-				<if test="platform_id != null">  
-	            	a.platform_id=#{platform_id},
-	        	</if> 
-	        	<if test="news_type != null">  
-	       	    	a.news_type=#{news_type},
-	       		</if> 
-	        	<if test="news_title != null">  
-	            	a.news_title=#{news_title},
-	        	</if> 
-	         	<if test="news_abstract != null">  
-	            	a.news_abstract=#{news_abstract}, 
-	        	</if> 
-	        	<if test="news_content != null">  
-	            	a.news_content=#{news_content},
-	        	</if>
-				<if test="news_subtitle != null">
-					a.news_subtitle=#{news_subtitle},
-				</if>
-				<if test="weights_order != null">
-					a.weights_order=#{weights_order}
-				</if>
-			</set>
-		where 
+			set
+	          a.platform_id=#{platform_id}
+	       	  ,a.news_type=#{news_type}
+	          ,a.news_title=#{news_title}
+	          ,a.news_abstract=#{news_abstract}
+	          ,a.news_content=#{news_content}
+			  ,a.news_subtitle=#{news_subtitle}
+			  ,a.weights_order=#{weights_order}
+		where
+		<if  test=" news_id != null">
 			a.news_id=#{news_id}
+		</if>
+
 	</update>
 	
 	<select id="selectMaxByWeights_order" resultType="Integer">
