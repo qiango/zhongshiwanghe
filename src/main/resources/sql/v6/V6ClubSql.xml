@@ -79,7 +79,7 @@
       select
           coalesce(user_level,'99')   user_level
           ,join_club_status
-       <if test="club_id != null">
+       <if test="club_id == null">
          ,club_id
        </if>
        from user_detail
