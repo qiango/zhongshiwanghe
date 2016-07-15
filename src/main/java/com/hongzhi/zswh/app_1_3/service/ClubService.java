@@ -117,6 +117,12 @@ public class ClubService {
         club.Vclub_name();
         club.Vcity_id();
 
+        List<String> club_name_list = clubDao.checkClubName(club.getClub_name());
+
+        if (club_name_list.size()> 0){ //俱乐部名不能重复
+            throw new HongZhiException("1083");
+        }
+
         String pic_url = null;
         try {
             pic_url = picService.picUpload(request).toString();
