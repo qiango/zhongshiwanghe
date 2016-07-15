@@ -221,8 +221,16 @@
     )
     </insert>
     
-    <select id="getClubName" resultType="String">
-      select club_name from club  where club_id = #{club_id } 
+    <select id="getClubName" resultType="map">
+      select
+      club_name
+      ,club_status
+      from
+        club
+      where
+        club_id = #{club_id }
+      and
+        is_delete = 0
     </select>
     
     <select id="getClubMgrId" resultType="Integer">
@@ -278,12 +286,11 @@
     <update id="updateClubStatusByClubId">
         update
           club
-        <trim prefix="SET" suffixOverrides=",">
-            <if test=" club_id != null"> club_status='99',</if>
-        </trim>
-        <if test="club_id !=null and club_id!=0 ">
-            where club_id = #{club_id}
-        </if>
-
+        set
+          club_status='99'
+        where
+          club_id = #{club_id}
+        and
+          is_delete = 0
     </update>
 </mapper>

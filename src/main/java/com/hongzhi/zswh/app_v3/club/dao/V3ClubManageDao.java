@@ -77,7 +77,7 @@ public interface V3ClubManageDao {
 	 * @param parseInt
 	 * @return
 	 */
-	String getClubName(int parseInt);
+
 
 	/**   Twitter : @taylorwang789 
 	 * Creat time : May 9, 2016    1:47:56 PM
@@ -112,4 +112,6 @@ public interface V3ClubManageDao {
 	List<Integer> selectClubMembers(String club_id);
 
 	void updateClubStatusByClubId(String club_id);
+
+	Map<String,String> getClubName(int club_id);
 }
