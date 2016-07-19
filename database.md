@@ -3,7 +3,7 @@
 advertisement
 
 字段|类型|默认值|中文名
----|---|---|--
+---|---|---|---
 ad_id| int(11)| NOT NULL AUTO_INCREMENT|自增主键
 ad_name| varchar(100)| NULL| 广告名称
 ad_location| int(11) |NULL| 位置
@@ -17,7 +17,7 @@ ad_end_time| timestamp |NULL| 结束时间
 advertisement_image
 
 字段|类型|默认值|中文名
----|---|---|--
+---|---|---|---
 image_id| int(11) | NOT NULL AUTO_INCREMENT|自增主键
 ad_id| int(11) | NULL | 广告主键
 image_url| varchar(200) | NULL | 图片url
@@ -32,7 +32,7 @@ image_width| int(11) | NULL | 宽度
 advertisement_pic_size
 
 字段|类型|默认值|中文名
----|---|---|--
+---|---|---|---
 height| int(11) | NULL | 像素高度
 width| int(11) | NULL | 像素宽度
 index| int(11) | NULL | 索引
@@ -41,7 +41,7 @@ index| int(11) | NULL | 索引
 advertisement_preset_location
 
 字段|类型|默认值|中文名
----|---|---|--
+---|---|---|---
 location_id| int(11) | NOT NULL AUTO_INCREMENT | 广告位置主键
 location_name| varchar(11)  | NULL | 位置名称
 status| int(11) | NULL | 位置狀态  0:未使用 1:使用中
@@ -51,7 +51,7 @@ status| int(11) | NULL | 位置狀态  0:未使用 1:使用中
 advertisement_properties
 
 字段|类型|默认值|中文名
----|---|---|--
+---|---|---|---
 property_id| int(11) | NOT NULL AUTO_INCREMENT | 属性主键
 ad_id| int(11) | NULL| 广告ID
 property_code| varchar(100) | NULL| 属性編号
@@ -64,7 +64,7 @@ property_value| varchar(200) | NULL| 属性值
 club
 
 字段|类型|默认值|中文名
----|---|---|--
+---|---|---|---
 club_id| int(11)| NOT NULL AUTO_INCREMENT | 俱乐部编号
 user_id| int(11) | NULL | 俱乐部申请人编号
 id| int(11) | NULL | 编号
@@ -91,7 +91,7 @@ club_rank| varchar(2)  | 1 | 俱乐部等級, (官方 / 认证)
 club_competition_score
 
 字段|类型|默认值|中文名
----|---|---|--
+---|---|---|---
 club_id| int(11) | NOT NULL | 俱乐部ID
 competition_id| int(11) | NOT NULL | 赛事ID
 rank| int(11) | NULL | 成绩排名
@@ -101,7 +101,7 @@ rank| int(11) | NULL | 成绩排名
 club_sports_camp
 
 字段|类型|默认值|中文名
----|---|---|--
+---|---|---|---
 sports_camp_id| int(11) | NOT NULL | 运动派编号
 club_id| int(11) | NOT NULL | 俱乐部编号
 
@@ -110,7 +110,7 @@ club_id| int(11) | NOT NULL | 俱乐部编号
 competition
 
 字段|类型|默认值|中文名
----|---|---|--
+---|---|---|---
 competition_id| int(11)| NOT NULL AUTO_INCREMENT | 赛事编号
 user_id| int(11) | NULL | 用户编号
 language_id| int(11) | NULL | 语言编号
@@ -137,7 +137,7 @@ club_score_publish| char(1)  | NULL | 赛事成绩是否发布 , 1:发布 , 0/NU
 competition_application
 
 字段|类型|默认值|中文名
----|---|---|--
+---|---|---|---
 competition_application_id| int(11) | NOT NULL AUTO_INCREMENT | 赛事报名编号
 controls_id| int(11) | NULL | 控件编号
 user_id| int(11) | NULL | 用户编号
@@ -157,7 +157,7 @@ controls_order| int(11) | NULL | 控件顺序
 competition_application_data
 
 字段|类型|默认值|中文名
----|---|---|--
+---|---|---|---
 competition_application_data_id| int(11)| NOT NULL AUTO_INCREMENT | 赛事报名数据
 controls_id| int(11) | NULL | 控件编号
 competition_application_id| int(11) | NULL | 赛事报名编号
@@ -175,7 +175,7 @@ is_delete| char(1)  | 0 | 删除标志 1:删除 0:未删
 competition_club
 
 字段|类型|默认值|中文名
----|---|---|--
+---|---|---|---
 club_id| int(11) | NOT NULL | 俱乐部编号
 competition_id| int(11)| NOT NULL | 赛事编号
 
@@ -185,7 +185,7 @@ competition_id| int(11)| NOT NULL | 赛事编号
 controls
 
 字段|类型|默认值|中文名
----|---|---|--
+---|---|---|---
 controls_id| int(11)| NOT NULL AUTO_INCREMENT | 控件编号
 controls_name| varchar(50)  | NULL | 控件名称
 remark| varchar(500)  | NULL | 备注
@@ -195,7 +195,7 @@ remark| varchar(500)  | NULL | 备注
 device_info
 
 字段|类型|默认值|中文名
----|---|---|--
+---|---|---|---
 id| int(11)| NOT NULL AUTO_INCREMENT|主键
 brand| varchar(50) | NULL | 品牌
 model| varchar(50) | NULL | 型号
@@ -215,7 +215,7 @@ storage_size| double | NULL | 硬盘容量(GB)
 device_user
 
 字段|类型|默认值|中文名
----|---|---|--
+---|---|---|---
 user_id| int(11) | NULL | 用户ID
 device_id| int(11) | NULL | 设备ID  device_info -> id
 save_tiime| timestamp NULL | NULL | 保存时間
@@ -226,7 +226,7 @@ save_tiime| timestamp NULL | NULL | 保存时間
 dictionary
 
 字段|类型|默认值|中文名
----|---|---|--
+---|---|---|---
 code| varchar(20)  | NOT NULL|编号
 value| varchar(100)  | NULL|值
 p_code| varchar(20)  | NULL|父级编号
@@ -237,7 +237,7 @@ language| varchar(7)  | NULL| 语言
 follower
 
 字段|类型|默认值|中文名
----|---|---|--
+---|---|---|---
 user_id| int(11) |NOT NULL|用户ID
 follower_id| int(11) | NOT NULL|用户粉丝的ID
 
@@ -246,7 +246,7 @@ follower_id| int(11) | NOT NULL|用户粉丝的ID
 mall_coupon
 
 字段|类型|默认值|中文名
----|---|---|--
+---|---|---|---
 coupon_id| int(11) |unsigned NOT NULL AUTO_INCREMENT | 优惠券id
 coupon_name| varchar(200)  | NULL | 优惠券名称
 coupon_describe| text |NULL | 优惠券描述
@@ -262,7 +262,7 @@ discount_type| int(11) unsigned | NULL | 1:直接调用公式  2:数量大于 mi
 mall_coupon_properties
 
 字段|类型|默认值|中文名
----|---|---|--
+---|---|---|---
 id| int(11) | NOT NULL AUTO_INCREMENT | ID
 coupon_id| int(11) | NULL | 优惠券id
 property_code| varchar(20)  | NULL | 优惠券属性编码
@@ -273,7 +273,7 @@ property_value| varchar(30)  | NULL | 优惠券属性值
 mall_discount
 
 字段|类型|默认值|中文名
----|---|---|--
+---|---|---|---
 id| int(11) | NOT NULL AUTO_INCREMENT
 discount_type| int(11) | NULL |  折扣类型 1: 立减 XXX 元  2:滿 param XXXX  3:XX 折
 param| decimal(20,2) | NULL | 参数
@@ -284,7 +284,7 @@ method| varchar(30) | NULL | 方程式
 mall_goods
 
 字段|类型|默认值|中文名
----|---|---|--
+---|---|---|---
 id| int(11)| NOT NULL AUTO_INCREMENT
 goods_code| varchar(30) | NULL | 商品编号
 category| int(11) | NULL | 商品分类
@@ -300,7 +300,7 @@ create_user| int(11) | NULL | 创建者
 mall_goods_category
 
 字段|类型|默认值|中文名
----|---|---|--
+---|---|---|---
 id| int(11) | NOT NULL AUTO_INCREMENT | 分类ID
 parent_id| int(11) | NULL | 上級分类ID
 category_name| varchar(30) | NULL | 分类名字
@@ -311,7 +311,7 @@ category_name| varchar(30) | NULL | 分类名字
 mall_goods_picture
 
 字段|类型|默认值|中文名
----|---|---|--
+---|---|---|---
 id| int(11)| NOT NULL AUTO_INCREMENT
 goods_id| int(11) | NULL | 商品ID
 picture_url| varchar(255) | NULL | 图片路径
@@ -323,7 +323,7 @@ status| char(1) | NULL | 狀态; 1:启用 0:禁用
 mall_goods_price
 
 字段|类型|默认值|中文名
----|---|---|--
+---|---|---|---
 id| int(11) |NOT NULL AUTO_INCREMENT
 goods_id| int(11) | NULL | 商品ID
 properties_id| int(11) | NULL | 商品属性ID
@@ -336,7 +336,7 @@ current_price| decimal(20,2) | NULL | 现价
 mall_goods_properties
 
 字段|类型|默认值|中文名
----|---|---|--
+---|---|---|---
 properties_id| int(11)| NOT NULL | 商品属性ID
 goods_id| int(11) |NOT NULL | 商品ID
 property_code| varchar(30) | NULL | 属性名
@@ -348,7 +348,7 @@ price_effect| int(11) | NULL | 是否影响价格 ; 1:影响 0:不影响
 mall_order
 
 字段|类型|默认值|中文名
----|---|---|--
+---|---|---|---
 id| int(11) | NOT NULL AUTO_INCREMENT | 主键
 code| varchar(30) | NULL | 订单号
 user_id| int(11) | NULL | 用户ID
@@ -363,7 +363,7 @@ discount_id| int(11) | NULL | 折扣ID
 mall_order_coupon_use
 
 字段|类型|默认值|中文名
----|---|---|--
+---|---|---|---
 id| int(11) | NOT NULL AUTO_INCREMENT | ID
 order_id| int(11) | NULL | 订单ID
 coupon_id| int(11) | NULL | 优惠券ID
@@ -373,7 +373,7 @@ coupon_id| int(11) | NULL | 优惠券ID
 mall_order_goods
 
 字段|类型|默认值|中文名
----|---|---|--
+---|---|---|---
 id| int(11)| NOT NULL AUTO_INCREMENT
 order_id| int(11) | NULL | 订单ID
 goods_id| int(11) | NULL | 商品ID
@@ -387,7 +387,7 @@ single_price| decimal(20,2) | NULL | 单价
 mall_payment
 
 字段|类型|默认值|中文名
----|---|---|--
+---|---|---|---
 order_id| int(11) | NULL|订单ID
 way| char(1) | NULL|支付方式 1: 支付宝 , 2: 微信
 status| char(1) | NULL | 跟据支付平台数据 1:下单 2:已付款 3:付款失败 4:已退款
@@ -400,7 +400,7 @@ trace_code| varchar(50) | NULL|支付平台编号
 mall_payment_histroy
 
 字段|类型|默认值|中文名
----|---|---|--
+---|---|---|---
 id| int(11)| NOT NULL AUTO_INCREMENT
 order_code| varchar(50)| NOT NULL |订单编号
 return_code| int(11) | NULL | 返回值 1: 客户端成功  2: 客户端失败  4: 服务端成功  8: 服务端失败
@@ -412,7 +412,7 @@ data_source| int(11) | NULL | 数据來源  1: 客户端 2: 服务端
 mall_return_history
 
 字段|类型|默认值|中文名
----|---|---|--
+---|---|---|---
 id| int(11) | NOT NULL AUTO_INCREMENT
 user_id| int(11) | NULL | 用户ID
 order_id| int(11) | NULL | 订单ID
@@ -430,7 +430,7 @@ refund_no| varchar(30) | NULL | 退款编号
 mall_return_preset_reason
 
 字段|类型|默认值|中文名
----|---|---|--
+---|---|---|---
 id| int(11)| NOT NULL AUTO_INCREMENT
 preset_reason_content| varchar(300) | NULL | 退货原因
 is_delete| char(1) | 0 | 1:已删除 0:未删
@@ -440,7 +440,7 @@ is_delete| char(1) | 0 | 1:已删除 0:未删
 mall_return_reason
 
 字段|类型|默认值|中文名
----|---|---|--
+---|---|---|---
 id| int(11)| NOT NULL AUTO_INCREMENT
 order_id| int(11) | NULL | 订单ID
 goods_id| int(11) | NULL | 商品ID
@@ -453,7 +453,7 @@ return_reason| varchar(500) | NULL | 退货原因用户填写
 menu_info
 
 字段|类型|默认值|中文名
----|---|---|--
+---|---|---|---
 menu_id| int(11)| NOT NULL AUTO_INCREMENT | 菜单编号
 menu_name| varchar(200)  | NULL | 菜单名称
 menu_url| varchar(500)  | NULL | 菜单地址
@@ -465,7 +465,7 @@ menu_parent_id| int(11) | NULL | 菜单父节点
 news
 
 字段|类型|默认值|中文名
----|---|---|--
+---|---|---|---
 news_id| int(11)| NOT NULL AUTO_INCREMENT
 platform_id| int(11) | NULL | 平台 1:pc 2:app移动
 news_type| char(1) | NULL | 0图文 1图片集 2视频
@@ -483,7 +483,7 @@ weights_order| int(11) | NULL | 权重
 news_category
 
 字段|类型|默认值|中文名
----|---|---|--
+---|---|---|---
 category_id| int(11) | NOT NULL
 category_name| varchar(50) | NULL | 频道名称
 category_describe| varchar(300) | NULL | 频道描述
@@ -496,7 +496,7 @@ is_delete| int(11) | NULL | 是否删除1：是2：否
 news_category_relation
 
 字段|类型|默认值|中文名
----|---|---|--
+---|---|---|---
 news_id| int(11) | NULL | 资讯id
 category_id| int(11) | NULL | 频道id
 is_delete| int(11) | NULL | 是否删除 1：是 2：否
@@ -506,7 +506,7 @@ is_delete| int(11) | NULL | 是否删除 1：是 2：否
 news_comment
 
 字段|类型|默认值|中文名
----|---|---|--
+---|---|---|---
 comment_id| int(11) NOT NULL AUTO_INCREMENT | 评论id
 news_id| int(11) | NULL | 资讯id
 comment_content| text | NULL | 评论内容
@@ -519,7 +519,7 @@ create_user| int(11) | NULL | 作者
 news_multimedia
 
 字段|类型|默认值|中文名
----|---|---|--
+---|---|---|---
 media_id| int(11) | NOT NULL AUTO_INCREMENT | 媒体id
 news_id| int(11) | NULL | 资讯id
 media_url| varchar(300) | NULL | image_url
@@ -532,7 +532,7 @@ is_delete| int(11) | 0 |狀态 0: 未删除  1: 删除
 news_range
 
 字段|类型|默认值|中文名
----|---|---|--
+---|---|---|---
 range_id| int(11)| NOT NULL AUTO_INCREMENT | 资讯范围id
 news_id| int(11) | NULL | 资讯id
 range_type| int(11) | NULL |范围类型 0: 公共 1:俱乐部 2:赛事
@@ -544,7 +544,7 @@ is_delete| int(11) | 0 | 是否删除 1：是2：否
 news_watch_history
 
 字段|类型|默认值|中文名
----|---|---|--
+---|---|---|---
 news_id| int(11) | NULL | 资讯id
 user_id| int(11) | NULL | 用户id
 create_time| timestamp NULL | CURRENT_TIMESTAMP | 创建时间
@@ -554,7 +554,7 @@ create_time| timestamp NULL | CURRENT_TIMESTAMP | 创建时间
 notification
 
 字段|类型|默认值|中文名
----|---|---|--
+---|---|---|---
 id| int(11) |NOT NULL AUTO_INCREMENT|ID
 noti_from| int(11) | NULL| 发送者ID
 noti_to| int(11) | NULL| 接收者 ID
@@ -569,7 +569,7 @@ is_delete| char(1) | NULL| 是否删除  1:已删 , 0:未删
 notification_user_state
 
 字段|类型|默认值|中文名
----|---|---|--
+---|---|---|---
 user_id| int(11)| NOT NULL | 用户ID
 category_code| char(1) NOT NULL | 消息分类ID
 noti_count| int(11) | NULL | 消息数量
@@ -579,7 +579,7 @@ noti_count| int(11) | NULL | 消息数量
 picture_upload
 
 字段|类型|默认值|中文名
----|---|---|--
+---|---|---|---
 id| int(11) | NOT NULL AUTO_INCREMENT | ID
 origin_name| varchar(40)  | NULL | 原图片名
 new_name| varchar(40)  | NULL | 新图片名
@@ -590,7 +590,7 @@ create_time| timestamp NULL | NULL |创建时间
 role_info
 
 字段|类型|默认值|中文名
----|---|---|--
+---|---|---|---
 role_id| int(11)| NOT NULL AUTO_INCREMENT | 角色编号
 role_name| varchar(100)  | NULL | 角色名称
 remark| varchar(500)  | NULL | 备注
@@ -601,7 +601,7 @@ is_delete| char(1)  | 0 |  是否删除  1:已删 , 0:未删
 roles_menus
 
 字段|类型|默认值|中文名
----|---|---|--
+---|---|---|---
 role_id| int(11)| NOT NULL | 角色编号
 menu_id| int(11)| NOT NULL | 菜单编号
 
@@ -610,7 +610,7 @@ menu_id| int(11)| NOT NULL | 菜单编号
 session_attribute
 
 字段|类型|默认值|中文名
----|---|---|--
+---|---|---|---
 id| int(11) | NULL | session_time -> table_id
 key_name| varchar(20) | NULL | 键名
 value_content| varchar(300) | NULL | 数值
@@ -620,7 +620,7 @@ value_content| varchar(300) | NULL | 数值
 session_log
 
 字段|类型|默认值|中文名
----|---|---|--
+---|---|---|---
 id| int(11) | NULL | session_time -> id
 function_name| varchar(100) | NULL | 用户访问的功能名
 visit_time| timestamp NULL | NULL | 访问时间
@@ -630,7 +630,7 @@ visit_time| timestamp NULL | NULL | 访问时间
 session_time
 
 字段|类型|默认值|中文名
----|---|---|--
+---|---|---|---
 id| int(11) NOT NULL AUTO_INCREMENT
 session_id| varchar(300) NOT NULL | session_id
 create_time| timestamp NULL | NULL | 创建时间
@@ -642,7 +642,7 @@ due_time| timestamp NULL | NULL | 到期时间
 shipping_address
 
 字段|类型|默认值|中文名
----|---|---|--
+---|---|---|---
 shipping_id| int(11) NOT NULL AUTO_INCREMENT | 配送地址ID
 user_id| int(11) | NULL | 用户ID  user_info > user_id
 city_code| varchar(20) | NULL | 地点标记   world_city > remark
@@ -657,7 +657,7 @@ is_delete| char(1) | 0 | 删除标记 0: 未删除 1: 己删除
 sports_camp
 
 字段|类型|默认值|中文名
----|---|---|--
+---|---|---|---
 sports_camp_id| int(11) NOT NULL AUTO_INCREMENT | 运动派编号
 language_id| int(11) | NULL | 语言编号
 user_id| int(11) | NULL | 用户编号
@@ -670,7 +670,7 @@ is_delete| char(1)  | 0
 upgrade_version
 
 字段|类型|默认值|中文名
----|---|---|--
+---|---|---|---
 iOS_current_version| varchar(30)  | NULL| iOS 版本
 android_current_version| varchar(30)  | NULL| Android 版本
 iOS| varchar(10)  | NULL| iOS 是否更新 , F:更新 ,  N:不更新
@@ -683,7 +683,7 @@ android_open| varchar(10)  | NULL| Android 启用更新  yes:启用,  no:不启�
 user_competition
 
 字段|类型|默认值|中文名
----|---|---|--
+---|---|---|---
 competition_id| int(11) | 0 | 赛事编号
 user_id| int(11) | 0 | 用户编号
 user_competition_status| varchar(2)  | NULL | 用户赛事状态
@@ -696,7 +696,7 @@ apply_or_refuse_time| timestamp | NULL | 同意或拒绝时间
 user_competition_refuse_reason
 
 字段|类型|默认值|中文名
----|---|---|--
+---|---|---|---
 id| int(11) | NOT NULL AUTO_INCREMENT | 主键
 user_id| int(11) | NULL| 用户ID
 competition_id| int(11) | NULL| 赛事ID
@@ -709,7 +709,7 @@ create_time| timestamp NULL | CURRENT_TIMESTAMP| 创建时间
 user_detail
 
 字段|类型|默认值|中文名
----|---|---|--
+---|---|---|---
 club_id| int(11) | NULL | 俱乐部编号
 user_id| int(11)| NOT NULL | 用户编号
 jump_club_number| int(11) | NULL | 选择俱乐部跳过次数
@@ -724,7 +724,7 @@ club_refuse_id| int(11) | NULL | 拒绝原因ID
 user_detail_refuse_club_reason
 
 字段|类型|默认值|中文名
----|---|---|--
+---|---|---|---
 club_reason_id| int(11) | NOT NULL AUTO_INCREMENT | 主键
 reason_content| text | NULL  | 原因
 create_time| timestamp NULL | CURRENT_TIMESTAMP | 创建时间
@@ -734,7 +734,7 @@ create_time| timestamp NULL | CURRENT_TIMESTAMP | 创建时间
 user_info
 
 字段|类型|默认值|中文名
----|---|---|--
+---|---|---|---
 user_id| int(11) NOT NULL AUTO_INCREMENT | 用户编号
 platform_id| int(11) | NULL | 平台编号
 user_real_name| varchar(200)  | NULL | 用户真实姓名
@@ -761,7 +761,7 @@ salt| varchar(20)  | NULL | 盐
 user_sports_camp
 
 字段|类型|默认值|中文名
----|---|---|--
+---|---|---|---
 sports_camp_id| int(11) |NOT NULL | 运动派编号
 user_id| int(11)| NOT NULL | 用户编号
 
@@ -770,7 +770,7 @@ user_id| int(11)| NOT NULL | 用户编号
 users_roles
 
 字段|类型|默认值|中文名
----|---|---|--
+---|---|---|---
 user_id| int(11)  | NOT NULL | 用户编号
 role_id| int(11)  | NOT NULL | 角色编号
 
@@ -779,7 +779,7 @@ role_id| int(11)  | NOT NULL | 角色编号
 world_city
 
 字段|类型|默认值|中文名
----|---|---|--
+---|---|---|---
 id| int(11)| NOT NULL AUTO_INCREMENT | 编号
 name| varchar(255)  | NULL | 名称
 parent_id| int(11) | NULL | 父编号

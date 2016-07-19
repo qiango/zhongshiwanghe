@@ -1,17 +1,16 @@
 package com.hongzhi.zswh.back.club.service;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
 import com.hongzhi.zswh.back.club.dao.ClubScoreDao;
 import com.hongzhi.zswh.back.club.entity.ClubScoreEntity;
 import com.hongzhi.zswh.util.basic.ObjectUtil;
 import com.hongzhi.zswh.util.exception.HongZhiException;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**   Twitter : @taylorwang789 
  * Creat time : May 9, 2016    10:41:12 AM
@@ -79,7 +78,7 @@ public class ClubScoreService {
 		clubScore.Vcompetition_id();
 		clubScore.Vrank();
 		int  effCount = scoredao.modifyScore(clubScore);
-		if(effCount==1){
+		if(1 == effCount || 2 == effCount){
 			return "success";
 		}else{
 			throw new HongZhiException("1034");
