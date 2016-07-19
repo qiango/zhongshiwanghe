@@ -52,7 +52,7 @@ require(['jquery','ZeroClipboard','datepicker-zh','bs','validate-zh','chosen','a
 	                    }
 	                });
 	            }
-	        }    		
+	        }
 	    };
     	
     	/*ajax配置*/
@@ -374,7 +374,7 @@ require(['jquery','ZeroClipboard','datepicker-zh','bs','validate-zh','chosen','a
         		light_cad(lightCad,2400);
         	});
         }
-        
+
         /*离线缓存*/
 		var cache = window.applicationCache || window.webkitApplicationCache || window.mozApplicationCache;
 		if(cache){
