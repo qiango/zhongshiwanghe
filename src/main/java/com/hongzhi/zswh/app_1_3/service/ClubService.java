@@ -1,7 +1,6 @@
 package com.hongzhi.zswh.app_1_3.service;
 
 
-import com.google.gson.JsonObject;
 import com.hongzhi.zswh.app_1_3.dao.ClubDao;
 import com.hongzhi.zswh.app_1_3.entity.Club;
 import com.hongzhi.zswh.app_1_3.entity.ClubManageEntity;
@@ -16,10 +15,7 @@ import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 
 
 @Service("app_1_3_ClubService")
@@ -190,7 +186,7 @@ public class ClubService {
         if (!ObjectUtil.isEmpty(city_id)){
             map.put("club_list_city_id", clubDao.listClubByCityId(city_id));
         }else{
-            map.put("club_list_city_id", new JsonObject());
+            map.put("club_list_city_id", new ArrayList<>());
         }
 
 
