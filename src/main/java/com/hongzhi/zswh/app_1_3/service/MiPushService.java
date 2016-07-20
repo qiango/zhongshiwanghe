@@ -24,11 +24,11 @@ public class MiPushService {
         miPushRegid.Vapp_type();
 
         int temp = 0;
-        if ("IOS".equals(miPushRegid.getApp_type())) {
+        if ("IOS".equals(miPushRegid.getApp_type().toUpperCase())) {
             miPushRegid.setApp_type("1");
             miPushRegid.setStatus("1");
             temp = miPushDao.saveRegid(miPushRegid);
-        } else if ("Android".equals(miPushRegid.getApp_type())) {
+        } else if ("ANDROID".equals(miPushRegid.getApp_type().toUpperCase())) {
             miPushRegid.setApp_type("2");
             miPushRegid.setStatus("1");
             temp = miPushDao.saveRegid(miPushRegid);
@@ -40,11 +40,13 @@ public class MiPushService {
         }
 
     }
+
     public Object canceRegid(MiPushRegid miPushRegid) throws HongZhiException {
         miPushRegid.Vregid();
         miPushDao.canceRegid(miPushRegid.getRegid());
         return null;
     }
+
     public void saveRegidOnLogIn(MiPushRegid miPushRegid) {
 
         if ("IOS".equals(miPushRegid.getApp_type().toUpperCase())) {
@@ -54,6 +56,6 @@ public class MiPushService {
             miPushRegid.setApp_type("2");
             miPushRegid.setStatus("1");
         }
-         miPushDao.saveRegid(miPushRegid);
+        miPushDao.saveRegid(miPushRegid);
     }
 }
