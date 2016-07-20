@@ -6,7 +6,7 @@ require.config({
      'fileinput-zh' : ['jquery','fileinput'],
        'datepicker' : ['jquery','jquery-ui'],
     'datepicker-zh' : ['jquery','datepicker'],
-               'bs' : ['jquery'],
+               'bs' : ['jquery','jquery-ui'],
          'validate' : ['jquery'],
       'validate-zh' : ['jquery','validate'],
            'chosen' : ['jquery','jquery-ui'],
@@ -20,10 +20,10 @@ require.config({
  	  		 		 'ue' : 'uEditor/ueditor.all.min',
  	  		 	 'ue-lan' : 'uEditor/lang/zh-cn/zh-cn',
                  'jquery' : 'jquery/jquery-1.11.3',
-              'jquery-ui' : 'jquery-ui/jquery-ui.min',           
+              'jquery-ui' : 'jquery-ui/jquery-ui.min',
               'fileinput' : 'upload/fileinput.min',
-           'fileinput-zh' : 'upload/fileinput_locale_zh', 
-             'datepicker' : 'bootstrap-datepicker/bootstrap-datepicker.min', 
+           'fileinput-zh' : 'upload/fileinput_locale_zh',
+             'datepicker' : 'bootstrap-datepicker/bootstrap-datepicker.min',
           'datepicker-zh' : 'bootstrap-datepicker/bootstrap-datepicker.zh-CN.min',
                      'bs' : 'bootstrap/js/bootstrap.min',
                'validate' : 'validate/jquery.validate.min',
@@ -35,16 +35,17 @@ require.config({
 });
 require(['jquery','ZeroClipboard','datepicker-zh','bs','validate-zh','chosen','ajaxUpload','ue-lan'],function($,ZeroClipboard){
     $(function(){
-    	
+
     	/*声明一个全局对象，当作命名空间*/
     	window.ns = {
 			site_back: function(data){
 				/*提交后返回*/
 	        	data.code == 0 && !history.go(-1) || alert('请求出错，请重试');
 	        },
+
 	        ellipsis: function (str) {
-	            var arr = str.split(",");       
-	            for(var i = 0; i<arr.length ; i++) {            
+	            var arr = str.split(",");
+	            for(var i = 0; i<arr.length ; i++) {
 	                $(arr[i]).each(function(){
 	                	$(this).attr('title', $(this).text());
 	                    if(20 < $(this).text().length) {
@@ -52,9 +53,44 @@ require(['jquery','ZeroClipboard','datepicker-zh','bs','validate-zh','chosen','a
 	                    }
 	                });
 	            }
-	        }
+	        },
+
+			//表单验证
+			formSubmit: function(form, submitUrl, btn, otherValidate, redirectUrl) {
+				form.validate({
+					submitHandler : function(){
+
+						//执行附加验证
+						if(!otherValidate()) {
+							return;
+						};
+
+						if(confirm("确定要提交数据吗？")) {
+							//提交
+							$.ajax({
+								type: "POST",
+								url: url + submitUrl,
+								dataType:"json",
+								data: form.serialize() ,
+								beforeSend: function() {
+									btn.button('loading');
+								}
+							})
+							.done(function(data){
+								ns.site_back(data);
+								redirectUrl && (location.hash = '#' + redirectUrl);
+							})
+							.fail(internal_error)
+							.always(function() {
+								btn.button('reset');
+							});
+						}
+					}
+				});
+			},
+
 	    };
-    	
+
     	/*ajax配置*/
     	$.ajaxSetup({cache:false});
     	$(document)
@@ -64,24 +100,24 @@ require(['jquery','ZeroClipboard','datepicker-zh','bs','validate-zh','chosen','a
     	.ajaxStop(function(){
     		$('.loading-modal').removeClass('load');
     	});
-    	
+
     	/*不规范的使用了不少全局变量，懒得改了,url为全局基础url*/
           window.url = window.location.pathname.substring(0, window.location.pathname.lastIndexOf('/'));
-          
+
         /*view的 基础url*/
         var temp_url = url + '/redirect.htmls?url=';
-        
+
         /*解决富文本编辑器的问题*/
         window['ZeroClipboard'] = ZeroClipboard;
 
         require.ueconfig = {
                 toolbars:[
                     [ 'source','fontfamily','fontsize','|','simpleupload','link','attachment','date','time','bold','italic','underline','forecolor','backcolor','insertorderedlist','insertunorderedlist','|','justifyleft','justifycenter','justifyright','|','help']
-                   ], 
+                   ],
                 wordCount:false,
                 initialContent:'请输入',
                 lang:'zh-cn',
-                initialFrameWidth:'80%', 
+                initialFrameWidth:'80%',
                 initialFrameHeight:150,
                 autoClearinitialContent:true,
                 elementPathEnabled:false,
@@ -102,12 +138,12 @@ require(['jquery','ZeroClipboard','datepicker-zh','bs','validate-zh','chosen','a
                 })
                 .fail(internal_error);
             }
-          }  
+          }
         }
 
         window.internal_error = function(xhr,status,error){
             location.hash = '#';
-            var html = xhr.status != '404' ? 
+            var html = xhr.status != '404' ?
                         '<div style="text-align:left; padding: 20px;>'+xhr.responseText+'<h2>STATUS:'+status+'</h2><h2>error:'+error+'</h2></div>' :
                         '<div class="display-table col-xs-12 bg-404 over-h">\
                             <div id="errorbox">\
@@ -127,7 +163,7 @@ require(['jquery','ZeroClipboard','datepicker-zh','bs','validate-zh','chosen','a
                 url: temp_url + str,
             })
             .done(function(data){
-                $('#wj-main-content').html(data); 
+                $('#wj-main-content').html(data);
             })
             .fail(internal_error);
         };
@@ -157,39 +193,39 @@ require(['jquery','ZeroClipboard','datepicker-zh','bs','validate-zh','chosen','a
             }
             $(selector).append(opts);
         };
-       
+
 		$(window).on('hashchange',function(e){
 			if(location.hash.substring(1)) {
 				goUrl(location.hash.substring(1));
 			}
 		});
-		
+
 		/*编辑*/
 	    $(document).on('click', '.wj_edit_data', function(e){
 	    	sessionStorage.setItem('edit_id', $(this).attr('edit_id'));
 	    	if($(this).attr('editable') == 'false'){
        		 	alert('信息不可修改');
        		 	e.preventDefault();
-       	 	}			
+       	 	}
 		});
-	    
+
 	    /*菜单点击加载页面，重复点击相同按钮也需要刷新*/
         $(document).on('click', '.child-item.text-hovered a', function(e){
             (location.hash == $(this).attr('href')) && goUrl(location.hash.substring(1));;
         });
-        
+
         /*返回按钮*/
         $(document).on('click', '#return_index_btn', function(e){
             history.go(-1);
             e.preventDefault();
         });
-        
+
         /*删除*/
 		$(document).on('click', '.wj_delete_data', function(){
 			var _this=$(this);
 			deleteData(_this.attr('back_path'),_this.attr('delete_path'),_this.attr('editable'));
 		});
-    	
+
 		/*详情页*/
        	$(document).on('click','.wj_view_data',function(e){
             var _this = $(this)
@@ -199,12 +235,12 @@ require(['jquery','ZeroClipboard','datepicker-zh','bs','validate-zh','chosen','a
                                                 type: 'GET',
                                             })
                                             .done(function(data){
-                                                $('#wj-main-content').html(data); 
+                                                $('#wj-main-content').html(data);
                                             })
                                             .fail(internal_error);
 
        	});
-    	
+
        	/*修改状态*/
     	$(document).on('click','#modal-save-btn',function(){
     		var self = $(this);
@@ -219,7 +255,7 @@ require(['jquery','ZeroClipboard','datepicker-zh','bs','validate-zh','chosen','a
                 })
             .fail(internal_error)
     	});
-    	
+
     	/*搜索*/
     	$(document).on('submit','#search_form',function(){
 	       	var search_path = $(this).attr('search_path');
@@ -234,7 +270,7 @@ require(['jquery','ZeroClipboard','datepicker-zh','bs','validate-zh','chosen','a
                  .fail(internal_error);
 	        return false;//阻止表单提交
     	});
-    	
+
     	$(document).on('click', '.wj_cog_data', function(){
     		var _this=$(this);
     		sessionStorage.setItem('edit_id', _this.attr('edit_id'));
@@ -255,7 +291,7 @@ require(['jquery','ZeroClipboard','datepicker-zh','bs','validate-zh','chosen','a
     			location.hash = '#' + $(this).attr('cog_path');
     		}
     	});
-    	
+
     	$(document).on('change','#fileToUpload',function(){
     		var fileName = '';
     		if($(this).val().lastIndexOf('\\') !=-1){
@@ -265,7 +301,7 @@ require(['jquery','ZeroClipboard','datepicker-zh','bs','validate-zh','chosen','a
     		}
     		$(this).parent().siblings('.file-path').text('您选择的文件为：'+fileName).attr('title',fileName);
     	});
-    	
+
     	$(document).on('click','.upload-btn',function() {
     		var parent = $(this).parent();
     		if(!$(this).siblings().find('#fileToUpload').val()){
@@ -295,7 +331,7 @@ require(['jquery','ZeroClipboard','datepicker-zh','bs','validate-zh','chosen','a
        		});
         	path.text('');
         });
-    	
+
         /*登出*/
     	$(document).on('click','#un-login',function(){
             var str = url + $(this).data('path');
@@ -309,7 +345,7 @@ require(['jquery','ZeroClipboard','datepicker-zh','bs','validate-zh','chosen','a
             })
             .fail(internal_error);
     	});
-    	
+
         $.ajax({
             type: 'get',
             url: url + '/init.htmls',
@@ -328,9 +364,9 @@ require(['jquery','ZeroClipboard','datepicker-zh','bs','validate-zh','chosen','a
 									<td>'+ (club_data[j].club_people_number||'') +'</td>\
 								</tr>'
                 }
-                
+
                 $('.word-doc tbody').html(club_sum);
-                
+
                 for (var i = 0, len = children.length; i < len; i++) {
                     main_menu += '<li class="cell-list">\
                                     <div class="text-hovered" data-toggle="collapse"\
@@ -338,7 +374,7 @@ require(['jquery','ZeroClipboard','datepicker-zh','bs','validate-zh','chosen','a
                                         <i class="fa fa-file-text-o"></i><a href="javascript:void(0);">'+ children[i].menu_name +'</a>\
                                     </div>\
                                     <ul class="retract collapse" id="all-order-'+ children[i].menu_id +'">';
-                    for (var j = 0, leng = children[i].children.length; j < leng; j++) {    
+                    for (var j = 0, leng = children[i].children.length; j < leng; j++) {
                         main_menu += '<li class="child-item text-hovered">\
                                         <a href="#'+ children[i].children[j].menu_url +'" class="" title="">'+ children[i].children[j].menu_name +'</a>\
                                       </li>';
@@ -353,13 +389,13 @@ require(['jquery','ZeroClipboard','datepicker-zh','bs','validate-zh','chosen','a
             }
         })
         .fail(internal_error);
-        
+
         /*F5刷新时加载数据*/
         setTimeout(function(){
         	$(window).trigger('hashchange');
         });
-        
-               
+
+
         /*低版本浏览器的发光特效*/
         function light_cad(lightCad,time){
         	lightCad.css({left:-1280}).animate({left:'120%'},time,function(){
@@ -380,7 +416,7 @@ require(['jquery','ZeroClipboard','datepicker-zh','bs','validate-zh','chosen','a
 		if(cache){
 			if(localStorage.getItem('siteCacheTag') !== 'false'){
 				localStorage.setItem('siteCacheTag','true');
-			}		
+			}
 
 			cache.addEventListener('error', function (e){
 				if(localStorage.getItem('siteCacheTag') === 'false'){
@@ -391,23 +427,23 @@ require(['jquery','ZeroClipboard','datepicker-zh','bs','validate-zh','chosen','a
 					console.log('缓存出错，请查看清单文件');
 				}
 				localStorage.setItem('siteCacheTag','true');
-			}); 
+			});
 	 		cache.addEventListener('downloading', function(){
 	 			localStorage.setItem('siteCacheTag','true');
-	 		}); 
+	 		});
 			cache.addEventListener('obsolete', function(){
 				localStorage.setItem('siteCacheTag','false');
-			});  
-			cache.addEventListener('updateready', function(e) { 
-				if (cache.status == cache.UPDATEREADY) { 
-					cache.swapCache(); 
-					if (confirm('缓存更新完毕，是否刷新页面以获得更好的体验?')) { 
-						location.reload(); 
-					} else { 
-					
-					} 
+			});
+			cache.addEventListener('updateready', function(e) {
+				if (cache.status == cache.UPDATEREADY) {
+					cache.swapCache();
+					if (confirm('缓存更新完毕，是否刷新页面以获得更好的体验?')) {
+						location.reload();
+					} else {
+
+					}
 				}
-			}); 
+			});
 		}
 	});
 });

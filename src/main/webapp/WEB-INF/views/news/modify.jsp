@@ -105,7 +105,7 @@
             <div class="col-xs-10 stretch">
             	<div class="col-xs-12 display-table stretch">
 	            	<label class="label-file btn btn-default">
-	            		选择图片<input id="fileToUpload" type="file" size="45" name="fileToUpload">
+	            		选择图片<input id="fileToUpload" type="file" size="45" name="fileToUpload" accept="image/gif,image/jpg,image/jpeg,image/png">
 	            	</label>
 	            	<input type="text" name="submit_file" id="submit_file" value="${image.information_image_url }">
 	            	<button type="button" class="btn btn-default upload-btn">上传</button>
@@ -114,7 +114,7 @@
             	</div>
  				
  				
- 				<img class="viewImg" src='${image.information_image_url }'> 				   
+ 				<img class="viewImg collapse" src='${image.information_image_url }'>
             </div>
         </div>
         <div class="col-xs-11 stretch form-group float-none img-news">
@@ -137,7 +137,7 @@
 					<div class="ov-h mt-8">
 		            	<div class="display-table stretch">
 			            	<label class="label-file btn btn-default">
-			            		选择图片<input id="fileToUpload" type="file" size="45" name="fileToUpload">
+			            		选择图片<input id="fileToUpload" type="file" size="45" name="fileToUpload" accept="image/gif,image/jpg,image/jpeg,image/png">
 			            	</label>
 			            	<input type="text" name="submit_file" id="submit_file">
 			            	<button type="button" class="btn btn-default upload-btn">上传</button>
@@ -164,7 +164,7 @@
 
 		<div class="col-xs-11 stretch form-group mt-10">
 			
-			<button class="btn btn-primary btn-theme pull-left col-xs-offset-2" id="submit_form_btn" type="submit">保存</button>
+			<button class="btn btn-primary btn-theme pull-left col-xs-offset-2" data-loading-text="提交中" id="submit_form_btn" type="submit">保存</button>
 		</div>
 	</form>
     
@@ -204,7 +204,7 @@
         	$('select').each(function(){
         		$(this).find('option[value="'+ data.data.news[$(this).attr('name')] +'"]').prop('selected',true);
     	    });
-        	if(data.data.news.newsrang){ debugger;
+        	if(data.data.news.newsrang){
 	        	$('[name="news_range"]').find('option[value="'+ data.data.news.newsrang["news_range"] +'"]').prop('selected',true).end().change();
 	        	setTimeout(function(){
 		        	$('[name="news_range"]').siblings('select:visible').find('option[value="'+ data.data.news.newsrang["circle_id"] +'"]').prop('selected',true);
@@ -216,7 +216,7 @@
 	    	$(':input').not('select,input[type="checkbox"]').each(function(){
 	    		$(this).val(data.data.news[$(this).attr('name')]);
 	    	});
-	    	if($('[name="news_type"]').val() !== 1){
+	    	if($('[name="news_type"]').val() != 1){
 	    		//图文或者视频图片
 	    		$('.img-news').find('.viewImg').attr('src','pic.htmls?p=' + (data.data.news.picture[0]?data.data.news.picture[0].media_url:'')).removeClass('collapse');
 	    		$('.img-news').find('#submit_file').val((data.data.news.picture[0]?data.data.news.picture[0].media_url:''));
@@ -269,39 +269,26 @@
 				UE.getEditor('editor').setContent(data.data.news.news_content, false);
 			});
 		}
-    }	
-    $("#submit_form").validate({
-        submitHandler : function(){
-            if(confirm("确定要提交数据吗？")) {
-            	//提交图集说明
-            	if($('[name="news_type"]').val()==1){            		
-            		if($('.img-news-list').find('[name="submit_file"]').filter(function(){return $.trim($(this).val()) == '';}).length||
-   	            		$('.img-news-list').find('.textarea_information').filter(function(){return $.trim($(this).val()) == '';}).length){
-   	            		alert('请至少上传一张图片并填写图片描述');
-   	            		return;
-   	            	}
-	            	var val = '';
-	            	$('.textarea_information').each(function(){
-	            		val += '#$#' + $(this).val() ;
-	            	});
-	            	$('[name="media_information"]').val(val.substring(3));
-            	}
-            	//提交
-                $.ajax({
-                     type: "POST",
-                     url: url + "/news/modifySave.htmls",
-                     dataType:"json",
-                     data: $("#submit_form").serialize() ,
-                })
-                .done(function(data){
-               	 	ns.site_back(data);
-                })
-                .fail(internal_error);
-            }
-            return false;//阻止表单提交
-        }
-    }); 
+    }
 
+	//表单验证
+	ns.formSubmit($('#submit_form'), '/news/modifySave.htmls', $('#submit_form_btn'), function () {
+		//提交图集说明
+		if($('[name="news_type"]').val()==1){
+			if($('.img-news-list').find('[name="submit_file"]').filter(function(){return $.trim($(this).val()) == '';}).length||
+				$('.img-news-list').find('.textarea_information').filter(function(){return $.trim($(this).val()) == '';}).length){
+				alert('请至少上传一张图片并填写图片描述');
+				return false;
+			}
+			var val = '';
+			$('.textarea_information').each(function(){
+				val += '#$#' + $(this).val() ;
+			});
+			$('[name="media_information"]').val(val.substring(3));
+
+		}
+		return true;
+	});
 
     </script>
 

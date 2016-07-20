@@ -96,8 +96,8 @@
             </div>
         </div>
         <div class="col-xs-11 stretch form-group mt-10">
-			
-			<button class="btn btn-primary btn-theme pull-left col-xs-offset-2" id="submit_form_btn" type="submit">保存</button>
+
+            <button class="btn btn-primary btn-theme pull-left col-xs-offset-2" data-loading-text="提交中" id="submit_form_btn" type="submit">保存</button>
 		</div>
 	</form>
 
@@ -146,28 +146,13 @@
     	}
     }).change();
 
-    $("#submit_form").validate({
-        submitHandler : function(){
-           	if(!$('#ifm')[0].contentWindow.uploadTag){
-           		alert('请先上传视频或等待视频上传完成');
-                return;
-           	}
-            if(confirm("确定要提交数据吗？")) {
-            	//提交
-                $.ajax({
-                     type: "POST",
-                     url: url + "/news/newSave.htmls",
-                     dataType:"json",
-                     data: $("#submit_form").serialize() ,
-                })
-                .done(function(data){
-               	 	ns.site_back(data);
-                    location.hash='#/news/index'
-                })
-                .fail(internal_error);
-            }
-            return false;//阻止表单提交
+
+    //表单验证
+    ns.formSubmit($('#submit_form'), '/news/newSave.htmls', $('#submit_form_btn'), function () {
+        if(!$('#ifm')[0].contentWindow.uploadTag){
+            alert('请先上传视频或等待视频上传完成');
+            return false;
         }
-    }); 
-   
+        return true;
+    },'/news/index');
     </script>
