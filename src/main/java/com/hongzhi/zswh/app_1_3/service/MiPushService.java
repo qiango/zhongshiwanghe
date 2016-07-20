@@ -40,4 +40,12 @@ public class MiPushService {
         }
 
     }
+
+
+    public Object canceRegid(MiPushRegid miPushRegid) throws HongZhiException {
+        miPushRegid.Vregid();
+        miPushDao.canceRegid(miPushRegid.getRegid());
+        return null;
+
+    }
 }
