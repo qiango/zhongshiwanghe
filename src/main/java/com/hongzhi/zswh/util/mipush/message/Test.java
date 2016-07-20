@@ -10,7 +10,9 @@ public class Test {
 
     public static void main(String[] args) {
         SendMessage sendMessage = new SendMessage();
-        sendMessage.iOSSend();
+//        sendMessage.iOSSend();
+//        sendMessage.broadcast();
+        sendMessage.send();
         System.out.println("end");
 
     }

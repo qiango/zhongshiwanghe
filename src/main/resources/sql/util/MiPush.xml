@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hongzhi.zswh.util.basic.sessionDao.SessionDao">
+    
+     <select id="getRegId" resultType="com.hongzhi.zswh.util.mipush.message.AppRegid">
+     select
+         a.user_id
+        ,a.regid
+        ,a.status
+        ,a.app_type
+        ,b.noti_count
+     from app_regid  a
+     left join
+         (
+            select
+                user_id
+               ,sum(noti_count) as noti_count
+            from notification_user_state
+            group by user_id
+         ) b
+         on a.user_id = b.user_id
+     where
+        status = '1'
+      <if test=" userIds != null  and userIds.size() > 0 " >
+        and  user_id in (
+        <foreach collection="userIds" item="item" separator=",">
+            #{item}
+        </foreach>
+          )
+      </if>
+     </select>
+    
+	
+	
+</mapper>

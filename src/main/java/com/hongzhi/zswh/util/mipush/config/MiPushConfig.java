@@ -19,7 +19,7 @@ public class MiPushConfig {
     public static String appKey(DEVICE device){
         String appkey= "" ;
         switch (device.toString().toLowerCase()) {
-            case "iOS" : appkey = MiPushiOS.AppID ; break ;
+            case "iOS" : appkey = MiPushiOS.AppKey ; break ;
         }
         return  appkey ;
     }
@@ -28,6 +28,7 @@ public class MiPushConfig {
         String appsecret = "" ;
         switch (device.toString()) {
             case "iOS" : appsecret = MiPushiOS.AppSecret ; break ;
+            case "Android" : appsecret = MiPushAndroid.AppSecret ; break ;
         }
         return  appsecret ;
     }
