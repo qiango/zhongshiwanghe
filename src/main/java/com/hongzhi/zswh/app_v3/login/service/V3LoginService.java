@@ -7,6 +7,8 @@ import java.util.Map;
 
 import javax.servlet.http.HttpSession;
 
+import com.hongzhi.zswh.app_1_3.entity.MiPushRegid;
+import com.hongzhi.zswh.app_1_3.service.MiPushService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -43,6 +45,9 @@ public class V3LoginService {
 	private AppSportsCampDao appSportsCampDao;
 	@Autowired
 	private AppUserInfoDao appUserInfoDao;
+
+    @Autowired
+    private MiPushService miPushService;
 
 	/**   Twitter : @taylorwang789 
 	 * Creat time : Apr 26, 2016    2:30:00 PM
@@ -92,6 +97,17 @@ public class V3LoginService {
 			out.put("sports_camp_id", sport_camp_id);
 			Map<String, Object> aa = new HashMap<>();
 			aa.put("user_info", out);
+
+            // mi push
+            if( !ObjectUtil.isEmpty(loginParam.getApp_type()) && !ObjectUtil.isEmpty(loginParam.getRegid())){
+                MiPushRegid miPushRegid = new MiPushRegid();
+                miPushRegid.setUser_id((String) userInfo.get("user_id"));
+                miPushRegid.setStatus("1");
+                miPushRegid.setApp_type(loginParam.getApp_type());
+                miPushRegid.setRegid(loginParam.getRegid());
+                miPushService.saveRegidOnLogIn(miPushRegid);
+            }
+
 			return  ObjectUtil.jsonOut(aa);
 		} catch (HongZhiException e) {
 			return  ObjectUtil.jsonOutError(e.getCode(), dictionary.getCodeValue(e.getCode(), loginParam.getLanguage() ));
@@ -148,7 +164,17 @@ public class V3LoginService {
 						userInfo.put("session_id",sess_id);
 						Map<String, Object> out = new HashMap<>();
 						out.put("user_info", userInfo);
-						
+
+                        // mi push
+                        if( !ObjectUtil.isEmpty(loginParam.getApp_type()) && !ObjectUtil.isEmpty(loginParam.getRegid())){
+                            MiPushRegid miPushRegid = new MiPushRegid();
+                            miPushRegid.setUser_id((String) userInfo.get("user_id"));
+                            miPushRegid.setStatus("1");
+                            miPushRegid.setApp_type(loginParam.getApp_type());
+                            miPushRegid.setRegid(loginParam.getRegid());
+                            miPushService.saveRegidOnLogIn(miPushRegid);
+                        }
+
 						return  ObjectUtil.jsonOut(out);
 					} else {
 						throw new HongZhiException("1011");
