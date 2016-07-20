@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.hongzhi.zswh.util.basic.sessionDao.SessionDao">
+<mapper namespace="com.hongzhi.zswh.util.mipush.message.MessageDao">
     
      <select id="getRegId" resultType="com.hongzhi.zswh.util.mipush.message.AppRegid">
      select
@@ -22,7 +22,7 @@
      where
         status = '1'
       <if test=" userIds != null  and userIds.size() > 0 " >
-        and  user_id in (
+        and  a.user_id in (
         <foreach collection="userIds" item="item" separator=",">
             #{item}
         </foreach>
