@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.hongzhi.zswh.util.mipush.message.MiMessage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -58,6 +59,9 @@ public class NotificationService {
 		
 		if(saveCount==1){
 		   notiStateDao.updateNotificationState(notificationEntity.getNoti_to());
+            MiMessage message = new MiMessage();
+            message.setMessage(notificationEntity.VNotification_body(),notificationEntity.VNoti_to());
+            message.send();
 			return  "success";
 		}else{
 			throw new HongZhiException("1011");
@@ -93,6 +97,11 @@ public class NotificationService {
 
 			if(saveCount==multiple_receiver.size()){
 				   notiStateDao.updateNotificationStateMultipleUser(multiple_receiver);
+
+                    MiMessage message = new MiMessage();
+                    message.setMessage(notificationEntity.VNotification_body(), multiple_receiver);
+                    message.send();
+
 					return  "success";
 			}else{
 					throw new HongZhiException("1011");

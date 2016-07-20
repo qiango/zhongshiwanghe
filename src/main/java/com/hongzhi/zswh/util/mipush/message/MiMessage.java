@@ -47,6 +47,18 @@ public class MiMessage {
         }
      }
 
+    public void setMessage(String content , List<Integer> user_id){
+        try {
+            if (ObjectUtil.isEmpty(user_id) && user_id.size() == 0 ) {
+                throw new HongZhiException("");
+            }
+            regidList = messageDao.getRegId(user_id);
+            msgContent = content;
+        } catch (HongZhiException e) {
+            e.printStackTrace();
+        }
+    }
+
     public void send() {
         List<String> regids_iOS = new ArrayList<>();
         List<Integer> regids_iOS_badge = new ArrayList<>();
