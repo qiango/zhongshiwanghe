@@ -40,7 +40,11 @@ public class MiPushService {
         }
 
     }
-
+    public Object canceRegid(MiPushRegid miPushRegid) throws HongZhiException {
+        miPushRegid.Vregid();
+        miPushDao.canceRegid(miPushRegid.getRegid());
+        return null;
+    }
     public void saveRegidOnLogIn(MiPushRegid miPushRegid) {
 
         if ("IOS".equals(miPushRegid.getApp_type().toUpperCase())) {
@@ -51,6 +55,5 @@ public class MiPushService {
             miPushRegid.setStatus("1");
         }
          miPushDao.saveRegid(miPushRegid);
-
     }
 }

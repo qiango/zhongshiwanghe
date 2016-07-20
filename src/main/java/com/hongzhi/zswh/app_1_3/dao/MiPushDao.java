@@ -14,4 +14,6 @@ import org.springframework.stereotype.Repository;
 public interface MiPushDao {
 
     int saveRegid(MiPushRegid miPushRegid);
+
+    void canceRegid(String regid);
 }

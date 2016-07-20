@@ -15,6 +15,15 @@
         ,#{app_type}
    )
 </insert>
+<update id="canceRegid">
+   update
+   app_regid a
+   set
+    a.status = 0
+   where
+    a.regid = #{regid}
 
+
+</update>
 
 </mapper>

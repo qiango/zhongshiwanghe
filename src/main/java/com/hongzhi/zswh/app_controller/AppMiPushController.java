@@ -51,5 +51,21 @@ public class AppMiPushController {
             return ObjectUtil.jsonOutError(e.getCode(), dic.getCodeValue(e.getCode(), language ) );
         }
     }
-    
+    @ResponseBody
+    @RequestMapping(value = "/cance_regid")
+    public String canceRegid(HttpSession session, String session_id, MiPushRegid miPushRegid, @PathVariable String version){
+        SessionProperty property;
+        String language = "zh";
+        try{
+            switch (version){
+                case "v1.3":
+                    property = sess.sessionEffective(session,session_id,"/v1.3/mi_push/cance_regid");
+                    return ObjectUtil.jsonOut(miPushService.canceRegid(miPushRegid));
+                default:
+                    return null;
+            }
+        }catch (HongZhiException e){
+            return ObjectUtil.jsonOutError(e.getCode(), dic.getCodeValue(e.getCode(), language ) );
+        }
+    }
 }
