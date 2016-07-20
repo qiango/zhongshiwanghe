@@ -84,5 +84,21 @@ public class AppClubController {
         }
 
     }
-
+    @ResponseBody
+    @RequestMapping("/load_club")
+    public String loadClub(HttpSession session, String session_id,String city_id,@PathVariable String version){
+        SessionProperty property;
+        String language = "zh";
+        try {
+            switch (version){
+                case "v1.3":
+                    property = sess.sessionEffective(session, session_id, "/v1.3/club/load_club");
+                    return ObjectUtil.jsonOut(clubService.listClub(city_id));
+                default:
+                    return null;
+            }
+        }catch (HongZhiException e){
+            return ObjectUtil.jsonOutError(e.getCode(), dic.getCodeValue(e.getCode(), language));
+        }
+}
 }

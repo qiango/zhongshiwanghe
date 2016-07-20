@@ -1,6 +1,7 @@
 package com.hongzhi.zswh.app_1_3.service;
 
 
+import com.google.gson.JsonObject;
 import com.hongzhi.zswh.app_1_3.dao.ClubDao;
 import com.hongzhi.zswh.app_1_3.entity.Club;
 import com.hongzhi.zswh.app_1_3.entity.ClubManageEntity;
@@ -181,4 +182,19 @@ public class ClubService {
 
     }
 
+    public Object listClub(String city_id) {
+        Map<String, Object> map = new HashMap<>();
+
+        map.put("club_list", clubDao.listClub());
+
+        if (!ObjectUtil.isEmpty(city_id)){
+            map.put("club_list_city_id", clubDao.listClubByCityId(city_id));
+        }else{
+            map.put("club_list_city_id", new JsonObject());
+        }
+
+
+        return map;
+
+    }
 }
