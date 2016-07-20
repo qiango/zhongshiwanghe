@@ -101,7 +101,7 @@ public class V3LoginService {
             // mi push
             if( !ObjectUtil.isEmpty(loginParam.getApp_type()) && !ObjectUtil.isEmpty(loginParam.getRegid())){
                 MiPushRegid miPushRegid = new MiPushRegid();
-                miPushRegid.setUser_id((String) userInfo.get("user_id"));
+                miPushRegid.setUser_id(userInfo.get("user_id").toString());
                 miPushRegid.setStatus("1");
                 miPushRegid.setApp_type(loginParam.getApp_type());
                 miPushRegid.setRegid(loginParam.getRegid());
@@ -168,7 +168,7 @@ public class V3LoginService {
                         // mi push
                         if( !ObjectUtil.isEmpty(loginParam.getApp_type()) && !ObjectUtil.isEmpty(loginParam.getRegid())){
                             MiPushRegid miPushRegid = new MiPushRegid();
-                            miPushRegid.setUser_id((String) userInfo.get("user_id"));
+                            miPushRegid.setUser_id(userInfo.get("user_id").toString());
                             miPushRegid.setStatus("1");
                             miPushRegid.setApp_type(loginParam.getApp_type());
                             miPushRegid.setRegid(loginParam.getRegid());
