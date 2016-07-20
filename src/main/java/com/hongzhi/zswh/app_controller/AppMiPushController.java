@@ -51,5 +51,5 @@ public class AppMiPushController {
             return ObjectUtil.jsonOutError(e.getCode(), dic.getCodeValue(e.getCode(), language ) );
         }
     }
-    
+
 }
