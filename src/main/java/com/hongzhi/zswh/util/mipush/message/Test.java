@@ -9,9 +9,8 @@ import com.hongzhi.zswh.util.mipush.config.DEVICE;
 public class Test {
 
     public static void main(String[] args) {
-        System.out.println(DEVICE.iOS);
         SendMessage sendMessage = new SendMessage();
-        sendMessage.send();
+        sendMessage.iOSSend();
         System.out.println("end");
 
     }
