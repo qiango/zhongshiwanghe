@@ -411,4 +411,96 @@
         and
         a.is_delete = 0
     </select>
+
+    <select id="listClub" resultType="map" >
+        select
+            ifnull(a.club_id,0) as club_id,
+            ifnull(a.club_name,'') as club_name,
+            ifnull(a.club_applicant_name,'') as club_applicant_name,
+            concat(cast(a.club_create_date as date ),'')  as club_create_date,
+            concat(cast(a.create_time as time ),'')  as create_time,
+            concat(cast(a.create_date as date ),'')  as create_date,
+            ifnull(a.club_qq,'') as club_qq,
+            ifnull(a.club_description,'') as club_description,
+            ifnull(d.value,'') as club_status,
+            a.user_id,
+            a.club_id,
+            a.id,
+            a.language_id
+        from
+          club  a
+        left join
+          world_city b
+        on
+          a.id = b.id
+        left join
+          dictionary  c
+        on
+          a.language_id = c.code
+        and
+          c.p_code='language'
+        and
+          c.language='zh'
+        left join
+          dictionary d
+        on
+          a.club_status = d.code
+        and
+          d.p_code = 'club'
+        and
+          d.language='zh'
+        where
+          is_delete = '0'
+        and
+          a.club_status ='99'
+        order by
+        convert(a.club_name USING gbk) COLLATE gbk_chinese_ci
+    </select>
+
+    <select id="listClubByCityId" resultType="map" >
+        select
+            ifnull(a.club_id,0) as club_id,
+            ifnull(a.club_name,'') as club_name,
+            ifnull(a.club_applicant_name,'') as club_applicant_name,
+            concat(cast(a.club_create_date as date ),'')  as club_create_date,
+            concat(cast(a.create_time as time ),'')  as create_time,
+            concat(cast(a.create_date as date ),'')  as create_date,
+            ifnull(a.club_qq,'') as club_qq,
+            ifnull(a.club_description,'') as club_description,
+            ifnull(d.value,'') as club_status,
+            a.user_id,
+            a.club_id,
+            a.id,
+            a.language_id
+        from
+          club  a
+        left join
+          world_city b
+        on
+          a.id = b.id
+        left join
+          dictionary  c
+        on
+          a.language_id = c.code
+        and
+          c.p_code='language'
+        and
+          c.language='zh'
+        left join
+          dictionary d
+        on
+          a.club_status = d.code
+        and
+          d.p_code = 'club'
+        and
+          d.language='zh'
+        where
+          is_delete = '0'
+        and
+          a.club_status ='99'
+        and
+          a.id = #{city_id}
+        order by
+        convert(a.club_name USING gbk) COLLATE gbk_chinese_ci
+    </select>
 </mapper>
