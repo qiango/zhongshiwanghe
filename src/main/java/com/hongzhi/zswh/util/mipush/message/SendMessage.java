@@ -2,14 +2,11 @@ package com.hongzhi.zswh.util.mipush.message;
 
 import com.hongzhi.zswh.util.mipush.config.DEVICE;
 import com.hongzhi.zswh.util.mipush.config.MiPushConfig;
-import com.sun.tools.internal.jxc.ap.Const;
 import com.xiaomi.push.sdk.ErrorCode;
 import com.xiaomi.xmpush.server.*;
 import org.json.simple.parser.ParseException;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Created by taylor on 7/13/16.
