@@ -103,6 +103,7 @@ public class MiMessage {
                 .description(msgContent).payload("msg")
                 .restrictedPackageName("com.chengjubei.activity")
                 .notifyType(1)     // 使用默认提示音提示
+                .extra("pushType", String.valueOf(ObjectUtil.coalesce(messageType)))
                 .build();
 
         Sender sender = new Sender(MiPushConfig.appSecret(DEVICE.Android));
