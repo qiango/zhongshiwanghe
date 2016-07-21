@@ -55,8 +55,12 @@ public class MiMessage {
                 regids_Android.add(regidList.get(i).getRegid());
             }
         }
-        sendiOS(regids_iOS, regids_iOS_badge );
-        sendAndroid(regids_Android);
+        if (!ObjectUtil.isEmpty(regids_iOS) && regids_iOS.size()>0) {
+            sendiOS(regids_iOS, regids_iOS_badge );
+        }
+        if (!ObjectUtil.isEmpty(regids_Android) && regids_Android.size() > 0 ) {
+            sendAndroid(regids_Android);
+        }
     }
 
 

@@ -1,6 +1,6 @@
 package com.hongzhi.zswh.app_1_3.service;
 
-import com.hongzhi.zswh.app_1_3.dao.AppCompetitionDao;
+import com.hongzhi.zswh.app_1_3.dao.CompetitionDao;
 import com.hongzhi.zswh.util.basic.DictionaryUtil;
 import com.hongzhi.zswh.util.basic.ObjectUtil;
 import com.hongzhi.zswh.util.basic.sessionDao.SessionProperty;
@@ -12,18 +12,31 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Created with IntelliJ IDEA.
- * User: xuejian
- * Date: 2016/7/21
- * Time: 14:51
- * To change this template use File | Settings | File Templates.
+ * Created by taylor on 7/21/16.
+ * twitter: @taylorwang789
  */
-@Service("app_1_3_AppCompetitionService")
-public class AppCompetitionService {
+
+@Service("app_1_3_competition_service")
+public class CompetitionService {
+
     @Autowired
-    private AppCompetitionDao appCompetitionDao;
+    private CompetitionDao competitionDao;
     @Autowired
     private DictionaryUtil dictionaryUtil;
+    private int default_size = 20 ;
+
+    public Object news(String competition_id,String page_number,String page_size) {
+        int start_row = 0;
+        int page = Integer.valueOf(ObjectUtil.coalesce(page_number,1).toString());
+        page_size =  ObjectUtil.coalesce(page_size,default_size).toString() ;
+        int size  = Integer.valueOf(page_size) ;
+        start_row = ( page - 1 ) * size;
+
+        Map<String,Object>  map = new HashMap<>();
+        map.put("news", competitionDao.competitionNews(competition_id,start_row,size));
+        return  map;
+    }
+
 
     public Object getJoinCompetition(SessionProperty property, String platform_id, String competition_id) {
         try {
@@ -31,7 +44,7 @@ public class AppCompetitionService {
         } catch (HongZhiException e) {
             e.printStackTrace();
         }
-        Map<String, Object> out=appCompetitionDao.getJoinCompetition(Integer.valueOf(property.getUser_id()),Integer.valueOf(platform_id),Integer.valueOf(competition_id));
+        Map<String, Object> out=competitionDao.getJoinCompetition(Integer.valueOf(property.getUser_id()),Integer.valueOf(platform_id),Integer.valueOf(competition_id));
 
         if (ObjectUtil.isEmpty(out)) {
             Map<String, Object> map = new HashMap<String, Object>();

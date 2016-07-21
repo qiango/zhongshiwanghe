@@ -59,7 +59,7 @@
 		
 		
 		
-		<button class="btn btn-primary btn-theme pull-left col-xs-offset-6" id="submit_form_btn" type="submit">保存</button>
+		<button class="btn btn-primary btn-theme pull-left col-xs-offset-6" id="submit_form_btn" type="submit" data-role="loading">保存</button>
 	</form>
 
 	<script type="text/javascript">
@@ -107,6 +107,9 @@
 		
 		/*提交字符串*/		
 		$('#submit_form').submit(function(){
+			//阻止多次请求
+			$('[data-role="loading"]').button('loading');
+
 			var datas = "";
 			$('tr').each(function(){
 				var son_data = "";
@@ -149,6 +152,10 @@
                 })
                 .fail(internal_error);
 			}
+
+			//恢复按钮可点击
+			$('[data-role="loading"]').button('reset');
+
        		return false;//阻止表单提交
 		});
     </script>

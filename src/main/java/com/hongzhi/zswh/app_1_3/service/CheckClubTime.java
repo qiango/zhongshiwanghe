@@ -9,7 +9,10 @@ import org.springframework.stereotype.Component;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Created with IntelliJ IDEA.
@@ -24,8 +27,8 @@ public class CheckClubTime {
     private ClubDao clubDao;
     @Autowired
     private DictionaryUtil dictionaryUtil;
-    //@Scheduled(cron = "0 */3 * * * ?")
-    @Scheduled(cron = "0 */2 * * *")
+   // @Scheduled(cron = "0 */3 * * * ?")
+    @Scheduled(cron = "0 0 0/1 * * ?")
     public void checkClub() {
 
         List<Map<String, Object>> club_list = clubDao.selectClub();
