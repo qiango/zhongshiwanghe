@@ -10,7 +10,6 @@ import com.xiaomi.xmpush.server.Message;
 import com.xiaomi.xmpush.server.Result;
 import com.xiaomi.xmpush.server.Sender;
 import org.json.simple.parser.ParseException;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -24,38 +23,21 @@ import java.util.List;
  */
 public class MiMessage {
 
-    @Autowired
-    private MessageDao messageDao;
 
     private List<AppRegid> regidList  = new ArrayList<>();
 
-    private String msgContent;
+    private String msgContent="";
 
-    private String iOS = "";
+    private String iOS = "1";
 
-    private String android = "";
+    private String android = "2";
 
-    public void setMessage(String content , Integer user_id){
-        try {
-            if (ObjectUtil.isEmpty(user_id)) {
-               throw new HongZhiException("");
-            }
-            regidList = messageDao.getRegId(Arrays.asList(user_id));
-            msgContent = content;
-        } catch (HongZhiException e) {
-            e.printStackTrace();
-        }
-     }
 
-    public void setMessage(String content , List<Integer> user_id){
-        try {
-            if (ObjectUtil.isEmpty(user_id) && user_id.size() == 0 ) {
-                throw new HongZhiException("");
-            }
-            regidList = messageDao.getRegId(user_id);
-            msgContent = content;
-        } catch (HongZhiException e) {
-            e.printStackTrace();
+    public void sendMessage(String content , List<AppRegid> regids){
+        msgContent = content;
+        regidList = regids;
+        if (!ObjectUtil.isEmpty(regidList) && regidList.size()>0) {
+            send();
         }
     }
 
@@ -94,13 +76,12 @@ public class MiMessage {
                 .category("action")
                 .extra("key","value")
                 .build();
-        System.out.println(MiPushConfig.appSecret(DEVICE.iOS));
-        Sender sender = new Sender(MiPushConfig.appSecret(DEVICE.iOS));
 
+        Sender sender = new Sender(MiPushConfig.appSecret(DEVICE.iOS));
         try {
             Result result =  sender.send(message,regids,0);
             ErrorCode ec = result.getErrorCode();
-            System.out.println(ec.getDescription());
+            System.out.println("iOS:"+regids+":"+ec.getDescription());
         } catch (IOException e) {
             e.printStackTrace();
         } catch (ParseException e) {
@@ -121,7 +102,7 @@ public class MiMessage {
         try {
             Result result = sender.send(message, regids, 0);
             ErrorCode ec = result.getErrorCode();
-            System.out.println(ec.getDescription());
+            System.out.println("Android:"+ec.getDescription());
         } catch (IOException e) {
             e.printStackTrace();
         } catch (ParseException e) {
