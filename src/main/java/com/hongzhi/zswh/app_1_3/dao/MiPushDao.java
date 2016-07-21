@@ -15,5 +15,5 @@ public interface MiPushDao {
 
     int saveRegid(MiPushRegid miPushRegid);
 
-    void canceRegid(String regid);
+    void cancelRegid(String regid);
 }

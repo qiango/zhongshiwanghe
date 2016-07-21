@@ -48,9 +48,36 @@
         where user_id = #{user_id}
     </select>
     
-    <select id="getClubName" resultType="String">
-     select club_name from club  where club_id = #{club_id } 
+    <select id="getClubName" resultType="map">
+      select
+        club_name
+        ,club_status
+      from
+        club
+      where
+        club_id = #{club_id }
+      and
+        is_delete = 0
+
     </select>
-    
-  
+    <select id="selectClubMembers" resultType="Integer">
+        select
+          user_id
+        from
+          user_detail
+        where
+          club_id = #{club_id}
+        and
+          join_club_status ='99'
+    </select>
+    <update id="updateClubStatusByClubId">
+        update
+          club
+        set
+          club_status='99'
+        where
+          club_id = #{club_id}
+        and
+          is_delete = 0
+    </update>
 </mapper>
