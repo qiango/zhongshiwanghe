@@ -83,6 +83,7 @@ public class MiMessage {
                 .badge(regids_iOS_badge+1)
                 .category("action")
                 .extra("pushType", String.valueOf(ObjectUtil.coalesce(messageType)))
+                .extra("content","")
                 .build();
 
         Sender sender = new Sender(MiPushConfig.appSecret(DEVICE.iOS));
@@ -105,6 +106,7 @@ public class MiMessage {
                 .restrictedPackageName("com.chengjubei.activity")
                 .notifyType(1)     // 使用默认提示音提示
                 .extra("pushType", String.valueOf(ObjectUtil.coalesce(messageType)))
+                .extra("content","")
                 .build();
 
         Sender sender = new Sender(MiPushConfig.appSecret(DEVICE.Android));
