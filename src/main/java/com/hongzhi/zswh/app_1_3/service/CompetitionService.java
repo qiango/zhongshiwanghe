@@ -30,6 +30,7 @@ public class CompetitionService {
 
         Map<String,Object>  map = new HashMap<>();
         map.put("news", competitionDao.competitionNews(competition_id,start_row,size));
+        map.put("news_detail_url", "/v5/news/detail.htmls?news_id=");
         return  map;
     }
 
