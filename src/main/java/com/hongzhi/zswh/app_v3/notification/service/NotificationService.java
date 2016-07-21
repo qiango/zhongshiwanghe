@@ -5,6 +5,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.hongzhi.zswh.util.mipush.message.MiMessage;
+import com.hongzhi.zswh.util.mipush.message.MiMessageService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -24,6 +26,10 @@ public class NotificationService {
 	
 	@Autowired
 	private NotificationUserStateDao notiStateDao;
+
+    @Autowired
+    private MiMessageService miMessageService;
+
 	
 
 	/**   Twitter : @taylorwang789 
@@ -58,6 +64,9 @@ public class NotificationService {
 		
 		if(saveCount==1){
 		   notiStateDao.updateNotificationState(notificationEntity.getNoti_to());
+            MiMessage message = new MiMessage();
+            message.sendMessage(notificationEntity.VNotification_body(),miMessageService.getRegidList(Integer.valueOf(notificationEntity.VNoti_to())));
+            message.send();
 			return  "success";
 		}else{
 			throw new HongZhiException("1011");
@@ -93,6 +102,10 @@ public class NotificationService {
 
 			if(saveCount==multiple_receiver.size()){
 				   notiStateDao.updateNotificationStateMultipleUser(multiple_receiver);
+
+                    MiMessage message = new MiMessage();
+                    message.sendMessage(notificationEntity.VNotification_body(), miMessageService.getRegidList(multiple_receiver));
+
 					return  "success";
 			}else{
 					throw new HongZhiException("1011");
@@ -117,8 +130,6 @@ public class NotificationService {
 	 * @param id
 	 * @param category_id 
 	 * @param language 
-	 * @param string 
-	 * @param id2 
 	 * @return
 	 */
 	@Transactional

@@ -415,6 +415,15 @@ public class ObjectUtil {
         }
         return root;
     }
+
+    public static  Object coalesce(Object... objs) {
+        for (Object obj: objs ) {
+            if (!isEmpty(obj)) {
+                return obj;
+            }
+        }
+        return "";
+    }
     
 
 	

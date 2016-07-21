@@ -1,6 +1,7 @@
 package com.hongzhi.zswh.back.club.dao;
 
 import java.util.List;
+import java.util.Map;
 
 import org.apache.ibatis.annotations.Param;
 
@@ -36,6 +37,9 @@ public interface JoinClubDao {
 	 * @param parseInt
 	 * @return
 	 */
-	String getClubName(int parseInt);
+	Map<String, String>  getClubName(int parseInt);
 
+	List<Integer> selectClubMembers(String club_id);
+
+	void updateClubStatusByClubId(String club_id);
 }

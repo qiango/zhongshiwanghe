@@ -15,10 +15,7 @@ import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 
 
 @Service("app_1_3_ClubService")
@@ -181,4 +178,19 @@ public class ClubService {
 
     }
 
+    public Object listClub(String city_id) {
+        Map<String, Object> map = new HashMap<>();
+
+        map.put("club_list", clubDao.listClub());
+
+        if (!ObjectUtil.isEmpty(city_id)){
+            map.put("club_list_city_id", clubDao.listClubByCityId(city_id));
+        }else{
+            map.put("club_list_city_id", new ArrayList<>());
+        }
+
+
+        return map;
+
+    }
 }

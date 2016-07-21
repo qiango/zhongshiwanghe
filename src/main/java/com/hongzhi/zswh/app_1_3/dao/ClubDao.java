@@ -39,4 +39,8 @@ public interface ClubDao {
     List<Integer> selectClubMembers(String club_id);
 
     List<String> checkClubName(String club_name);
+
+    List<Map<String,Object>>  listClub();
+
+    List<Map<String,Object>>  listClubByCityId(@Param("city_id")String city_id);
 }
