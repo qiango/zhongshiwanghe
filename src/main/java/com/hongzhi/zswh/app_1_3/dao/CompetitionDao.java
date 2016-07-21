@@ -19,4 +19,5 @@ public interface CompetitionDao {
 
     List<CompetitionNewsImage> competitionNewsImages(@Param("newsID") List<Integer> news_id_list);
 
+    Map<String, Object> getJoinCompetition(@Param("user_id") Integer user_id, @Param("platform_id") Integer platform_id, @Param("competition_id") Integer competition_id);
 }
