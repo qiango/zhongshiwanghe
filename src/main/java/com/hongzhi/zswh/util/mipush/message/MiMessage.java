@@ -1,8 +1,8 @@
 package com.hongzhi.zswh.util.mipush.message;
 
 import com.hongzhi.zswh.util.basic.ObjectUtil;
-import com.hongzhi.zswh.util.exception.HongZhiException;
 import com.hongzhi.zswh.util.mipush.config.DEVICE;
+import com.hongzhi.zswh.util.mipush.config.MessageType;
 import com.hongzhi.zswh.util.mipush.config.MiPushConfig;
 import com.xiaomi.push.sdk.ErrorCode;
 import com.xiaomi.xmpush.server.Constants;
@@ -13,7 +13,6 @@ import org.json.simple.parser.ParseException;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 
@@ -32,6 +31,11 @@ public class MiMessage {
 
     private String android = "2";
 
+    private String messageType = "";
+
+    public MiMessage(MessageType messageType) {
+        this.messageType = messageType.toString();
+    }
 
     public void sendMessage(String content , List<AppRegid> regids){
         msgContent = content;
@@ -78,7 +82,8 @@ public class MiMessage {
                 .soundURL("default")
                 .badge(regids_iOS_badge+1)
                 .category("action")
-                .extra("key","value")
+                .extra("pushType", String.valueOf(ObjectUtil.coalesce(messageType)))
+                .extra("content","")
                 .build();
 
         Sender sender = new Sender(MiPushConfig.appSecret(DEVICE.iOS));
@@ -100,6 +105,8 @@ public class MiMessage {
                 .description(msgContent).payload("msg")
                 .restrictedPackageName("com.chengjubei.activity")
                 .notifyType(1)     // 使用默认提示音提示
+                .extra("pushType", String.valueOf(ObjectUtil.coalesce(messageType)))
+                .extra("content","")
                 .build();
 
         Sender sender = new Sender(MiPushConfig.appSecret(DEVICE.Android));
