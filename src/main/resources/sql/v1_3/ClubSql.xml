@@ -503,4 +503,27 @@
         order by
         convert(a.club_name USING gbk) COLLATE gbk_chinese_ci
     </select>
+    <select id="selectClub" resultType="map">
+      select
+        date_format(a.club_create_time,'%Y-%m-%d') as club_create_time
+        ,a.club_id as club_id
+        ,a.club_status as club_status
+      from
+        club a
+      where
+        a.club_status = 2
+      and
+        a.is_delete = 0
+
+    </select>
+    <update id="updateClubStatus">
+        update
+          club a
+        set
+          a.club_status = '3'
+        where
+          a.club_id = #{club_id}
+        and
+          a.is_delete = 0
+    </update>
 </mapper>

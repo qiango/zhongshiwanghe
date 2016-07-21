@@ -18,6 +18,34 @@
     order by   coalesce( a.weights_order,9999999999) asc , a.create_time desc
     limit #{startRow } , #{size }
     </select>
-
+    <select id="getJoinCompetition" resultType="map">
+        select
+            a.user_id
+            ,case when b.user_competition_status  in ('97','98')  then '0'
+            else coalesce( b.user_competition_status ,'0')  end  as user_competition_status
+            ,case when d.join_club_status in ('97','98')  then '0'
+            else coalesce (d.join_club_status , '0')  end  as  join_club_status
+            ,coalesce(c.club_status,'3') as club_status
+        from
+          user_info a
+        left join
+          user_competition  b
+        on
+          a.user_id = b.user_id
+        and
+          b.competition_id =#{competition_id}
+        left join
+          user_detail d
+        on
+          a.user_id = d.user_id
+        left join
+          club c
+        on
+          c.club_id = d.club_id
+        where
+          a.user_id = #{user_id}
+        and
+          a.platform_id = #{platform_id}
+    </select>
 
 </mapper>
