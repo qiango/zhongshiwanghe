@@ -85,7 +85,7 @@
         <input type="hidden" name="club_id" value="${club.club_id }" >
 		<div class="col-xs-11 stretch form-group mt-10">
 				
-			<button class="btn btn-primary btn-theme pull-left col-xs-offset-2" id="submit_form_btn" type="submit">保存</button>
+			<button class="btn btn-primary btn-theme pull-left col-xs-offset-2" id="submit_form_btn" type="submit" data-role="loading">保存</button>
 		</div>
     </form>
     
@@ -114,23 +114,32 @@
 	    	});
     	});
     }
-    $("#submit_form").validate({
-        submitHandler : function(){
-            if(confirm("确定要提交数据吗？")) {
-                $.ajax({
-                     type: "POST",
-                     url: url+"/club/modifySave.htmls",
-                     data: $("#submit_form").serialize(),
-                     success: function(data){
-         //                alert("提交成功");
-                         change_hash("/club/index");
-                     },
-                     error: internal_error
-                 });
-            }
-            return false;//阻止表单提交
-        }
-    }); 
+
+	//表单验证
+	ns.formSubmit({
+		submitUrl: '/club/modifySave.htmls',
+		otherValidate:function() {
+			if($('[name="ad_type"]').val()==1 ||$('[name="ad_type"]').val()==2){
+				if($('.img-news-list').find('[name="submit_file"]').filter(function(){return $.trim($(this).val()) == '';}).length){
+					alert('请至少上传一张图片');
+					return;
+				}
+				var val = '';
+				$('.textarea_information').each(function(){
+					val += '#$#' + $(this).val() ;
+				});
+				$('[name="image_information"]').val(val.substring(3));
+
+
+				var val_temp = '';
+				$('.textarea_information_link').each(function(){
+					val_temp += '#$#' + $(this).val() ;
+				});
+				$('[name="information_link_ad"]').val(val_temp.substring(3));
+			}
+			return true;
+		}
+	});
  
     $("#club_create_date").datepicker({
 		format:'yyyy-mm-dd',

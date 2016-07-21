@@ -27,7 +27,7 @@
 
 		<div class="col-xs-11 stretch form-group mt-10">
 						
-			<button class="btn btn-primary btn-theme pull-left col-xs-offset-2" id="submit_form_btn" type="submit">保存</button>
+			<button class="btn btn-primary btn-theme pull-left col-xs-offset-2" id="submit_form_btn" type="submit" data-role="loading">保存</button>
 		</div>
     </form>
     
@@ -48,26 +48,38 @@
 	    });
     }
     $('[name="club_id"]').val(sessionStorage.getItem('edit_id'));
-    $('#submit_form').validate({
-        submitHandler : function(){
-        	var ids='';
-        	$(':checked').each(function(){
-        		ids += ',' + $(this).val()
-        	});
-            if(confirm('确定要提交数据吗？')) {
-                $.ajax({
-                     type: 'POST',
-                     url: url+'/club/sportscampSave.htmls',
-                     data: {club_id:$('[name="club_id"]').val(),sports_camp_id:ids.substring(1)},
-                })
-                .done(function(data){
-               	 	ns.site_back(data);
-                })
-                .fail(internal_error);
-           }
-            return false;//阻止表单提交
-        }
-    }); 
+//    $('#submit_form').validate({
+//        submitHandler : function(){
+//        	var ids='';
+//        	$(':checked').each(function(){
+//        		ids += ',' + $(this).val()
+//        	});
+//            if(confirm('确定要提交数据吗？')) {
+//                $.ajax({
+//                     type: 'POST',
+//                     url: url+'/club/sportscampSave.htmls',
+//                     data: {club_id:$('[name="club_id"]').val(),sports_camp_id:ids.substring(1)},
+//                })
+//                .done(function(data){
+//               	 	ns.site_back(data);
+//                })
+//                .fail(internal_error);
+//           }
+//            return false;//阻止表单提交
+//        }
+//    });
+
+	//表单验证
+	ns.formSubmit({
+		submitUrl: '/club/sportscampSave.htmls',
+		data: function() {
+			var ids='';
+			$(':checked').each(function(){
+				ids += ',' + $(this).val()
+			});
+			return {club_id:$('[name="club_id"]').val(),sports_camp_id: ids.substring(1)};
+		}
+	});
   
     </script>
 
