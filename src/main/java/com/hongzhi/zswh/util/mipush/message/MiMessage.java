@@ -66,8 +66,7 @@ public class MiMessage {
 
     private void sendiOS(List<String> regids, List<Integer> regids_iOS_badge){
         for (int i = 0; i < regids.size() ; i++) {
-            sendiOS(regids.get(i), (Integer) ObjectUtil.getProperty(regids_iOS_badge.get(i),0)
-            );
+            sendiOS(regids.get(i), (Integer) ObjectUtil.getProperty(regids_iOS_badge.get(i),0));
         }
     }
 
