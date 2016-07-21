@@ -27,7 +27,7 @@
                 <div class="col-xs-1">
                     <button class="btn btn-primary bg-theme border-theme pull-left" type="submit">搜索</button>
                 </div>
-				<button class="btn btn-primary btn-theme-bg pull-right ml-20" type="button" id="check-pass">审核通过</button>
+				<button class="btn btn-primary btn-theme-bg pull-right ml-20" type="button" id="check-pass" data-role="loading">审核通过</button>
             	<button class="btn btn-primary btn-theme-bg pull-right" type="button" id="check-refuse-btn" data-toggle="modal" data-target="#fix-modal">审核不通过</button>
             </div>
         </form>
@@ -97,7 +97,7 @@
 	           	</div>
 	            <div class="modal-footer">
         	   	   <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
-        	   	   <button type="button" class="btn btn-primary" data-dismiss="modal" id="modal-refuse-btn">提交</button>
+        	   	   <button type="button" class="btn btn-primary" data-dismiss="modal" id="modal-refuse-btn" data-role="loading">提交</button>
       		    </div>
 	        </div>
 	      </div>
@@ -172,6 +172,9 @@
     });
    
     $('#submit_form').submit(function(){
+		//阻止多次请求
+		$('[data-role="loading"]').button('loading');
+
     	var datas='',
     		checked=$(this).find(':checked').not('#check_all');
     	if(checked.length == 0){
@@ -195,6 +198,10 @@
                  error: internal_error
             });
         }
+
+		//恢复按钮可点击
+		$('[data-role="loading"]').button('reset');
+
     	return false;
     });
 	$('#check-refuse-btn').click(function(e){

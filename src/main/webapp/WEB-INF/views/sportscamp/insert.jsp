@@ -53,8 +53,8 @@
 		</div>
 
 		<div class="col-xs-11 stretch form-group mt-10">
-				
-			<button class="btn btn-primary btn-theme pull-left col-xs-offset-2" id="submit_form_btn" type="submit">保存</button>
+
+			<button class="btn btn-primary btn-theme pull-left col-xs-offset-2" id="submit_form_btn" type="submit" data-role="loading">保存</button>
 		</div>
     </form>
     
@@ -73,22 +73,11 @@
     		$(".select-choose").chosen().next('.chosen-container').css({width:$('.select-choose').css('width')});
     	});
     }
-    $("#submit_form").validate({
-        submitHandler : function(){
-            if(confirm("确定要提交数据吗？")) {
-                $.ajax({
-                     type: "POST",
-                     url: url+"/sportscamp/insertSave.htmls",
-                     data: $("#submit_form").serialize(),
-                })
-                .done(function(data){
-               	 	ns.site_back(data);
-                })
-                .fail(internal_error);
-            }
-            return false;//阻止表单提交
-        }
-    }); 
+
+	//表单验证
+	ns.formSubmit({
+		submitUrl: '/sportscamp/insertSave.htmls'
+	});
     </script>
 </body>
 </html>

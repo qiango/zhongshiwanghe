@@ -164,7 +164,7 @@
 
 		<div class="col-xs-11 stretch form-group mt-10">
 			
-			<button class="btn btn-primary btn-theme pull-left col-xs-offset-2" data-loading-text="提交中" id="submit_form_btn" type="submit">保存</button>
+			<button class="btn btn-primary btn-theme pull-left col-xs-offset-2" id="submit_form_btn" type="submit" data-role="loading">保存</button>
 		</div>
 	</form>
     
@@ -272,23 +272,25 @@
     }
 
 	//表单验证
-	ns.formSubmit($('#submit_form'), '/news/modifySave.htmls', $('#submit_form_btn'), function () {
-		//提交图集说明
-		if($('[name="news_type"]').val()==1){
-			if($('.img-news-list').find('[name="submit_file"]').filter(function(){return $.trim($(this).val()) == '';}).length||
-				$('.img-news-list').find('.textarea_information').filter(function(){return $.trim($(this).val()) == '';}).length){
-				alert('请至少上传一张图片并填写图片描述');
-				return false;
+	ns.formSubmit({
+		submitUrl: '/news/modifySave.htmls',
+		otherValidate: function () {
+			//提交图集说明
+			if($('[name="news_type"]').val()==1){
+				if($('.img-news-list').find('[name="submit_file"]').filter(function(){return $.trim($(this).val()) == '';}).length||
+						$('.img-news-list').find('.textarea_information').filter(function(){return $.trim($(this).val()) == '';}).length){
+					alert('请至少上传一张图片并填写图片描述');
+					return false;
+				}
+				var val = '';
+				$('.textarea_information').each(function(){
+					val += '#$#' + $(this).val() ;
+				});
+				$('[name="media_information"]').val(val.substring(3));
+
 			}
-			var val = '';
-			$('.textarea_information').each(function(){
-				val += '#$#' + $(this).val() ;
-			});
-			$('[name="media_information"]').val(val.substring(3));
-
+			return true;
 		}
-		return true;
 	});
-
     </script>
 

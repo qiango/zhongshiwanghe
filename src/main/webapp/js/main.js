@@ -55,35 +55,48 @@ require(['jquery','ZeroClipboard','datepicker-zh','bs','validate-zh','chosen','a
 	            }
 	        },
 
-			//表单验证
-			formSubmit: function(form, submitUrl, btn, otherValidate, redirectUrl) {
-				form.validate({
+			//表单验证,包含除了赛事管理页面的所有表单验证
+			formSubmit: function(args) {
+
+				//参数默认值
+				var arg = {
+					form: $('#submit_form'),
+					otherValidate: function() { return true; },
+					redirectUrl: false,//这个参数基本不用
+					submitUrl: ''
+				};
+				arg = $.extend(arg,args);
+
+				arg.form.validate({
 					submitHandler : function(){
+						//阻止多次请求
+						$('[data-role="loading"]').button('loading');
 
 						//执行附加验证
-						if(!otherValidate()) {
+						if(!arg.otherValidate()) {
+							//恢复按钮可点击
+							$('[data-role="loading"]').button('reset');
 							return;
 						};
+						//提交的数据
+						arg.data = arg.data ? arg.data() : arg.form.serialize();
 
 						if(confirm("确定要提交数据吗？")) {
 							//提交
 							$.ajax({
 								type: "POST",
-								url: url + submitUrl,
+								url: url + arg.submitUrl,
 								dataType:"json",
-								data: form.serialize() ,
-								beforeSend: function() {
-									btn.button('loading');
-								}
+								data: arg.data,
+								headers: {Accept:"*/*"}
 							})
 							.done(function(data){
 								ns.site_back(data);
-								redirectUrl && (location.hash = '#' + redirectUrl);
+								arg.redirectUrl && (location.hash = '#' + arg.redirectUrl);
 							})
-							.fail(internal_error)
-							.always(function() {
-								btn.button('reset');
-							});
+							.fail(internal_error);
+						} else {
+							$('[data-role="loading"]').button('reset');
 						}
 					}
 				});
@@ -91,23 +104,31 @@ require(['jquery','ZeroClipboard','datepicker-zh','bs','validate-zh','chosen','a
 
 	    };
 
-    	/*ajax配置*/
+    	//ajax配置
     	$.ajaxSetup({cache:false});
     	$(document)
     	.ajaxStart(function(){
+			//过渡动画
     		$('.loading-modal').addClass('load');
     	})
     	.ajaxStop(function(){
     		$('.loading-modal').removeClass('load');
+			//恢复按钮可点击
+			$('[data-role="loading"]').button('reset');
     	});
 
-    	/*不规范的使用了不少全局变量，懒得改了,url为全局基础url*/
+		////阻止多次请求
+		//$(document).on('click', '[data-role="loading"]', function(e){
+		//	$('[data-role="loading"]').button('loading');
+		//});
+
+    	//不规范的使用了不少全局变量，懒得改了,url为全局基础url
           window.url = window.location.pathname.substring(0, window.location.pathname.lastIndexOf('/'));
 
-        /*view的 基础url*/
+        //view的 基础url
         var temp_url = url + '/redirect.htmls?url=';
 
-        /*解决富文本编辑器的问题*/
+        //解决富文本编辑器的问题
         window['ZeroClipboard'] = ZeroClipboard;
 
         require.ueconfig = {
@@ -156,7 +177,7 @@ require(['jquery','ZeroClipboard','datepicker-zh','bs','validate-zh','chosen','a
                         </div>';
             $('#wj-main-content').html(html)
         }
-        /*加载模板*/
+        //加载模板
         window.goUrl = function(str) {
             $.ajax({
                 type: 'GET',
@@ -200,7 +221,7 @@ require(['jquery','ZeroClipboard','datepicker-zh','bs','validate-zh','chosen','a
 			}
 		});
 
-		/*编辑*/
+		//编辑
 	    $(document).on('click', '.wj_edit_data', function(e){
 	    	sessionStorage.setItem('edit_id', $(this).attr('edit_id'));
 	    	if($(this).attr('editable') == 'false'){
@@ -209,24 +230,24 @@ require(['jquery','ZeroClipboard','datepicker-zh','bs','validate-zh','chosen','a
        	 	}
 		});
 
-	    /*菜单点击加载页面，重复点击相同按钮也需要刷新*/
+	    //菜单点击加载页面，重复点击相同按钮也需要刷新
         $(document).on('click', '.child-item.text-hovered a', function(e){
-            (location.hash == $(this).attr('href')) && goUrl(location.hash.substring(1));;
+            (location.hash == $(this).attr('href')) && goUrl(location.hash.substring(1));
         });
 
-        /*返回按钮*/
+        //返回按钮
         $(document).on('click', '#return_index_btn', function(e){
             history.go(-1);
             e.preventDefault();
         });
 
-        /*删除*/
+        //删除
 		$(document).on('click', '.wj_delete_data', function(){
 			var _this=$(this);
 			deleteData(_this.attr('back_path'),_this.attr('delete_path'),_this.attr('editable'));
 		});
 
-		/*详情页*/
+		//详情页
        	$(document).on('click','.wj_view_data',function(e){
             var _this = $(this)
             sessionStorage.setItem('edit_id', _this.attr('edit_id'));
@@ -241,7 +262,7 @@ require(['jquery','ZeroClipboard','datepicker-zh','bs','validate-zh','chosen','a
 
        	});
 
-       	/*修改状态*/
+       	//修改状态
     	$(document).on('click','#modal-save-btn',function(){
     		var self = $(this);
     		self.attr('new_status',$('[name="new_status"]').val());
@@ -256,7 +277,7 @@ require(['jquery','ZeroClipboard','datepicker-zh','bs','validate-zh','chosen','a
             .fail(internal_error)
     	});
 
-    	/*搜索*/
+    	//搜索
     	$(document).on('submit','#search_form',function(){
 	       	var search_path = $(this).attr('search_path');
 	            $.ajax({
@@ -332,7 +353,7 @@ require(['jquery','ZeroClipboard','datepicker-zh','bs','validate-zh','chosen','a
         	path.text('');
         });
 
-        /*登出*/
+        //登出
     	$(document).on('click','#un-login',function(){
             var str = url + $(this).data('path');
             $.ajax({
@@ -390,13 +411,13 @@ require(['jquery','ZeroClipboard','datepicker-zh','bs','validate-zh','chosen','a
         })
         .fail(internal_error);
 
-        /*F5刷新时加载数据*/
+        //F5刷新时加载数据
         setTimeout(function(){
         	$(window).trigger('hashchange');
         });
 
 
-        /*低版本浏览器的发光特效*/
+        //低版本浏览器的发光特效
         function light_cad(lightCad,time){
         	lightCad.css({left:-1280}).animate({left:'120%'},time,function(){
         		lightCad.css({left:-1280});
@@ -411,7 +432,7 @@ require(['jquery','ZeroClipboard','datepicker-zh','bs','validate-zh','chosen','a
         	});
         }
 
-        /*离线缓存*/
+        //离线缓存
 		var cache = window.applicationCache || window.webkitApplicationCache || window.mozApplicationCache;
 		if(cache){
 			if(localStorage.getItem('siteCacheTag') !== 'false'){

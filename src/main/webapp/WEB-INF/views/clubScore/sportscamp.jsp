@@ -30,7 +30,7 @@
 
 		<div class="col-xs-11 stretch form-group mt-10">
 						
-			<button class="btn btn-primary btn-theme pull-left col-xs-offset-2" id="submit_form_btn" type="submit">保存</button>
+			<button class="btn btn-primary btn-theme pull-left col-xs-offset-2" id="submit_form_btn" type="submit" data-role="loading">保存</button>
 		</div>
     </form>
     
