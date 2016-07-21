@@ -54,18 +54,12 @@ public class AppCompetitionController {
     @ResponseBody
     @RequestMapping("/news")
     public String loadClub(HttpSession session, String session_id,String competition_id,String page_number,String page_size,@PathVariable String version){
-        SessionProperty property;
         String language = "zh";
-        try {
-            switch (version){
-                case "v1.3":
-                    property = sess.sessionEffective(session, session_id, "/v1.3/competiton/news");
-                    return ObjectUtil.jsonOut( competitionService.news(competition_id,page_number,page_size) );
-                default:
-                    return null;
+        switch (version){
+             case "v1.3":
+                 return ObjectUtil.jsonOut( competitionService.news(competition_id,page_number,page_size) );
+             default:
+                 return null;
             }
-        }catch (HongZhiException e){
-            return ObjectUtil.jsonOutError(e.getCode(), dic.getCodeValue(e.getCode(), language));
-        }
     }
 }
