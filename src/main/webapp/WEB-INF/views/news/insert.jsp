@@ -39,7 +39,6 @@
 				<div class="select-group">
 					<div class="item-group" style="margin-bottom: 8px;">
 					    <select name="news_range" class="drop-btn width-200 form-control" placeholder="请选择">
-							<option value="">请选择</option>
 					    </select>
 					    <select name="circle_id" class="drop-btn width-200 form-control com-select none">
 							<option value="">请选择</option>
@@ -47,6 +46,7 @@
 					    <select name="circle_id" class="drop-btn width-200 form-control club-select none">
 							<option value="">请选择</option>
 					    </select>
+						<input type="hidden" name="circle_id" value="0">
 					</div>
 				</div>
 				<button type="button" class="btn btn-default btn-add-item"><i class="fa fa-plus"></i>新增范围</button>
@@ -210,7 +210,9 @@
 			$(this).siblings('.club-select').removeClass('none').prop('disabled',false);
     	} else if (this.value == 2){
 			$(this).siblings('.com-select').removeClass('none').prop('disabled',false);
-    	}
+    	} else if(this.value == 0) {
+			$(this).siblings('input[type="hidden"]').removeClass('none').prop('disabled',false);
+		}
     }).find('[name="news_range"]').change();
     
     var editor = new UE.ui.Editor();
