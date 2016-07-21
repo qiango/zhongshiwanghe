@@ -30,22 +30,27 @@
             </div>
         </div>
         <style>
-        	[name="circle_id"].drop-btn{ position: static !important; height: 34px !important; display: inline-block !important; border: 1px solid #ddd; }
+        	.select-group .drop-btn{ position: static !important; height: 34px !important; display: inline-block !important; border: 1px solid #ddd; }
         	select.none.drop-btn{ display: none !important; }
         </style>
         <div class="col-xs-11 stretch form-group float-none">
             <span class="col-xs-2 align-right">资讯范围</span>
             <div class="col-xs-10 stretch">
-               <select name="news_range" class="drop-btn width-200 select-choose form-control" data-placeholder="请选择">
-                    <option value=""></option>
-               </select>
-               <select name="circle_id" class="drop-btn width-200 form-control com-select none" placeholder="请选择" required>
-                    <option value="">请选择</option>
-               </select>
-               <select name="circle_id" class="drop-btn width-200 form-control club-select none" placeholder="请选择" required>
-                    <option value="">请选择</option>
-               </select>
-               <label id="circle_id-error" class="error" for="circle_id"></label>
+				<div class="select-group">
+					<div class="item-group" style="margin-bottom: 8px;">
+					    <select name="news_range" class="drop-btn width-200 form-control" placeholder="请选择">
+							<option value="">请选择</option>
+					    </select>
+					    <select name="circle_id" class="drop-btn width-200 form-control com-select none">
+							<option value="">请选择</option>
+					    </select>
+					    <select name="circle_id" class="drop-btn width-200 form-control club-select none">
+							<option value="">请选择</option>
+					    </select>
+					</div>
+				</div>
+				<button type="button" class="btn btn-default btn-add-item"><i class="fa fa-plus"></i>新增范围</button>
+				<button type="button" class="btn btn-default btn-delete-item"><i class="fa fa-times"></i>删除范围</button>
             </div>
         </div>
         
@@ -136,7 +141,7 @@
             </div>
         </div>
         -->
-      
+
 
 
 		<div class="col-xs-11 stretch form-group mt-10">
@@ -151,8 +156,7 @@
     	    	
     	$.when((function(){
     		var df = $.Deferred();
-    		//缓存需要复制的节点
-    		sessionStorage.setItem('itemHTML',$('.panel-list-item').clone().find('#submit_file').prop('disabled',false).end().wrap('<div></div>').parent().html());
+
     		
     		load_page_data(data.data.information_type_list,'news_type','zh_value','select[name="news_type"]');
     		load_page_data(data.data.competition_list,'competition_id','competition_name','select[name="competition_id"]');
@@ -165,16 +169,25 @@
         	$('#clone-panel').click(function(){
         		$(sessionStorage.getItem('itemHTML')).appendTo($(this).parent());
         	});
+			$('.btn-add-item').click(function() {
+				$(sessionStorage.getItem('selectHTML')).appendTo($('.select-group'));
+			});
         	//删除节点
         	$('#delete-panel').click(function(){
         		($('.panel-list-item').length-1) && $('.panel-list-item').eq(-1).remove() || alert('只剩一条，不能再删了');
         	});
-        	
+			$('.btn-delete-item').click(function() {
+				($('.item-group').length-1) && $('.item-group').eq(-1).remove() || alert('只剩一条，不能再删了');
+			});
+
         	df.resolve();
         	return df.promise();
     	})())
     	.done(function(){
     		$(".select-choose").chosen().next('.chosen-container').css({width:$('.select-choose').css('width')});
+			//缓存需要复制的节点
+			sessionStorage.setItem('itemHTML',$('.panel-list-item').clone().find('#submit_file').prop('disabled',false).end().wrap('<div></div>').parent().html());
+			sessionStorage.setItem('selectHTML',$('.select-group').html());
     	});
     }
     
@@ -189,18 +202,21 @@
     		$('[name="media_information"]').prop('disabled',false);
     	}
     }).change();
-    
-    $('[name="news_range"]').change(function(){
-   		$('[name="circle_id"]').addClass('none').prop('disabled',true);
+
+	//资讯范围切换
+    $('.select-group').on('change','[name="news_range"]',function(){
+   		$(this).siblings('[name="circle_id"]').addClass('none').prop('disabled',true);
    		if (this.value == 1){
-			$('.club-select').removeClass('none').prop('disabled',false);
+			$(this).siblings('.club-select').removeClass('none').prop('disabled',false);
     	} else if (this.value == 2){
-    		$('.com-select').removeClass('none').prop('disabled',false);
+			$(this).siblings('.com-select').removeClass('none').prop('disabled',false);
     	}
-    }).change();
+    }).find('[name="news_range"]').change();
     
     var editor = new UE.ui.Editor();
     editor.render("editor");
+
+
 
 //	//表单验证
 //	ns.formSubmit($('#submit_form'), $('#submit_form_btn'), '/news/newSave.htmls', function () {
