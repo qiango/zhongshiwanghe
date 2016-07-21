@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.hongzhi.zswh.util.mipush.message.MessageType;
 import com.hongzhi.zswh.util.mipush.message.MiMessage;
 import com.hongzhi.zswh.util.mipush.message.MiMessageService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -64,7 +65,7 @@ public class NotificationService {
 		
 		if(saveCount==1){
 		   notiStateDao.updateNotificationState(notificationEntity.getNoti_to());
-            MiMessage message = new MiMessage();
+            MiMessage message = new MiMessage(MessageType.CLUB);
             message.sendMessage(notificationEntity.VNotification_body(),miMessageService.getRegidList(Integer.valueOf(notificationEntity.VNoti_to())));
             message.send();
 			return  "success";
@@ -103,7 +104,7 @@ public class NotificationService {
 			if(saveCount==multiple_receiver.size()){
 				   notiStateDao.updateNotificationStateMultipleUser(multiple_receiver);
 
-                    MiMessage message = new MiMessage();
+                    MiMessage message = new MiMessage(MessageType.CLUB);
                     message.sendMessage(notificationEntity.VNotification_body(), miMessageService.getRegidList(multiple_receiver));
 
 					return  "success";
