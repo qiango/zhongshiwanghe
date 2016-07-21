@@ -43,4 +43,9 @@ public interface ClubDao {
     List<Map<String,Object>>  listClub();
 
     List<Map<String,Object>>  listClubByCityId(@Param("city_id")String city_id);
+
+    List<Map<String, Object>>  selectClub();
+
+
+    void updateClubStatus(String club_id);
 }
