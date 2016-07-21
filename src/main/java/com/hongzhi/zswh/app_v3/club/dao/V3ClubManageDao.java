@@ -110,8 +110,8 @@ public interface V3ClubManageDao {
 
 
 	List<Integer> selectClubMembers(String club_id);
-
 	void updateClubStatusByClubId(String club_id);
+
 
 	Map<String,String> getClubName(int club_id);
 }

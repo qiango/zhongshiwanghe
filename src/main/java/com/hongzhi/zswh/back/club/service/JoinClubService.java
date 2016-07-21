@@ -58,14 +58,25 @@ public class JoinClubService {
 	 * @throws HongZhiException 
 	 * @throws  
 	 */
-	public String apply(SessionProperty sp, ParamObj paramObj) throws  HongZhiException {
-		int update_count = joinClubDao.applyToJoinClub(Integer.parseInt(paramObj.getUser_id()),Integer.parseInt(paramObj.getClub_id())  );
-		if(update_count==1){
-			String clubName = joinClubDao.getClubName(Integer.parseInt(paramObj.getClub_id()));
-			notiSender.sendNoti(Integer.parseInt(sp.getUser_id()), null , Integer.parseInt(paramObj.getUser_id()), "1" , "尊敬的用户，您的俱乐部申请已通过，您现在是"+clubName+"俱乐部的一员了。");
-			return  ObjectUtil.jsonOut("true");
-		}else{
-			return  ObjectUtil.jsonOutError("1033", "false");
+	public String apply(SessionProperty sp, ParamObj paramObj) throws HongZhiException {
+		int update_count = joinClubDao.applyToJoinClub(Integer.parseInt(paramObj.getUser_id()), Integer.parseInt(paramObj.getClub_id()));
+		if (update_count == 1) {
+			Map<String, String> map = joinClubDao.getClubName(Integer.parseInt(paramObj.getClub_id()));
+			notiSender.sendNoti(Integer.parseInt(sp.getUser_id()), null, Integer.parseInt(paramObj.getUser_id()), "1", dictionaryUtil.getCodeValue("check_join_club_t", "data_alias", sp.getLanguage()) + map.get("club_name") + dictionaryUtil.getCodeValue("join_club_t", "data_alias", sp.getLanguage()));
+
+			if ("2".equals(map.get("club_status"))) {
+				List<Integer> club_members_list = joinClubDao.selectClubMembers(paramObj.getClub_id());//根据俱乐部id查询俱乐部当前人数
+				if (!ObjectUtil.isEmpty(club_members_list)) {
+					int club_min_member = Integer.valueOf(dictionaryUtil.getCodeValue("club_min_member", "data_alias", sp.getLanguage()));
+					if (club_members_list.size() >= club_min_member) {
+						joinClubDao.updateClubStatusByClubId(paramObj.getClub_id());//组建的俱乐部成员达到三个人（加入状态）时，改变club的状态（2筹备中--99启用）
+					}
+				}
+			}
+
+			return ObjectUtil.jsonOut("true");
+		} else {
+			return ObjectUtil.jsonOutError("1033", "false");
 		}
 	}
 

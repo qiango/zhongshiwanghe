@@ -52,15 +52,15 @@ public class AppMiPushController {
         }
     }
     @ResponseBody
-    @RequestMapping(value = "/cance_regid")
-    public String canceRegid(HttpSession session, String session_id, MiPushRegid miPushRegid, @PathVariable String version){
+    @RequestMapping(value = "/cancel_regid")
+    public String cancelRegid(HttpSession session, String session_id, MiPushRegid miPushRegid, @PathVariable String version){
         SessionProperty property;
         String language = "zh";
         try{
             switch (version){
                 case "v1.3":
                     property = sess.sessionEffective(session,session_id,"/v1.3/mi_push/cance_regid");
-                    return ObjectUtil.jsonOut(miPushService.canceRegid(miPushRegid));
+                    return ObjectUtil.jsonOut(miPushService.cancelRegid(miPushRegid));
                 default:
                     return null;
             }
