@@ -15,6 +15,8 @@ public class LoginParam {
 	 private String user_password;
 	 private String phone;
 	 private String platform_id;
+     private String regid;
+     private String app_type;
 
 // verify
 	public String VUser_password() throws HongZhiException {
@@ -28,9 +30,26 @@ public class LoginParam {
 	}
 	
 	
-///  getter and setter 	
-	
-	public String getUser_name() {
+///  getter and setter
+
+
+    public String getApp_type() {
+        return app_type;
+    }
+
+    public void setApp_type(String app_type) {
+        this.app_type = app_type;
+    }
+
+    public String getRegid() {
+        return regid;
+    }
+
+    public void setRegid(String regid) {
+        this.regid = regid;
+    }
+
+    public String getUser_name() {
 		return user_name;
 	}
 	public void setUser_name(String user_name) {
