@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.hongzhi.zswh.app_1_3.dao.CompetitionDao">
 
-    <select id="competitionNews"  resultType="map" >
+    <select id="competitionNews"  resultType="com.hongzhi.zswh.app_1_3.entity.CompetitionNews" >
     select
 		 a.news_id
         ,coalesce(a.news_type     ,'0') as news_type
@@ -19,5 +19,16 @@
     limit #{startRow } , #{size }
     </select>
 
+    <select id="competitionNewsImages" resultType="com.hongzhi.zswh.app_1_3.entity.CompetitionNewsImage" >
+     select
+          news_id
+         ,media_url  as image_url
+     from news_multimedia
+      where news_id in (
+     <foreach collection="newsID" item="id" separator="," >
+          #{id}
+     </foreach>
+        )
+    </select>
 
 </mapper>

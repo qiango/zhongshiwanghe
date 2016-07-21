@@ -1,5 +1,7 @@
 package com.hongzhi.zswh.app_1_3.dao;
 
+import com.hongzhi.zswh.app_1_3.entity.CompetitionNews;
+import com.hongzhi.zswh.app_1_3.entity.CompetitionNewsImage;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
@@ -13,6 +15,8 @@ import java.util.Map;
 @Repository("app_1_3_competition_dao")
 public interface CompetitionDao {
 
-    List<Map<String,Object>> competitionNews(@Param("compID") String competition_id,@Param("startRow") Integer start_row,@Param("size") Integer page_size);
+    List<CompetitionNews> competitionNews(@Param("compID") String competition_id, @Param("startRow") Integer start_row, @Param("size") Integer page_size);
+
+    List<CompetitionNewsImage> competitionNewsImages(@Param("newsID") List<Integer> news_id_list);
 
 }
