@@ -1,4 +1,4 @@
-package com.hongzhi.zswh.util.mipush.message;
+package com.hongzhi.zswh.util.mipush.config;
 
 /**
  * Created by taylor on 7/21/16.
@@ -10,5 +10,6 @@ public enum MessageType {
     ,COMPETITION
     ,CLUB
     ,USER
+    ,NOTIFICATION
 
 }

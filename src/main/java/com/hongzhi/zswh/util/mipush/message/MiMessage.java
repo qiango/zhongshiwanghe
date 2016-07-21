@@ -2,6 +2,7 @@ package com.hongzhi.zswh.util.mipush.message;
 
 import com.hongzhi.zswh.util.basic.ObjectUtil;
 import com.hongzhi.zswh.util.mipush.config.DEVICE;
+import com.hongzhi.zswh.util.mipush.config.MessageType;
 import com.hongzhi.zswh.util.mipush.config.MiPushConfig;
 import com.xiaomi.push.sdk.ErrorCode;
 import com.xiaomi.xmpush.server.Constants;
