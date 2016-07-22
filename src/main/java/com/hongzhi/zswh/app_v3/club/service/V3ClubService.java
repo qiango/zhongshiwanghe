@@ -6,6 +6,7 @@ import com.hongzhi.zswh.app_v3.club.dao.V3ClubManageDao;
 import com.hongzhi.zswh.app_v3.club.entity.ClubManageEntity;
 import com.hongzhi.zswh.app_v3.club.entity.ClubParam;
 import com.hongzhi.zswh.app_v3.club.entity.ClubQueryEntity;
+import com.hongzhi.zswh.app_v3.me.dao.AppMeV3Dao;
 import com.hongzhi.zswh.app_v3.notification.service.NotificationService;
 import com.hongzhi.zswh.util.basic.DictionaryUtil;
 import com.hongzhi.zswh.util.basic.ObjectUtil;
@@ -29,8 +30,12 @@ public class V3ClubService {
 	@Autowired
 	private DictionaryUtil dictionaryUtil;
 
+    @Autowired
+    private AppMeV3Dao appMeDao;
 
-	private int defaultPageSize=30;
+
+
+    private int defaultPageSize=30;
 	
 	
 	@Autowired
@@ -162,7 +167,9 @@ public class V3ClubService {
 			break;
 		}
 		if(data_count == 1 ){
-			return  data_count;
+            List<String> list = appMeDao.findFollowUserInfoById(Integer.parseInt(properties.getUser_id()));
+            notiSender.sendNoti(Integer.parseInt(properties.getUser_id()), null , Integer.valueOf(club_user_id) , "1", list.get(0)+dictionaryUtil.getCodeValue("follow", "data_alias", properties.getLanguage()) );
+            return  data_count;
 		}else{
 			throw new HongZhiException("1041");
 		}
