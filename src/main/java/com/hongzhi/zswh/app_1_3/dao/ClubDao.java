@@ -48,4 +48,6 @@ public interface ClubDao {
 
 
     void updateClubStatus(String club_id);
+
+    List<Integer> selectClubMembersByClubId(String club_id);
 }
