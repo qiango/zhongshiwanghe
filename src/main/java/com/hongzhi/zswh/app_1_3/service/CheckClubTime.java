@@ -1,6 +1,7 @@
 package com.hongzhi.zswh.app_1_3.service;
 
 import com.hongzhi.zswh.app_1_3.dao.ClubDao;
+import com.hongzhi.zswh.app_v3.notification.service.NotificationService;
 import com.hongzhi.zswh.util.basic.DictionaryUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -9,10 +10,7 @@ import org.springframework.stereotype.Component;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Created with IntelliJ IDEA.
@@ -27,7 +25,10 @@ public class CheckClubTime {
     private ClubDao clubDao;
     @Autowired
     private DictionaryUtil dictionaryUtil;
-   // @Scheduled(cron = "0 */3 * * * ?")
+    @Autowired
+    private NotificationService notificationService;
+
+    // @Scheduled(cron = "0 */3 * * * ?")
     @Scheduled(cron = "0 0 0/1 * * ?")
     public void checkClub() {
 
@@ -46,10 +47,16 @@ public class CheckClubTime {
 
                     int days = daysBetween(club_create_time_date, now_date);
 
-                    int club_effective_days = Integer.valueOf(dictionaryUtil.getCodeValue("club_effective_days", "data_alias","zh"));
+                    int club_effective_days = Integer.valueOf(dictionaryUtil.getCodeValue("club_effective_days", "data_alias", "zh"));
 
                     if (days > club_effective_days && "2".equals(club_list.get(i).get("club_status").toString())) {
+
                         clubDao.updateClubStatus(club_list.get(i).get("club_id").toString());
+
+                        List<Integer> multiple_receiver = clubDao.selectClubMembersByClubId(club_list.get(i).get("club_id").toString());
+
+                        //send message
+                        notificationService.sendNoti(1, multiple_receiver, 1, null, dictionaryUtil.getCodeValue("break_club_message", "data_alias", "zh"));
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -64,7 +71,7 @@ public class CheckClubTime {
      * 计算两个日期之间相差的天数
      *
      * @param start_date 较小的时间
-     * @param end_date  较大的时间
+     * @param end_date   较大的时间
      * @return 相差天数
      * @throws ParseException
      */

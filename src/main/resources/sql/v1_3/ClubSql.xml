@@ -526,4 +526,13 @@
         and
           a.is_delete = 0
     </update>
+
+    <select id="selectClubMembersByClubId" resultType="Integer">
+        select
+            user_id
+        from
+            user_detail
+        where
+            club_id = #{club_id}
+    </select>
 </mapper>
