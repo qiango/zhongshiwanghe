@@ -32,8 +32,6 @@ public class CheckClubTime {
     private DictionaryUtil dictionaryUtil;
     @Autowired
     private NotificationService notificationService;
-    @Autowired
-    private V6ClubService v6ClubService;
 
     @Scheduled(cron = "0 */5 * * * ?")
     // @Scheduled(cron = "0 0 0/1 * * ?")
@@ -69,7 +67,8 @@ public class CheckClubTime {
 
                         clubDao.insetIntoUserDetail(user_detail_list);
 
-                        clubDao.deleteUserDetailByUserId(multiple_receiver);
+//                        clubDao.deleteUserDetailByUserId(multiple_receiver);
+                        clubDao.clubUnbuild(multiple_receiver);
 
                     }
                 } catch (Exception e) {

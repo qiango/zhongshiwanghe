@@ -548,9 +548,11 @@
         FROM
           user_detail
         where
-        <foreach collection ="multiple_receiver" item="item" index= "index" separator=",">
-            user_id=#{item};
+             user_id in (
+        <foreach collection ="multipleReceiver" item="item" index= "index" separator=",">
+            #{item}
         </foreach>
+        )
 
     </select>
     <insert id="insetIntoUserDetail" parameterType="com.hongzhi.zswh.app_1_3.entity.UserDetailEntity">
@@ -564,7 +566,7 @@
         `club_refuse_id`,
         `create_time_bak`
         ) VALUE
-        <foreach collection ="user_detail_list" item="item" index= "index" separator=",">
+        <foreach collection ="detailList" item="item" index= "index" separator=",">
         (
         #{item.club_id},
         #{item.user_id},
@@ -580,13 +582,15 @@
 
     </insert>
 
-    <delete id="deleteUserDetailByUserId">
+    <delete id="clubUnbuild">
         DELETE
         FROM
           user_detail
         WHERE
-        <foreach collection ="multiple_receiver" item="item" index= "index" separator=",">
-          user_id =#{item}
+          user_id in (
+        <foreach collection ="reciver" item="item" index= "index" separator=",">
+          #{item}
         </foreach>
+        )
     </delete>
 </mapper>

@@ -52,9 +52,9 @@ public interface ClubDao {
 
     List<Integer> selectClubMembersByClubId(String club_id);
 
-    List<UserDetailEntity> queryClub(List<Integer> multiple_receiver);
+    List<UserDetailEntity> queryClub(@Param("multipleReceiver") List<Integer> multiple_receiver);
 
-    void insetIntoUserDetail(List<UserDetailEntity> user_detail_list);
+    void insetIntoUserDetail(@Param("detailList") List<UserDetailEntity> user_detail_list);
 
-    void deleteUserDetailByUserId(List<Integer> multiple_receiver);
+    void clubUnbuild(@Param("reciver") List<Integer> multiple_receiver);
 }
