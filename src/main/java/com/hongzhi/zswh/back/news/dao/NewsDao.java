@@ -78,7 +78,7 @@ public interface NewsDao {
      * @param news_id
      * @return
      */
-    Map<String ,Object> findNewsRangeById(@Param("news_id") String news_id);
+    List<Map<String ,Object>> findNewsRangeById(@Param("news_id") String news_id);
 
     int selectMaxByWeights_order();
 
