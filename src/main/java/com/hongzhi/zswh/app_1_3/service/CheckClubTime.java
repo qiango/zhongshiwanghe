@@ -32,8 +32,6 @@ public class CheckClubTime {
     private DictionaryUtil dictionaryUtil;
     @Autowired
     private NotificationService notificationService;
-    @Autowired
-    private V6ClubService v6ClubService;
 
     @Scheduled(cron = "0 */5 * * * ?")
     // @Scheduled(cron = "0 0 0/1 * * ?")
