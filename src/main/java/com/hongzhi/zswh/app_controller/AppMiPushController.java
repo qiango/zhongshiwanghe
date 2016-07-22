@@ -68,4 +68,23 @@ public class AppMiPushController {
             return ObjectUtil.jsonOutError(e.getCode(), dic.getCodeValue(e.getCode(), language ) );
         }
     }
+
+    @ResponseBody
+    @RequestMapping(value = "/broadcast")
+    public String broadcast(HttpSession session , String session_id , String message_title, String message_url ,String message_type, @PathVariable String version ) {
+        SessionProperty property;
+        String language = "zh";
+        try{
+            switch (version){
+                case "v1.3":
+                    property = sess.sessionEffective(session,session_id,"/v1.3/mi_push/broadcast");
+                    return ObjectUtil.jsonOut(miPushService.broadcast(message_title,message_url,message_type));
+                default:
+                    return null;
+            }
+        }catch (HongZhiException e){
+            return ObjectUtil.jsonOutError(e.getCode(), dic.getCodeValue(e.getCode(), language ) );
+        }
+    }
+
 }
