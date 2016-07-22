@@ -29,24 +29,28 @@
 <!--                <label id="news_type-error" class="error" for="news_type"></label> -->
 <!--             </div> -->
 <!--         </div> -->
-        <style>
-        	[name="circle_id"].drop-btn{ position: static !important; height: 34px !important; display: inline-block !important; border: 1px solid #ddd; }
-        	select.none.drop-btn{ display: none !important; }
-        </style>
+       <style>
+           .select-group .drop-btn{ position: static !important; height: 34px !important; display: inline-block !important; border: 1px solid #ddd; }
+           select.none.drop-btn{ display: none !important; }
+       </style>
         <div class="col-xs-11 stretch form-group float-none">
-            <span class="col-xs-2 align-right"><label class="warning-label">*</label>资讯范围</span>
+            <span class="col-xs-2 align-right">资讯范围</span>
             <div class="col-xs-10 stretch">
-               <select name="news_range" class="drop-btn width-200 select-choose form-control" data-placeholder="请选择">
-                    
-               </select>
-               
-               <select name="circle_id" class="drop-btn width-200 form-control com-select none" placeholder="请选择" required>
-                    <option value="">请选择</option>
-               </select>
-               <select name="circle_id" class="drop-btn width-200 form-control club-select none" placeholder="请选择" required>
-                    <option value="">请选择</option>
-               </select>
-               <label id="circle_id-error" class="error" for="circle_id"></label>
+                <div class="select-group">
+                    <div class="item-group" style="margin-bottom: 8px;">
+                        <select name="news_range" class="drop-btn width-200 form-control" placeholder="请选择">
+                        </select>
+                        <select name="circle_id" class="drop-btn width-200 form-control com-select none">
+                            <option value="">请选择</option>
+                        </select>
+                        <select name="circle_id" class="drop-btn width-200 form-control club-select none">
+                            <option value="">请选择</option>
+                        </select>
+                        <input type="hidden" name="circle_id" value="0">
+                    </div>
+                </div>
+                <button type="button" class="btn btn-default btn-add-item"><i class="fa fa-plus"></i>新增范围</button>
+                <button type="button" class="btn btn-default btn-delete-item"><i class="fa fa-times"></i>删除范围</button>
             </div>
         </div>
         <div class="col-xs-11 stretch form-group float-none">
@@ -109,8 +113,7 @@
     	$.when((function(){
     		var df = $.Deferred();
     		$('#replacer').replaceWith('<iframe src="style/iqy/sdkdemo.html" id="ifm" name="ifm" frameborder="0" width="100%" height="400" style="border: 1px solid #ddd; box-shadow: 0 0 5px 0px #ddd inset; border-radius: 6px;"></iframe>')
-    		//缓存需要复制的节点
-    		sessionStorage.setItem('itemHTML',$('.panel-list-item').clone().find('#submit_file').prop('disabled',false).end().wrap('<div></div>').parent().html());
+
     		
     		load_page_data(data.data.information_type_list,'news_type','zh_value','select[name="news_type"]');
     		load_page_data(data.data.competition_list,'competition_id','competition_name','select[name="competition_id"]');
@@ -119,32 +122,53 @@
         	load_page_data(data.data.category_video,'category_id','category_name','select[name="category_id"]');
         	load_page_data(data.data.competition_list,'competition_id','competition_name','.com-select');
         	load_page_data(data.data.club_list,'club_id','club_name','.club-select');
-        	
-        	//复制节点
-        	$('#clone-panel').click(function(){
-        		$(sessionStorage.getItem('itemHTML')).appendTo($(this).parent());
-        	});
-        	//删除节点
-        	$('#delete-panel').click(function(){
-        		($('.panel-list-item').length-1) && $('.panel-list-item').eq(-1).remove() || alert('只剩一条，不能再删了');
-        	});
+
+            //复制节点
+            $('#clone-panel').click(function(){
+                $(sessionStorage.getItem('itemHTML')).appendTo($(this).parent());
+            });
+            $('.btn-add-item').click(function() {
+                $(sessionStorage.getItem('selectHTML')).appendTo($('.select-group'));
+            });
+            //删除节点
+            $('#delete-panel').click(function(){
+                ($('.panel-list-item').length-1) && $('.panel-list-item').eq(-1).remove() || alert('只剩一条，不能再删了');
+            });
+            $('.btn-delete-item').click(function() {
+                ($('.item-group').length-1) && $('.item-group').eq(-1).remove() || alert('只剩一条，不能再删了');
+            });
         	
         	df.resolve();
         	return df.promise();
     	})())
     	.done(function(){
     		$(".select-choose").chosen().next('.chosen-container').css({width:$('.select-choose').css('width')});
+            //缓存需要复制的节点
+            sessionStorage.setItem('itemHTML',$('.panel-list-item').clone().find('#submit_file').prop('disabled',false).end().wrap('<div></div>').parent().html());
+            sessionStorage.setItem('selectHTML',$('.select-group').html());
     	});
     }
-    
-    $('[name="news_range"]').change(function(){
-   		$('[name="circle_id"]').addClass('none').prop('disabled',true);
-   		if (this.value == 1){
-			$('.club-select').removeClass('none').prop('disabled',false);
-    	} else if (this.value == 2){
-    		$('.com-select').removeClass('none').prop('disabled',false);
-    	}
-    }).change();
+
+//    $('[name="news_range"]').change(function(){
+//   		$('[name="circle_id"]').addClass('none').prop('disabled',true);
+//   		if (this.value == 1){
+//			$('.club-select').removeClass('none').prop('disabled',false);
+//    	} else if (this.value == 2){
+//    		$('.com-select').removeClass('none').prop('disabled',false);
+//    	}
+//    }).change();
+
+    //资讯范围切换
+    $('.select-group').on('change','[name="news_range"]',function(){
+        $(this).siblings('[name="circle_id"]').addClass('none').prop('disabled',true);
+        if (this.value == 1){
+            $(this).siblings('.club-select').removeClass('none').prop('disabled',false);
+        } else if (this.value == 2){
+            $(this).siblings('.com-select').removeClass('none').prop('disabled',false);
+        } else if(this.value == 0) {
+            $(this).siblings('input[type="hidden"]').removeClass('none').prop('disabled',false);
+        }
+    }).find('[name="news_range"]').change();
 
 
     //表单验证
