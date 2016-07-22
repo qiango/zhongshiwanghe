@@ -215,13 +215,28 @@ public class NewsService {
 		List<Map<String, Object>> picture = newsDao.findPictureBynews_id(news_id);
 		modifyLoad.put("picture", picture);
 		//资讯范围
-		Map<String, Object> newsRang = newsDao.findNewsRangeById(news_id);
+		List<Map<String, Object>> newsRang = newsDao.findNewsRangeById(news_id);
 		modifyLoad.put("newsrang",newsRang);
 		// 返回结果
 		Map<String,Object> out =  newLoad(null);
 		out.put("news", modifyLoad);
-//		out.put("platform_list", platform_list);
-//		out.put("information_type_list", information_type_list);
+
+        List<Map<String,Object>> competition_list = newsDao.listCompetitiony();
+		List<Map<String,Object>> club_list = newsDao.listClub();
+        List<Map<String,Object>> range_list = new ArrayList<>();
+        Integer[] range_type_array = {0,1,2};
+        String[] range_name_array = {"公共","俱乐部","赛事"};
+        for(int i=0;i< 3 ;i++){
+            Map<String,Object> range_type = new HashMap<>();
+            range_type.put("range_type", range_type_array[i]);
+            range_type.put("range_name", range_name_array[i]);
+            range_list.add(range_type);
+        }
+
+        out.put("competition_list", competition_list);
+        out.put("club_list", club_list);
+        out.put("range_list", range_list);
+
 		return out;
 	}
 
