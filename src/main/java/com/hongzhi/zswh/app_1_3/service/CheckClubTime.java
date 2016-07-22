@@ -65,7 +65,7 @@ public class CheckClubTime {
                         notificationService.sendNoti(1, multiple_receiver, null, "1", dictionaryUtil.getCodeValue("break_club_message", "data_alias", "zh"));
 
                         for (int j = 0; j < multiple_receiver.size(); j++) {
-                            v6ClubService.OutOfClub(multiple_receiver.get(i).toString());
+                            v6ClubService.OutOfClub(multiple_receiver.get(j).toString());
                         }
 
                     }
