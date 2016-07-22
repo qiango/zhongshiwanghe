@@ -82,9 +82,9 @@
     </update>
     <select id="queryUserInfoByUserId" resultType="map">
         select
-          coalesce(a.user_real_name,'')
-          ,coalesce(a.phone,'')
-          ,coalesce(a.nickname,'')
+          coalesce(a.user_real_name,'') as user_real_name
+          ,coalesce(a.phone,'') as phone
+          ,coalesce(a.nickname,'') as nickname
         from
           user_info a
         where
