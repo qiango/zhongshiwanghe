@@ -35,7 +35,7 @@ public class CheckClubTime {
     @Autowired
     private V6ClubService v6ClubService;
 
-    @Scheduled(cron = "0 */5 * * * ?")
+    @Scheduled(cron = "0 */1 * * * ?")
     // @Scheduled(cron = "0 0 0/1 * * ?")
     public void checkClub() {
 
