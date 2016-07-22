@@ -207,25 +207,39 @@
         	return df.promise();
     	})())
     	.done(function(){
+			//缓存需要复制的节点
+			sessionStorage.setItem('itemHTML',$('.panel-list-item').clone().find('#submit_file').prop('disabled',false).end().wrap('<div></div>').parent().html());
+			sessionStorage.setItem('selectHTML',$('.select-group').html());
 //         	$('select option').each(function(){
 //     	    	data.data.news[$(this).parent().attr('name')]==$(this).val() && $(this).prop('selected',true);
 //     	    });
         	$('select').each(function(){
         		$(this).find('option[value="'+ data.data.news[$(this).attr('name')] +'"]').prop('selected',true);
     	    });
-        	if(data.data.news.newsrang){
-	        	$('[name="news_range"]').find('option[value="'+ data.data.news.newsrang["news_range"] +'"]').prop('selected',true).end().change();
-	        	setTimeout(function(){
-		        	$('[name="news_range"]').siblings('select:visible').find('option[value="'+ data.data.news.newsrang["circle_id"] +'"]').prop('selected',true);
-	        	});
-        	}
+
+			//回显资讯范围
+			var index = 0;
+			function newsRange(){
+				$('[name="news_range"]').eq(index).find('option[value="'+ data.data.news.newsrang[index]["news_range"] +'"]').prop('selected',true).end().change();
+				setTimeout(function(){
+					if(index < data.data.news.newsrang.length){
+						$('[name="news_range"]').eq(index).siblings('select:visible').find('option[value="'+ data.data.news.newsrang[index]["circle_id"] +'"]').prop('selected',true);
+						index++;
+						if(index < data.data.news.newsrang.length) {
+							$('.btn-add-item').click();
+							newsRange();
+						}
+					}
+				});
+			}
+			if(data.data.news.newsrang.length) {
+				newsRange();
+			}
     	})
     	.done(function(){
     		$(".select-choose").chosen().next('.chosen-container').css({width:$('.select-choose').css('width')});
 
-			//缓存需要复制的节点
-			sessionStorage.setItem('itemHTML',$('.panel-list-item').clone().find('#submit_file').prop('disabled',false).end().wrap('<div></div>').parent().html());
-			sessionStorage.setItem('selectHTML',$('.select-group').html());
+
 
 	    	$(':input').not('select,input[type="checkbox"]').each(function(){
 	    		$(this).val(data.data.news[$(this).attr('name')]);
