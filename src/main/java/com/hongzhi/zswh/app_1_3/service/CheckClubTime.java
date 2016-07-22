@@ -2,6 +2,7 @@ package com.hongzhi.zswh.app_1_3.service;
 
 import com.hongzhi.zswh.app_1_3.dao.ClubDao;
 import com.hongzhi.zswh.app_v3.notification.service.NotificationService;
+import com.hongzhi.zswh.app_v6.service.V6ClubService;
 import com.hongzhi.zswh.util.basic.DictionaryUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -30,9 +31,11 @@ public class CheckClubTime {
     private DictionaryUtil dictionaryUtil;
     @Autowired
     private NotificationService notificationService;
+    @Autowired
+    private V6ClubService v6ClubService;
 
-     @Scheduled(cron = "0 */5 * * * ?")
-   // @Scheduled(cron = "0 0 0/1 * * ?")
+    @Scheduled(cron = "0 */5 * * * ?")
+    // @Scheduled(cron = "0 0 0/1 * * ?")
     public void checkClub() {
 
         List<Map<String, Object>> club_list = clubDao.selectClub();
@@ -60,6 +63,11 @@ public class CheckClubTime {
 
                         //send message
                         notificationService.sendNoti(1, multiple_receiver, null, "1", dictionaryUtil.getCodeValue("break_club_message", "data_alias", "zh"));
+
+                        for (int j = 0; j < multiple_receiver.size(); j++) {
+                            v6ClubService.OutOfClub(multiple_receiver.get(i).toString());
+                        }
+
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
