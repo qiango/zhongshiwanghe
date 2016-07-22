@@ -69,7 +69,8 @@ public class CheckClubTime {
 
                         clubDao.insetIntoUserDetail(user_detail_list);
 
-                        clubDao.deleteUserDetailByUserId(multiple_receiver);
+//                        clubDao.deleteUserDetailByUserId(multiple_receiver);
+                        clubDao.clubUnbuild(multiple_receiver);
 
                     }
                 } catch (Exception e) {
