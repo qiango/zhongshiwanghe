@@ -81,14 +81,14 @@ public class AppMeV3Servce {
 	public Object follow(SessionProperty properties, String follow_user_id) throws HongZhiException {
 		int insert_count = appMeDao.follow(Integer.parseInt(follow_user_id),Integer.parseInt(properties.getUser_id()));
 		if(insert_count==1){
-			/**
-			 * @author Saxon 
-			 * add notification
-			 * date time:20160508
-			 * */
-			List<FollowingEntity> list = appMeDao.findFollowUserInfoById(Integer.parseInt(properties.getUser_id()));
-			
-            notiSender.sendNoti(Integer.parseInt(properties.getUser_id()), null , Integer.valueOf(follow_user_id) , "1", list.get(0).getUser_name()+dictionaryUtil.getCodeValue("follow", "data_alias", properties.getLanguage()) );
+
+			List<String> list = appMeDao.findFollowUserInfoById(Integer.parseInt(properties.getUser_id()));
+
+            System.out.println("before send notification");
+            if (!ObjectUtil.isEmpty(list) && list.size()>0) {
+                System.out.println("send notification"+list.get(0));
+                notiSender.sendNoti(Integer.parseInt(properties.getUser_id()), null , Integer.valueOf(follow_user_id) , "1", list.get(0)+dictionaryUtil.getCodeValue("follow", "data_alias", properties.getLanguage()) );
+            }
             return "success";
 		} else {
 			throw new HongZhiException("1041");
