@@ -56,7 +56,7 @@ public class CheckClubTime {
                         List<Integer> multiple_receiver = clubDao.selectClubMembersByClubId(club_list.get(i).get("club_id").toString());
 
                         //send message
-                        notificationService.sendNoti(1, multiple_receiver, 1, null, dictionaryUtil.getCodeValue("break_club_message", "data_alias", "zh"));
+                        notificationService.sendNoti(1, multiple_receiver, null, "1", dictionaryUtil.getCodeValue("break_club_message", "data_alias", "zh"));
                     }
                 } catch (Exception e) {
                     e.printStackTrace();

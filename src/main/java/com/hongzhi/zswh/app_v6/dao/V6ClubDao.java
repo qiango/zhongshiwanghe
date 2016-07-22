@@ -75,4 +75,9 @@ public interface V6ClubDao {
     List<Integer> selectClubMembers(String club_id);
 
     void updateClubStatus(@Param("club_status")String club_status,@Param("club_id") String club_id);
+
+    Map<String,Object> queryUserInfoByUserId(String userId);
+
+
+    List<Integer> queryClubAdmin(String club_id);
 }

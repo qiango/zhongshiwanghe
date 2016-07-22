@@ -1,10 +1,12 @@
 package com.hongzhi.zswh.app_v6.service;
 
+import com.hongzhi.zswh.app_v3.notification.service.NotificationService;
 import com.hongzhi.zswh.app_v6.dao.V6ClubDao;
 import com.hongzhi.zswh.app_v6.entity.ClubManageEntity;
 import com.hongzhi.zswh.app_v6.entity.ClubQueryEntity;
 import com.hongzhi.zswh.app_v6.entity.UserDetailEntity;
 import com.hongzhi.zswh.app_v6.entity.V6Club;
+import com.hongzhi.zswh.util.basic.DictionaryUtil;
 import com.hongzhi.zswh.util.basic.ObjectUtil;
 import com.hongzhi.zswh.util.basic.sessionDao.SessionProperty;
 import com.hongzhi.zswh.util.exception.HongZhiException;
@@ -27,14 +29,20 @@ public class V6ClubService {
     private V6ClubDao v6ClubDao;
     @Autowired
     private PictureService picService;
+    @Autowired
+    private NotificationService notificationService;
+    @Autowired
+    private DictionaryUtil dictionaryUtil;
+
     /**
      * 会员退出俱乐部，管理员不能退出
+     *
      * @param club_id
      * @param userId
      * @return
      * @throws HongZhiException
      */
-    public String OutOfClub(String userId)throws HongZhiException{
+    public String OutOfClub(String userId) throws HongZhiException {
 
 /*        if (ObjectUtil.isEmpty(club_id)) {
             throw new HongZhiException("1021");
@@ -45,21 +53,34 @@ public class V6ClubService {
             throw new HongZhiException("1079");//俱乐部管理员不能退出
         }*/
         List<Map<String, Objects>> list = v6ClubDao.selectCompetitionByUserId(Integer.valueOf(userId));
-        if(list.size()>0){
+        if (list.size() > 0) {
             //不允许退出
             throw new HongZhiException("1077");
         }
-        Map<String,Object> clubMap =  v6ClubDao.queryClubLevel(null,userId);
-        if ("0".equals(clubMap.get("user_level"))){
+        Map<String, Object> clubMap = v6ClubDao.queryClubLevel(null, userId);
 
-            String club_id =  clubMap.get("club_id").toString();
-            List<Integer> club_member_list  =   v6ClubDao.selectClubMembers(club_id);
+        Map<String, Object> map = v6ClubDao.queryUserInfoByUserId(userId);
 
-            if (club_member_list.size()==1){
+        String message = map.get("phone").toString();
+        if (!ObjectUtil.isEmpty(map.get("user_real_name"))) {
+            message += "," + map.get("user_real_name").toString();
+        } else if (!ObjectUtil.isEmpty(map.get("nickname"))) {
+            message += "," + map.get("nickname").toString();
+        }
+
+        if ("0".equals(clubMap.get("user_level"))) {
+
+            String club_id = clubMap.get("club_id").toString();
+            List<Integer> club_member_list = v6ClubDao.selectClubMembers(club_id);
+
+            if (club_member_list.size() == 1) {
                 //只剩下管理员一个人可以退出俱乐部，且俱乐部解散
                 String club_status = "3";
-                v6ClubDao.updateClubStatus(club_status,club_id);
-            }else if (club_member_list.size()!=1){
+                v6ClubDao.updateClubStatus(club_status, club_id);
+
+                notificationService.sendNoti(1, null, Integer.valueOf(userId), "1", message + dictionaryUtil.getCodeValue("out_club_message", "data_alias", "zh"));
+
+            } else if (club_member_list.size() != 1) {
 
                 throw new HongZhiException("1079");//俱乐部管理员不能退出
             }
@@ -67,22 +88,31 @@ public class V6ClubService {
         }
 
         UserDetailEntity userDetail = v6ClubDao.selectUserDetailEntity(Integer.valueOf(userId));
-        if(null==userDetail){
+        if (null == userDetail) {
             return "success";
         }
         v6ClubDao.insetIntoUserDetail(userDetail);
         v6ClubDao.deleteUserDetailByUserId(Integer.valueOf(userId));
 
-         if ("1".equals(clubMap.get("join_club_status"))){
-             throw new HongZhiException("1080");//您已取消，欢迎下次再来
+        if (!"0".equals(clubMap.get("user_level"))) {
+
+            List<Integer> user_id_list = v6ClubDao.queryClubAdmin(clubMap.get("club_id").toString());
+            if (user_id_list.size() > 0) {
+                notificationService.sendNoti(1, user_id_list, null, "1", message +dictionaryUtil.getCodeValue("out_club_message", "data_alias", "zh"));
+            }
+        }
+
+        if ("1".equals(clubMap.get("join_club_status"))) {
+            throw new HongZhiException("1080");//您已取消，欢迎下次再来
         } else {
-             return "success";
-         }
+            return "success";
+        }
 
     }
 
     /**
      * 俱乐部管理员可以跟换俱乐部头像
+     *
      * @param request
      * @param club_id
      * @param user_id
@@ -91,39 +121,40 @@ public class V6ClubService {
      */
     public Object saveClubPic(HttpServletRequest request, String club_id, String user_id) throws HongZhiException {
 
-        if (!ObjectUtil.isEmpty(club_id)){
-           List list =  v6ClubDao.selectClubAdmin(club_id,user_id);//查看是否是俱乐部管理员
-            if (list.size()==0){
+        if (!ObjectUtil.isEmpty(club_id)) {
+            List list = v6ClubDao.selectClubAdmin(club_id, user_id);//查看是否是俱乐部管理员
+            if (list.size() == 0) {
                 throw new HongZhiException("1078");
             }
 
             String picUrl = null;
             try {
-                picUrl =  picService.picUpload(request).toString();
+                picUrl = picService.picUpload(request).toString();
             } catch (IOException e) {
                 throw new HongZhiException("1011");
             }
             //{"picUrl":"/2016/0705/1467690672409_touxiang.jpeg"}
-            if (!ObjectUtil.isEmpty(picUrl)){//解析调用图片上传后返回的json字符串
-                JSONObject jsonObject = new JSONObject(picUrl) ;
+            if (!ObjectUtil.isEmpty(picUrl)) {//解析调用图片上传后返回的json字符串
+                JSONObject jsonObject = new JSONObject(picUrl);
                 picUrl = jsonObject.getString("picUrl");
             }
-            int clubPic =   v6ClubDao.saveClubPic(picUrl,club_id);
-            if (1 == clubPic){
-                Map<String,Object> map = new HashMap<>();
-                picUrl = "/pic.htmls?p="+picUrl;
-                map.put("pic",picUrl);
+            int clubPic = v6ClubDao.saveClubPic(picUrl, club_id);
+            if (1 == clubPic) {
+                Map<String, Object> map = new HashMap<>();
+                picUrl = "/pic.htmls?p=" + picUrl;
+                map.put("pic", picUrl);
                 return map;
             } else {
                 throw new HongZhiException("1069");
             }
-        }else {
+        } else {
             throw new HongZhiException("1021");
         }
     }
 
     /**
      * 管理员转让
+     *
      * @param user_id
      * @param club_id
      * @param userId
@@ -131,18 +162,18 @@ public class V6ClubService {
      * @throws HongZhiException
      */
     public Object transferClub(String user_id, String club_id, String userId) throws HongZhiException {
-        if (!ObjectUtil.isEmpty(club_id)){
-            if (ObjectUtil.isEmpty(user_id)){//user_id要转让的用户id
+        if (!ObjectUtil.isEmpty(club_id)) {
+            if (ObjectUtil.isEmpty(user_id)) {//user_id要转让的用户id
                 throw new HongZhiException("1005");//用户为空
             }
-            List list =  v6ClubDao.selectClubAdmin(club_id,userId);//查看当前用户是否是俱乐部管理员
-            if (list.size()==0){
+            List list = v6ClubDao.selectClubAdmin(club_id, userId);//查看当前用户是否是俱乐部管理员
+            if (list.size() == 0) {
                 throw new HongZhiException("1078");//普通无权限转让
             }
-                v6ClubDao.transferClubByUserId(club_id,userId,"99");//管理员转变成普通用户
-                v6ClubDao.transferClubByUserId(club_id,user_id,"0");//普通用户转变成管理员
+            v6ClubDao.transferClubByUserId(club_id, userId, "99");//管理员转变成普通用户
+            v6ClubDao.transferClubByUserId(club_id, user_id, "0");//普通用户转变成管理员
 
-        }else {
+        } else {
             throw new HongZhiException("1021");//俱乐部为空
         }
 
@@ -151,6 +182,7 @@ public class V6ClubService {
 
     /**
      * 俱乐部列表分页（待定，未完成）
+     *
      * @param page_number
      * @param club_name
      * @return
@@ -168,15 +200,16 @@ public class V6ClubService {
 
     /**
      * 判断当前用户是否是俱乐部管理员
+     *
      * @param property
      * @param club_id
      * @return
      * @throws HongZhiException
      */
-    public Object queryClubAdmin(SessionProperty property,String club_id) throws HongZhiException {
+    public Object queryClubAdmin(SessionProperty property, String club_id) throws HongZhiException {
         if (!ObjectUtil.isEmpty(club_id)) {
-            Map<String,Object>  clubMap = v6ClubDao.queryClubLevel(club_id, property.getUser_id());//查看是否是俱乐部管理员
-          //  Map<String,Object>  club_list = v6ClubDao.queryClubLevel("44", "280");//查看是否是俱乐部管理员
+            Map<String, Object> clubMap = v6ClubDao.queryClubLevel(club_id, property.getUser_id());//查看是否是俱乐部管理员
+            //  Map<String,Object>  club_list = v6ClubDao.queryClubLevel("44", "280");//查看是否是俱乐部管理员
 
 //            Map<String,Object> map = new HashMap<>();
 //            map.put("user_level", club_list.get(0).("user_level"));//判断当前用户级别
@@ -186,33 +219,33 @@ public class V6ClubService {
             }else {
                 map.put("user_level",0);//管理员
             }*/
-            List<Map<String, Objects>> list = v6ClubDao.selectCompetitionByUserId(Integer.valueOf( property.getUser_id()));
-            if(list.size()>0){
-                clubMap.put("user_competition_status","1");//1表示有赛事没结束
-            }else {
-                clubMap.put("user_competition_status","0");//0表示没有赛事
+            List<Map<String, Objects>> list = v6ClubDao.selectCompetitionByUserId(Integer.valueOf(property.getUser_id()));
+            if (list.size() > 0) {
+                clubMap.put("user_competition_status", "1");//1表示有赛事没结束
+            } else {
+                clubMap.put("user_competition_status", "0");//0表示没有赛事
             }
             return clubMap;
-        }else {
-          throw new HongZhiException("1021");//俱乐部为空
-         }
+        } else {
+            throw new HongZhiException("1021");//俱乐部为空
+        }
     }
 
     public Object clubMembers(SessionProperty property) {
-        Map<String,Object> club = v6ClubDao.ownClubMemberCount(Integer.parseInt(property.getUser_id()));
-       // String memberCount  = club.get("club_member").toString();
-        List<Map<String,Object>>   club_member = v6ClubDao.ownClubMemberList((Integer)club.get("user_id"),(Integer)club.get("club_id"));
+        Map<String, Object> club = v6ClubDao.ownClubMemberCount(Integer.parseInt(property.getUser_id()));
+        // String memberCount  = club.get("club_member").toString();
+        List<Map<String, Object>> club_member = v6ClubDao.ownClubMemberList((Integer) club.get("user_id"), (Integer) club.get("club_id"));
 
-        Map<String,Object> map = new HashMap<>();
-        map.put("manager_flag",  ObjectUtil.getProperty(club.get("user_level") ,"99"));
+        Map<String, Object> map = new HashMap<>();
+        map.put("manager_flag", ObjectUtil.getProperty(club.get("user_level"), "99"));
         map.put("club_member_list", club_member);
         return map;
     }
 
     public Object loadClubManage(SessionProperty property) throws HongZhiException {
 
-        ClubQueryEntity clubInfo = v6ClubDao.clubInfo( Integer.parseInt(property.getUser_id()),property.getLanguage());
-        if(ObjectUtil.isEmpty(clubInfo)){
+        ClubQueryEntity clubInfo = v6ClubDao.clubInfo(Integer.parseInt(property.getUser_id()), property.getLanguage());
+        if (ObjectUtil.isEmpty(clubInfo)) {
             clubInfo = new ClubQueryEntity();
 
         }
@@ -221,7 +254,7 @@ public class V6ClubService {
         // List list = v6ClubDao.selectClubAdmin("32", "375");//查看是否是俱乐部管理员
         if (list.size() == 0) {
             out.setUser_level("99");//普通会员
-        }else {
+        } else {
             out.setUser_level("0");//管理员
         }
         String defaultVal = "0";
@@ -237,15 +270,16 @@ public class V6ClubService {
         out.setComprehensive_integral(defaultVal);
         out.setMy_club_ranking(clubInfo.getMy_club_rank());
         out.setClub(v6ClubDao.userClub(Integer.parseInt(property.getUser_id())));
-        String club_id ="0";
-        if(!ObjectUtil.isEmpty(clubInfo.getClub_id())){
-            club_id=clubInfo.getClub_id();
+        String club_id = "0";
+        if (!ObjectUtil.isEmpty(clubInfo.getClub_id())) {
+            club_id = clubInfo.getClub_id();
         }
-        out.setClub_ranking_list(v6ClubDao.clubRanking("   limit 3   " ,Integer.parseInt(club_id) ));
-        Map<String,Object> map = new HashMap<>();
+        out.setClub_ranking_list(v6ClubDao.clubRanking("   limit 3   ", Integer.parseInt(club_id)));
+        Map<String, Object> map = new HashMap<>();
         map.put("club_interface_data", out);
         return map;
     }
+
     public Object loadClubManageNotLogIn() {
 
         ClubManageEntity out = new ClubManageEntity();
@@ -262,8 +296,8 @@ public class V6ClubService {
         out.setComprehensive_integral(defaultVal);
         out.setMy_club_ranking(defaultVal);
         out.setClub(null);
-        out.setClub_ranking_list(v6ClubDao.clubRanking("   limit 3   " ,0));
-        Map<String,Object> map = new HashMap<>();
+        out.setClub_ranking_list(v6ClubDao.clubRanking("   limit 3   ", 0));
+        Map<String, Object> map = new HashMap<>();
         map.put("club_interface_data", out);
         return map;
     }
