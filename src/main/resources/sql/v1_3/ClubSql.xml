@@ -452,7 +452,7 @@
         where
           is_delete = '0'
         and
-          a.club_status ='99'
+          a.club_status in ('99','2')
         order by
         convert(a.club_name USING gbk) COLLATE gbk_chinese_ci
     </select>
@@ -497,7 +497,7 @@
         where
           is_delete = '0'
         and
-          a.club_status ='99'
+          a.club_status in ('99','2')
         and
           a.id = #{city_id}
         order by
