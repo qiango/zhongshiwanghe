@@ -95,7 +95,7 @@
           user_status = 1
 
     </select>
-    <select id="queryClubAdmin" resultType="map">
+    <select id="queryClubAdmin" resultType="int">
         select
           user_id
         from

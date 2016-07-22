@@ -75,7 +75,7 @@
           and user_level=0
 
     </select>
-    <select id="queryClubAdmin" resultType="map">
+    <select id="queryClubAdmin" resultType="int">
         select
           user_id
          from
