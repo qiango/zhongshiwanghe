@@ -1,13 +1,5 @@
 package com.hongzhi.zswh.back.club.service;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Repository;
-
 import com.hongzhi.zswh.app_v3.notification.service.NotificationService;
 import com.hongzhi.zswh.back.club.dao.JoinClubDao;
 import com.hongzhi.zswh.back.club.entity.JoinClub;
@@ -16,6 +8,13 @@ import com.hongzhi.zswh.util.basic.DictionaryUtil;
 import com.hongzhi.zswh.util.basic.ObjectUtil;
 import com.hongzhi.zswh.util.basic.sessionDao.SessionProperty;
 import com.hongzhi.zswh.util.exception.HongZhiException;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Twitter : @taylorwang789
@@ -39,7 +38,7 @@ public class JoinClubService {
      * Twitter : @taylorwang789
      * Creat time : Mar 24, 2016    2:53:45 PM
      *
-     * @param user
+     *
      * @return
      */
     public String waittingJoinList(SessionProperty sp) {
@@ -80,6 +79,7 @@ public class JoinClubService {
                     }
                 }
             }
+/*
             Map<String, Object> user_info_map = joinClubDao.queryUserInfoByUserId(paramObj.getUser_id());
 
             String message = user_info_map.get("phone").toString();
@@ -89,11 +89,12 @@ public class JoinClubService {
             } else if (!ObjectUtil.isEmpty(map.get("nickname"))) {
                 message += "," + user_info_map.get("nickname").toString();
             }
+*/
 
             List<Integer> user_id_list = joinClubDao.queryClubAdmin(paramObj.getClub_id());
 
             if (user_id_list.size() > 0) {
-                notificationService.sendNoti(1, user_id_list, null, "1", message + dictionaryUtil.getCodeValue("out_club_message", "data_alias", "zh"));
+                notificationService.sendNoti(1, user_id_list, null, "1", dictionaryUtil.getCodeValue("check_join_club_t", "data_alias","zh") + map.get("club_name") + dictionaryUtil.getCodeValue("join_club_t", "data_alias","zh"));
             }
 
             return ObjectUtil.jsonOut("true");
