@@ -55,7 +55,7 @@ public class MiMessageBroadcast {
         Message message = new Message.IOSBuilder()
                 .description(msgContent)
                 .soundURL("default")
-                .badge(1)
+//                .badge(1)
                 .category("action")
                 .extra("pushType", String.valueOf(ObjectUtil.coalesce(messageType)))
                 .extra("content",ObjectUtil.coalesce(msgUrl,"").toString())
