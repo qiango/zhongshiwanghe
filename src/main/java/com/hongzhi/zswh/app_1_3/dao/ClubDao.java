@@ -3,6 +3,7 @@ package com.hongzhi.zswh.app_1_3.dao;
 
 import com.hongzhi.zswh.app_1_3.entity.Club;
 import com.hongzhi.zswh.app_1_3.entity.ClubQueryEntity;
+import com.hongzhi.zswh.app_1_3.entity.UserDetailEntity;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
@@ -50,4 +51,10 @@ public interface ClubDao {
     void updateClubStatus(String club_id);
 
     List<Integer> selectClubMembersByClubId(String club_id);
+
+    List<UserDetailEntity> queryClub(List<Integer> multiple_receiver);
+
+    void insetIntoUserDetail(List<UserDetailEntity> user_detail_list);
+
+    void deleteUserDetailByUserId(List<Integer> multiple_receiver);
 }
