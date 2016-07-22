@@ -75,6 +75,17 @@
           and user_level=0
 
     </select>
+    <select id="queryClubAdmin" resultType="map">
+        select
+          user_id
+         from
+          user_detail
+        where
+          club_id = #{club_id}
+        and
+          user_level=0
+    </select>
+
    <select id="queryClubLevel" resultType="map">
       select
           coalesce(user_level,'99')   user_level
@@ -383,6 +394,22 @@
         and
           user_status = 1
     </select>
+    <select id="queryUserInfoByUserId" resultType="map">
+        select
+          coalesce(a.user_real_name,'')
+          ,coalesce(a.phone,'')
+          ,coalesce(a.nickname,'')
+        from
+          user_info a
+        where
+          user_id = #{user_id}
+        and
+          is_delete = 0
+        and
+          user_status = 1
+
+    </select>
+
     <insert id="saveUserDetail">
         insert into user_detail(
           club_id
