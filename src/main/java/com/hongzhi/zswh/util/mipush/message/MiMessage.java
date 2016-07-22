@@ -80,7 +80,7 @@ public class MiMessage {
         Message message = new Message.IOSBuilder()
                 .description(msgContent)
                 .soundURL("default")
-                .badge(regids_iOS_badge+1)
+                .badge(regids_iOS_badge)
                 .category("action")
                 .extra("pushType", String.valueOf(ObjectUtil.coalesce(messageType)))
                 .extra("content","")
