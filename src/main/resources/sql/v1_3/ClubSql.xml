@@ -535,4 +535,58 @@
         where
             club_id = #{club_id}
     </select>
+    <select id="queryClub" resultType="com.hongzhi.zswh.app_1_3.entity.UserDetailEntity">
+       SELECT
+          club_id,
+          user_id,
+          jump_club_number,
+          join_club_status,
+          user_level,
+          create_time,
+          change_status_time,
+          club_refuse_id
+        FROM
+          user_detail
+        where
+        <foreach collection ="multiple_receiver" item="item" index= "index" separator=",">
+            user_id=#{item};
+        </foreach>
+
+    </select>
+    <insert id="insetIntoUserDetail" parameterType="com.hongzhi.zswh.app_1_3.entity.UserDetailEntity">
+        INSERT INTO user_detail_bak(
+        `club_id`,`user_id`,
+        `jump_club_number`,
+        `join_club_status`,
+        `user_level`,
+        `create_time`,
+        `change_status_time`,
+        `club_refuse_id`,
+        `create_time_bak`
+        ) VALUE
+        <foreach collection ="user_detail_list" item="item" index= "index" separator=",">
+        (
+        #{item.club_id},
+        #{item.user_id},
+        #{item.jump_club_number},
+        #{item.join_club_status},
+        #{item.user_level},
+        #{item.create_time},
+        #{item.change_status_time},
+        #{item.club_refuse_id},
+        NOW()
+        )
+        </foreach>
+
+    </insert>
+
+    <delete id="deleteUserDetailByUserId">
+        DELETE
+        FROM
+          user_detail
+        WHERE
+        <foreach collection ="multiple_receiver" item="item" index= "index" separator=",">
+          user_id =#{item}
+        </foreach>
+    </delete>
 </mapper>

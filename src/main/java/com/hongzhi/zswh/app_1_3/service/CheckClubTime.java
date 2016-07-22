@@ -1,6 +1,7 @@
 package com.hongzhi.zswh.app_1_3.service;
 
 import com.hongzhi.zswh.app_1_3.dao.ClubDao;
+import com.hongzhi.zswh.app_1_3.entity.UserDetailEntity;
 import com.hongzhi.zswh.app_v3.notification.service.NotificationService;
 import com.hongzhi.zswh.app_v6.service.V6ClubService;
 import com.hongzhi.zswh.util.basic.DictionaryUtil;
@@ -64,9 +65,11 @@ public class CheckClubTime {
                         //send message
                         notificationService.sendNoti(1, multiple_receiver, null, "1", dictionaryUtil.getCodeValue("break_club_message", "data_alias", "zh"));
 
-                        for (int j = 0; j < multiple_receiver.size(); j++) {
-                            v6ClubService.OutOfClub(multiple_receiver.get(j).toString());
-                        }
+                        List<UserDetailEntity> user_detail_list = clubDao.queryClub(multiple_receiver);
+
+                        clubDao.insetIntoUserDetail(user_detail_list);
+
+                        clubDao.deleteUserDetailByUserId(multiple_receiver);
 
                     }
                 } catch (Exception e) {
