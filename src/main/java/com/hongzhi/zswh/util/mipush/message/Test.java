@@ -11,8 +11,14 @@ import java.util.List;
  */
 public class Test {
     public static void main(String[] args) {
-        MiMessageBroadcast  miMessageBroadcast = new MiMessageBroadcast(MessageType.NEWS);
-        miMessageBroadcast.sendMessage("bbc news , hello","test broadcast");
+//        MiMessageBroadcast  miMessageBroadcast = new MiMessageBroadcast(MessageType.NEWS);
+//        miMessageBroadcast.sendMessage("mi api test","http://dev.xiaomi.com/doc/?p=533");
+
+        MessageType[] types = MessageType.values();
+        for (int i = 0; i < types.length; i++) {
+            System.out.println(types[i].name());
+            System.out.println("COMPETITION".equals(types[i].name()));
+        }
 
         System.out.println("end");
     }

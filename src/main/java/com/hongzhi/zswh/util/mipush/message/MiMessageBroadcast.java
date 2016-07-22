@@ -27,15 +27,19 @@ public class MiMessageBroadcast {
 
     private String messageType = "";
 
-    private String msgTopic = "";
+    private String msgUrl = "";
 
     public MiMessageBroadcast(MessageType messageType) {
         this.messageType = messageType.toString();
     }
 
-    public void sendMessage(String content ,String topic){
+    public MiMessageBroadcast(String messageType) {
+        this.messageType = messageType ;
+    }
+
+    public void sendMessage(String content ,String url){
         msgContent = content;
-        msgTopic = topic;
+        msgUrl = url;
         send();
     }
 
@@ -54,7 +58,7 @@ public class MiMessageBroadcast {
                 .badge(1)
                 .category("action")
                 .extra("pushType", String.valueOf(ObjectUtil.coalesce(messageType)))
-                .extra("content","")
+                .extra("content",ObjectUtil.coalesce(msgUrl,"").toString())
                 .build();
 
         Sender sender = new Sender(MiPushConfig.appSecret(DEVICE.iOS));
@@ -77,7 +81,7 @@ public class MiMessageBroadcast {
                 .restrictedPackageName("com.chengjubei.activity")
                 .notifyType(1)     // 使用默认提示音提示
                 .extra("pushType", String.valueOf(ObjectUtil.coalesce(messageType)))
-                .extra("content","")
+                .extra("content",ObjectUtil.coalesce(msgUrl,"").toString())
                 .build();
 
         Sender sender = new Sender(MiPushConfig.appSecret(DEVICE.Android));
