@@ -508,6 +508,7 @@
         date_format(a.club_create_time,'%Y-%m-%d') as club_create_time
         ,a.club_id as club_id
         ,a.club_status as club_status
+        ,coalesce(a.reminder_mark,'0') as reminder_mark
       from
         club a
       where
@@ -517,14 +518,17 @@
 
     </select>
     <update id="updateClubStatus">
-        update
-          club a
-        set
-          a.club_status = '3'
-        where
-          a.club_id = #{club_id}
-        and
-          a.is_delete = 0
+        <foreach collection ="club_id" item="item" index= "index" separator=",">
+            update
+                club a
+            set
+                a.club_status = '3'
+            where
+                a.club_id = #{item}
+            and
+                a.is_delete = 0
+        </foreach>
+
     </update>
 
     <select id="selectClubMembersByClubId" resultType="Integer">
@@ -533,7 +537,11 @@
         from
             user_detail
         where
-            club_id = #{club_id}
+            club_id in (
+        <foreach collection ="clubId" item="item" index= "index" separator=",">
+            #{item}
+        </foreach>
+            )
     </select>
     <select id="queryClub" resultType="com.hongzhi.zswh.app_1_3.entity.UserDetailEntity">
        SELECT
@@ -593,4 +601,18 @@
         </foreach>
         )
     </delete>
+
+    <update id="updateClubReminderMark">
+        <foreach collection ="reminder" item="item" index= "index" separator=",">
+            update
+              club a
+            set
+              a.reminder_mark = '1'
+            where
+              a.club_id = #{item}
+            and
+              a.is_delete = 0
+        </foreach>
+
+    </update>
 </mapper>

@@ -48,13 +48,19 @@ public interface ClubDao {
     List<Map<String, Object>>  selectClub();
 
 
-    void updateClubStatus(String club_id);
+   // void updateClubStatus(String club_id);
 
-    List<Integer> selectClubMembersByClubId(String club_id);
+   // List<Integer> selectClubMembersByClubId(String club_id);
 
     List<UserDetailEntity> queryClub(@Param("multipleReceiver") List<Integer> multiple_receiver);
 
     void insetIntoUserDetail(@Param("detailList") List<UserDetailEntity> user_detail_list);
 
     void clubUnbuild(@Param("reciver") List<Integer> multiple_receiver);
+
+    void updateClubStatus(@Param("club_id") List<Integer> club_id_list);
+
+    List<Integer> selectClubMembersByClubId(@Param("clubId") List<Integer> club_id_list);
+
+    void updateClubReminderMark(@Param("reminder") List<Integer> club_id_reminder_list);
 }
