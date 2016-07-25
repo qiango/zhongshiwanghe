@@ -3,8 +3,8 @@ package com.hongzhi.zswh.app_1_3.service;
 import com.hongzhi.zswh.app_1_3.dao.ClubDao;
 import com.hongzhi.zswh.app_1_3.entity.UserDetailEntity;
 import com.hongzhi.zswh.app_v3.notification.service.NotificationService;
-import com.hongzhi.zswh.app_v6.service.V6ClubService;
 import com.hongzhi.zswh.util.basic.DictionaryUtil;
+import com.hongzhi.zswh.util.exception.HongZhiException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
@@ -12,10 +12,7 @@ import org.springframework.stereotype.Component;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Created with IntelliJ IDEA.
@@ -35,14 +32,23 @@ public class CheckClubTime {
 
     @Scheduled(cron = "0 */1 * * * ?")
     // @Scheduled(cron = "0 0 0/1 * * ?")
-    public void checkClub() {
+    public void checkClub() throws HongZhiException {
 
         List<Map<String, Object>> club_list = clubDao.selectClub();
 
         DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
 
         if (club_list.size() != 0) {
+            List<Integer> club_id_effective_list = new ArrayList<>();
+            List<Integer> club_id_reminder_list = new ArrayList<>();
+
+            int club_effective_days = Integer.valueOf(dictionaryUtil.getCodeValue("club_effective_days", "data_alias", "zh"));
+
+            int club_reminder_days = Integer.valueOf(dictionaryUtil.getCodeValue("club_reminder_days", "data_alias", "zh"));
+
+
             for (int i = 0; i < club_list.size(); i++) {
+
                 String club_create_time = club_list.get(i).get("club_create_time").toString();
 
                 try {
@@ -52,28 +58,43 @@ public class CheckClubTime {
 
                     int days = daysBetween(club_create_time_date, now_date);
 
-                    int club_effective_days = Integer.valueOf(dictionaryUtil.getCodeValue("club_effective_days", "data_alias", "zh"));
 
-                    if (days > club_effective_days && "2".equals(club_list.get(i).get("club_status").toString())) {
+                    if (days > club_effective_days) {
 
-                        clubDao.updateClubStatus(club_list.get(i).get("club_id").toString());
+                        club_id_effective_list.add(Integer.valueOf(club_list.get(i).get("club_id").toString()));
 
-                        List<Integer> multiple_receiver = clubDao.selectClubMembersByClubId(club_list.get(i).get("club_id").toString());
+                    } else if (days == club_reminder_days && "0".equals(club_list.get(i).get("reminder_mark").toString())) {
 
-                        //send message
-                        notificationService.sendNoti(1, multiple_receiver, null, "1", dictionaryUtil.getCodeValue("break_club_message", "data_alias", "zh"));
-
-                        List<UserDetailEntity> user_detail_list = clubDao.queryClub(multiple_receiver);
-
-                        clubDao.insetIntoUserDetail(user_detail_list);
-
-//                        clubDao.deleteUserDetailByUserId(multiple_receiver);
-                        clubDao.clubUnbuild(multiple_receiver);
-
+                        club_id_reminder_list.add(Integer.valueOf(club_list.get(i).get("club_id").toString()));
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
+
+            }
+            if (club_id_effective_list.size() > 0) {
+
+                clubDao.updateClubStatus(club_id_effective_list);
+
+                List<Integer> multiple_receiver = clubDao.selectClubMembersByClubId(club_id_effective_list);
+
+                //send message
+                notificationService.sendNoti(1, multiple_receiver, null, "1", dictionaryUtil.getCodeValue("break_club_message", "data_alias", "zh"));
+
+                List<UserDetailEntity> user_detail_list = clubDao.queryClub(multiple_receiver);
+
+                clubDao.insetIntoUserDetail(user_detail_list);
+
+                clubDao.clubUnbuild(multiple_receiver);
+
+            } else if (club_id_reminder_list.size() > 0) {
+
+                clubDao.updateClubReminderMark(club_id_reminder_list);
+
+                List<Integer> multiple_receiver = clubDao.selectClubMembersByClubId(club_id_reminder_list);
+
+                //send message
+                notificationService.sendNoti(1, multiple_receiver, null, "1", dictionaryUtil.getCodeValue("reminder_club", "data_alias", "zh"));
 
             }
         }
