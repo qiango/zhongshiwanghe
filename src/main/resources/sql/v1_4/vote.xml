@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hongzhi.zswh.app_1_4.dao.VoteDao">
+
+    <select id="listVotes" resultType="com.hongzhi.zswh.app_1_4.entity.Vote" >
+   <!--
+    List<Vote> listVotes(@Param("voteID") Integer vote_id,@Param("statuses") List<Integer> statuses);
+    -->
+    select
+         vote_id
+        ,vote_name
+        ,image
+        ,start_time
+        ,end_time
+        ,status
+        ,index
+    from vote
+    <where>
+        <if test=" voteID != null and voteID !='' ">
+            and vote_id = #{voteID}
+        </if>
+        <if test=" statuses.size() > 0 " >
+            and status in (
+            <foreach collection="statuses" item="stat" separator="," >
+                #{stat}
+            </foreach>
+            )
+        </if>
+    </where>
+    </select>
+
+
+</mapper>
