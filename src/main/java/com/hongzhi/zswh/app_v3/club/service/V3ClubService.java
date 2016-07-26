@@ -166,9 +166,11 @@ public class V3ClubService {
 		default:
 			break;
 		}
-		if(data_count == 1 && vis_focus.equals("0") ){
-            List<String> list = appMeDao.findFollowUserInfoById(Integer.parseInt(properties.getUser_id()));
-            notiSender.sendNoti(Integer.parseInt(properties.getUser_id()), null , Integer.valueOf(club_user_id) , "1", list.get(0)+dictionaryUtil.getCodeValue("follow", "data_alias", properties.getLanguage()) );
+		if(data_count == 1 ){
+            if ( vis_focus.equals("0") ) {
+                List<String> list = appMeDao.findFollowUserInfoById(Integer.parseInt(properties.getUser_id()));
+                notiSender.sendNoti(Integer.parseInt(properties.getUser_id()), null , Integer.valueOf(club_user_id) , "1", list.get(0)+dictionaryUtil.getCodeValue("follow", "data_alias", properties.getLanguage()) );
+            }
             return  data_count;
 		}else{
 			throw new HongZhiException("1041");
