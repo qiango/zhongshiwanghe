@@ -33,8 +33,8 @@ public class SessionService {
 	private  int      appSessionInt = (3600*1000)*24*7 ;    //  milli second 
 //	private  int      appSessionInt = 86400000 ;    //  milli second 
 
-	private  String   sessionStr   = " INTERVAL 30 minute " ;  // 30 minutes  
-	private  int      sessionInt   = 1800000 ;  // milli second 
+	private  String   sessionStr   = " INTERVAL  7 day  " ;
+	private  int      sessionInt   = (3600*1000)*24*7  ;  // milli second
 	
 	/**   Twitter : @taylorwang789 
 	 * Creat time : Apr 10, 2016    1:57:59 PM

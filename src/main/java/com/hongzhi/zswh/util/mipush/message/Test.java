@@ -21,22 +21,22 @@ import java.util.Arrays;
 public class Test {
     public static void main(String[] args) {
         Constants.useOfficial();
-//        String regids = "dgVKkBBAdMeSGivTVh+6qU23P+EXST3QEPD+JAng7no=";
-        String regids =  "FHalADCHGdsUbM78HrfR8PO0+nX60UAwqWOgxTG1XHA=";
-        Message message = new Message.IOSBuilder()
-                .description("jfksajf")
-                .soundURL("default")
-                .badge(1)
-                .category("action")
-                .extra("pushType", String.valueOf(MessageType.NOTIFICATION))
+        Message message = new Message.Builder()
+                .title("ChengJuBei")
+                .description("messagejkfdjak").payload("msg")
+                .restrictedPackageName("com.chengjubei.activity")
+                .notifyType(1)     // 使用默认提示音提示
+                .extra("pushType", MessageType.NOTIFICATION.toString() )
                 .extra("content","")
+                .extra(Constants.EXTRA_PARAM_NOTIFY_FOREGROUND, "0")
                 .build();
 
-        Sender sender = new Sender(MiPushConfig.appSecret(DEVICE.iOS));
+        String regids = "RKEx4ZPd8z/k2NAXIZeFlu/07FOuhT1I7eyttXMeSIE=";
+        Sender sender = new Sender(MiPushConfig.appSecret(DEVICE.Android));
         try {
-            Result result =  sender.send(message,regids,0);
+            Result result = sender.send(message, regids, 0);
             ErrorCode ec = result.getErrorCode();
-            System.out.println("iOS:"+regids+":"+ec.getDescription());
+            System.out.println("Android:"+ec.getDescription());
         } catch (IOException e) {
             e.printStackTrace();
         } catch (ParseException e) {
