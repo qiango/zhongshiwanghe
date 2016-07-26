@@ -82,6 +82,7 @@ public class MiMessageBroadcast {
                 .notifyType(1)     // 使用默认提示音提示
                 .extra("pushType", String.valueOf(ObjectUtil.coalesce(messageType)))
                 .extra("content",ObjectUtil.coalesce(msgUrl,"").toString())
+                .extra(Constants.EXTRA_PARAM_NOTIFY_FOREGROUND, "0")
                 .build();
 
         Sender sender = new Sender(MiPushConfig.appSecret(DEVICE.Android));
