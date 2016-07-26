@@ -43,9 +43,9 @@ public class AppVoteController {
             switch (version){
                 case "v1.4":
                     property = sess.sessionEffective(session,session_id,"/v1.4/vote/list");
-                    return ObjectUtil.jsonOut( voteService.votes(vote_id) );
+                    return ObjectUtil.jsonOutDT( voteService.votes(vote_id) , property.getLanguage());
                 default:
-                    return null;
+                    return "hello";
             }
         }catch (HongZhiException e){
             return ObjectUtil.jsonOutError(e.getCode(), dic.getCodeValue(e.getCode(), language ) );

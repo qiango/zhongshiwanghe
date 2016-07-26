@@ -12,15 +12,15 @@
         ,image
         ,start_time
         ,end_time
-        ,status
-        ,index
+        ,vote_status
+        ,vote_index
     from vote
     <where>
         <if test=" voteID != null and voteID !='' ">
-            and vote_id = #{voteID}
+            vote_id = #{voteID}
         </if>
         <if test=" statuses.size() > 0 " >
-            and status in (
+            and vote_status in (
             <foreach collection="statuses" item="stat" separator="," >
                 #{stat}
             </foreach>
