@@ -2,7 +2,6 @@ package com.hongzhi.zswh.app_1_4.service;
 
 import com.hongzhi.zswh.app_1_4.dao.EventDao;
 import com.hongzhi.zswh.app_1_4.entity.Event;
-import com.hongzhi.zswh.util.basic.DictionaryUtil;
 import com.hongzhi.zswh.util.basic.ObjectUtil;
 import com.hongzhi.zswh.util.basic.sessionDao.SessionProperty;
 import org.springframework.beans.factory.annotation.Autowired;
