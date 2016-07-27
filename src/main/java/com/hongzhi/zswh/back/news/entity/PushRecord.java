@@ -14,9 +14,11 @@ public class PushRecord {
 	private String news_id;
 
 	public String Vnews_title() throws HongZhiException {
-		return ExcepUtil.verify(news_title, "1084").toString();
+		return ExcepUtil.verify(news_title, "1085").toString();
 	}
-
+	public String Vnews_id() throws HongZhiException {
+		return ExcepUtil.verify(news_id, "1073").toString();
+	}
 	public String getNews_id() {
 		return news_id;
 	}
