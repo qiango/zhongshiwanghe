@@ -1,6 +1,7 @@
 package com.hongzhi.zswh.app_1_4.service;
 
 import com.hongzhi.zswh.app_1_4.dao.VoteDao;
+import com.hongzhi.zswh.app_1_4.entity.Item;
 import com.hongzhi.zswh.app_1_4.entity.Vote;
 import com.hongzhi.zswh.app_1_4.entity.VoteStatus;
 import com.hongzhi.zswh.util.basic.sessionDao.SessionProperty;
@@ -34,4 +35,28 @@ public class VoteService {
     }
 
 
+    public Object items(Integer vote_id, Integer page_number, Integer page_size) {
+
+        Integer start_row = (page_number - 1 ) * page_size ;
+
+        List<Item> items = voteDao.items(vote_id,start_row,page_size);
+
+        Map<String,Object> map = new HashMap<>();
+        map.put("items",items);
+        return map;
+    }
+
+    public Object vote(SessionProperty property, Integer vote_id, Integer item_id) {
+
+        List<Integer> user_ids = voteDao.userIds(vote_id,Integer.valueOf(property.getUser_id()));
+
+        if (user_ids.contains(Integer.valueOf(property.getUser_id()))) {
+            int  count = voteDao.vote(Integer.valueOf(property.getUser_id()),vote_id,item_id);
+
+        } else {
+            // can't vote
+        }
+
+        return null;
+    }
 }

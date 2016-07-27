@@ -36,7 +36,7 @@ public class AppVoteController {
 
     @ResponseBody
     @RequestMapping(value = "/list")
-    public String cancelRegid(HttpSession session, String session_id,Integer vote_id, @PathVariable String version){
+    public String list(HttpSession session, String session_id,Integer vote_id, @PathVariable String version){
         SessionProperty property;
         String language = "zh";
         try{
@@ -51,6 +51,44 @@ public class AppVoteController {
             return ObjectUtil.jsonOutError(e.getCode(), dic.getCodeValue(e.getCode(), language ) );
         }
     }
+
+
+    @ResponseBody
+    @RequestMapping(value = "/items")
+    public String item(HttpSession session, String session_id,Integer vote_id,Integer page_number,Integer page_size, @PathVariable String version){
+        SessionProperty property;
+        String language = "zh";
+        try{
+            switch (version){
+                case "v1.4":
+                    property = sess.sessionEffective(session,session_id,"/v1.4/vote/item");
+                    return ObjectUtil.jsonOutDT( voteService.items(vote_id,Integer.valueOf(ObjectUtil.coalesce(page_number,1).toString()),Integer.valueOf(ObjectUtil.coalesce(page_size,20).toString())) , property.getLanguage());
+                default:
+                    return "hello";
+            }
+        }catch (HongZhiException e){
+            return ObjectUtil.jsonOutError(e.getCode(), dic.getCodeValue(e.getCode(), language ) );
+        }
+    }
+
+    @ResponseBody
+    @RequestMapping(value = "/vote")
+    public String vote(HttpSession session, String session_id,Integer vote_id,Integer item_id, @PathVariable String version){
+        SessionProperty property;
+        String language = "zh";
+        try{
+            switch (version){
+                case "v1.4":
+                    property = sess.sessionEffective(session,session_id,"/v1.4/vote/item");
+                    return ObjectUtil.jsonOutDT( voteService.vote(property,vote_id,item_id ) , property.getLanguage());
+                default:
+                    return "hello";
+            }
+        }catch (HongZhiException e){
+            return ObjectUtil.jsonOutError(e.getCode(), dic.getCodeValue(e.getCode(), language ) );
+        }
+    }
+
 
 
 
