@@ -222,13 +222,11 @@
 			function newsRange(){
 				$('[name="news_range"]').eq(index).find('option[value="'+ data.data.news.newsrang[index]["news_range"] +'"]').prop('selected',true).end().change();
 				setTimeout(function(){
-					if(index < data.data.news.newsrang.length){
-						$('[name="news_range"]').eq(index).siblings('select:visible').find('option[value="'+ data.data.news.newsrang[index]["circle_id"] +'"]').prop('selected',true);
-						index++;
-						if(index < data.data.news.newsrang.length) {
-							$('.btn-add-item').click();
-							newsRange();
-						}
+					$('[name="news_range"]').eq(index).siblings('select:visible').find('option[value="'+ data.data.news.newsrang[index]["circle_id"] +'"]').prop('selected',true);
+					index++;
+					if(index < data.data.news.newsrang.length) {
+						$('.btn-add-item').click();
+						newsRange();
 					}
 				});
 			}
