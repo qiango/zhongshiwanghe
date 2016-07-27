@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hongzhi.zswh.app_1_4.dao.EventDao">
+
+
+
+    <select id="statusInfo" resultType="map" >
+    select
+         case when user_id = #{userID}
+              then 'true'
+              else 'false'
+              end as is_registered
+        ,count(1) as registered_count
+    from event_registration
+    where event_id = #{eventID}
+    </select>
+
+</mapper>
