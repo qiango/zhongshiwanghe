@@ -1,14 +1,15 @@
 package com.hongzhi.zswh.back.news.service;
 
+import com.hongzhi.zswh.util.mipush.config.MessageType;
+import com.hongzhi.zswh.app_1_3.service.MiPushService;
 import com.hongzhi.zswh.back.competition.dao.PlatformDao;
 import com.hongzhi.zswh.back.competition.entity.Platform;
 import com.hongzhi.zswh.back.news.dao.NewsDao;
-import com.hongzhi.zswh.back.news.entity.NEWS;
-import com.hongzhi.zswh.back.news.entity.NewsImageEntity;
-import com.hongzhi.zswh.back.news.entity.NewsParam;
-import com.hongzhi.zswh.back.news.entity.NewsRangeEntity;
+import com.hongzhi.zswh.back.news.entity.*;
+import com.hongzhi.zswh.util.basic.DictionaryUtil;
 import com.hongzhi.zswh.util.basic.ObjectUtil;
 import com.hongzhi.zswh.util.basic.sessionDao.SessionProperty;
+import com.hongzhi.zswh.util.date.DateUtil;
 import com.hongzhi.zswh.util.exception.HongZhiException;
 import com.hongzhi.zswh.util.page.PageModel;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,6 +28,10 @@ public class NewsService {
 	private NewsDao newsDao;
 	@Autowired
 	private PlatformDao platformDao;
+	@Autowired
+	private DictionaryUtil dictionaryUtil;
+	@Autowired
+	private MiPushService miPushService;
 
 	public String logicDelete(String news_id) throws HongZhiException {
 		// 校检
@@ -282,5 +287,42 @@ public class NewsService {
 			throw new HongZhiException("1033");
 		}
 
+	}
+
+	public Object miPush(SessionProperty properties, PushRecord pushRecord) throws HongZhiException {
+
+		pushRecord.Vnews_title();
+
+		Map<String, String> date_map = DateUtil.getWeekDay(null);
+
+		pushRecord.setMonday_date(date_map.get("monday_date"));
+		pushRecord.setSundays_date(date_map.get("sundays_date"));
+		pushRecord.setUser_id(properties.getUser_id());
+		pushRecord.setNews_type("0");
+
+		Map<String, Object> map = newsDao.selectPushRecord(pushRecord);
+
+		map.get("weeks");
+		map.get("days");
+		//一周次数三次
+		int effective_weeks = Integer.valueOf(dictionaryUtil.getCodeValue("effective_weeks", "data_alias", "zh"));
+
+		//一天次数一次
+		int effective_days = Integer.valueOf(dictionaryUtil.getCodeValue("effective_days", "data_alias", "zh"));
+
+		if (effective_days > Integer.valueOf(map.get("days").toString()) && effective_weeks > Integer.valueOf(map.get("weeks").toString())) { //可以发
+
+			newsDao.savePushRecord(pushRecord);
+
+			String url = "/v5/news/detail.htmls?news_id=" + pushRecord.getNews_id();
+
+			miPushService.broadcast(pushRecord.getNews_title(), url, String.valueOf(MessageType.NEWS));
+
+		} else if (effective_days <= Integer.valueOf(map.get("days").toString()) || effective_weeks <= Integer.valueOf(map.get("weeks").toString())) {
+
+			throw new HongZhiException("1083");
+		}
+
+		return null;
 	}
 }

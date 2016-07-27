@@ -262,5 +262,26 @@
 	
 	
 	</select>
-	
+	<select id="selectPushRecord" resultType="map">
+		SELECT
+			c.weeks as weeks
+			,d.days as days
+		from
+			(SELECT COUNT(1) as weeks   FROM push_record a where  a.type =#{news_type} and a.user_id = #{user_id} and DATE_FORMAT(a.create_time,'%Y-%m-%d') between CAST(#{monday_date}  AS DATE)
+			and  CAST(#{sundays_date} AS DATE) ) c
+			,(SELECT COUNT(1) as days from push_record b where  b.type =#{news_type}  and b.user_id = #{user_id} and  DATE_FORMAT(b.create_time,'%Y-%m-%d') = DATE_FORMAT(NOW(),'%Y-%m-%d'))d
+	</select>
+
+	<insert id="savePushRecord">
+		insert into
+			push_record(
+				user_id
+		   		,type
+		)
+		values
+		(
+		   		#{user_id }
+		  		,'0'
+		)
+	</insert>
 </mapper>
