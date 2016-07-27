@@ -25,6 +25,7 @@ public class AppEventController {
     @Autowired
     private EventService eventService;
 
+    // event list
     @ResponseBody
     @RequestMapping(value = "/list")
     public String list(HttpSession session, String session_id,Integer club_id, @PathVariable String version){
@@ -36,13 +37,17 @@ public class AppEventController {
                     property = sess.sessionEffective(session,session_id,"/v1.4/event/list");
                     return ObjectUtil.jsonOut( eventService.events(club_id) );
                 default:
-                    return "hello";
+                    return "404";
             }
         }catch (HongZhiException e){
             return ObjectUtil.jsonOutError(e.getCode(), dic.getCodeValue(e.getCode(), language ) );
         }
     }
 
+
+    // create event
+
+    // event join
 
 
 

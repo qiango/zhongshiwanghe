@@ -9,10 +9,9 @@ import java.util.HashMap;
 public enum EventStatus {
 
      UNDER_REVIEW(0)
-    ,PREPARE(1)
-    ,REGISTRATION(2)
-    ,PROCESSING(3)
-    ,OVER(4);
+    ,NORMAL(1)
+    ,FAIL_REVIEW(2)
+    ,OVER(3);
 
     private int value;
 

@@ -42,17 +42,11 @@ public class DictionaryUtil {
         }
     }
 
-    public String getValue(String... param) {
+    public String getValue(String code,String p_code ,String language){
         if (ObjectUtil.isEmpty(dics) || dics.size() == 0) {
             init();
         }
-        String key = "";
-        for (int i = 0; i < param.length; i++) {
-            key += param[i] ;
-            if (i != ( param.length - 1 ) ) {
-                key += "_" ;
-            }
-        }
+        String key = code+"_"+p_code+"_"+language;
         return dics.get(key);
     }
 	
