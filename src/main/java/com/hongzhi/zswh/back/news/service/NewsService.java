@@ -289,9 +289,18 @@ public class NewsService {
 
 	}
 
+	/**
+	 * 资讯推送频率
+	 *
+	 * @param properties
+	 * @param pushRecord
+	 * @return
+	 * @throws HongZhiException
+	 */
 	public Object miPush(SessionProperty properties, PushRecord pushRecord) throws HongZhiException {
 
 		pushRecord.Vnews_title();
+		pushRecord.Vnews_id();
 
 		Map<String, String> date_map = DateUtil.getWeekDay(null);
 
@@ -302,12 +311,10 @@ public class NewsService {
 
 		Map<String, Object> map = newsDao.selectPushRecord(pushRecord);
 
-		map.get("weeks");
-		map.get("days");
-		//一周次数三次
+		//一周上限次数
 		int effective_weeks = Integer.valueOf(dictionaryUtil.getCodeValue("effective_weeks", "data_alias", "zh"));
 
-		//一天次数一次
+		//一天上限次数
 		int effective_days = Integer.valueOf(dictionaryUtil.getCodeValue("effective_days", "data_alias", "zh"));
 
 		if (effective_days > Integer.valueOf(map.get("days").toString()) && effective_weeks > Integer.valueOf(map.get("weeks").toString())) { //可以发
@@ -320,7 +327,7 @@ public class NewsService {
 
 		} else if (effective_days <= Integer.valueOf(map.get("days").toString()) || effective_weeks <= Integer.valueOf(map.get("weeks").toString())) {
 
-			throw new HongZhiException("1083");
+			throw new HongZhiException("1084");
 		}
 
 		return null;
