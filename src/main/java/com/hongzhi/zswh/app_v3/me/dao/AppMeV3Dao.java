@@ -62,5 +62,5 @@ public interface AppMeV3Dao {
 	 * @author Saxon
 	 * @date 2016年5月8日
 	 */
-	List<FollowingEntity> findFollowUserInfoById(@Param("follow_user_id") Integer follow_user_id);
+	List<String> findFollowUserInfoById(@Param("follow_user_id") Integer follow_user_id);
 }

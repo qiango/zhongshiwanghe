@@ -452,7 +452,7 @@
         where
           is_delete = '0'
         and
-          a.club_status ='99'
+          a.club_status in ('99','2')
         order by
         convert(a.club_name USING gbk) COLLATE gbk_chinese_ci
     </select>
@@ -497,7 +497,7 @@
         where
           is_delete = '0'
         and
-          a.club_status ='99'
+          a.club_status in ('99','2')
         and
           a.id = #{city_id}
         order by
@@ -508,6 +508,7 @@
         date_format(a.club_create_time,'%Y-%m-%d') as club_create_time
         ,a.club_id as club_id
         ,a.club_status as club_status
+        ,coalesce(a.reminder_mark,'0') as reminder_mark
       from
         club a
       where
@@ -517,13 +518,101 @@
 
     </select>
     <update id="updateClubStatus">
-        update
-          club a
-        set
-          a.club_status = '3'
+        <foreach collection ="club_id" item="item" index= "index" separator=",">
+            update
+                club a
+            set
+                a.club_status = '3'
+            where
+                a.club_id = #{item}
+            and
+                a.is_delete = 0
+        </foreach>
+
+    </update>
+
+    <select id="selectClubMembersByClubId" resultType="Integer">
+        select
+            user_id
+        from
+            user_detail
         where
-          a.club_id = #{club_id}
-        and
-          a.is_delete = 0
+            club_id in (
+        <foreach collection ="clubId" item="item" index= "index" separator=",">
+            #{item}
+        </foreach>
+            )
+    </select>
+    <select id="queryClub" resultType="com.hongzhi.zswh.app_1_3.entity.UserDetailEntity">
+       SELECT
+          club_id,
+          user_id,
+          jump_club_number,
+          join_club_status,
+          user_level,
+          create_time,
+          change_status_time,
+          club_refuse_id
+        FROM
+          user_detail
+        where
+             user_id in (
+        <foreach collection ="multipleReceiver" item="item" index= "index" separator=",">
+            #{item}
+        </foreach>
+        )
+
+    </select>
+    <insert id="insetIntoUserDetail" parameterType="com.hongzhi.zswh.app_1_3.entity.UserDetailEntity">
+        INSERT INTO user_detail_bak(
+        `club_id`,`user_id`,
+        `jump_club_number`,
+        `join_club_status`,
+        `user_level`,
+        `create_time`,
+        `change_status_time`,
+        `club_refuse_id`,
+        `create_time_bak`
+        ) VALUE
+        <foreach collection ="detailList" item="item" index= "index" separator=",">
+        (
+        #{item.club_id},
+        #{item.user_id},
+        #{item.jump_club_number},
+        #{item.join_club_status},
+        #{item.user_level},
+        #{item.create_time},
+        #{item.change_status_time},
+        #{item.club_refuse_id},
+        NOW()
+        )
+        </foreach>
+
+    </insert>
+
+    <delete id="clubUnbuild">
+        DELETE
+        FROM
+          user_detail
+        WHERE
+          user_id in (
+        <foreach collection ="reciver" item="item" index= "index" separator=",">
+          #{item}
+        </foreach>
+        )
+    </delete>
+
+    <update id="updateClubReminderMark">
+        <foreach collection ="reminder" item="item" index= "index" separator=",">
+            update
+              club a
+            set
+              a.reminder_mark = '1'
+            where
+              a.club_id = #{item}
+            and
+              a.is_delete = 0
+        </foreach>
+
     </update>
 </mapper>

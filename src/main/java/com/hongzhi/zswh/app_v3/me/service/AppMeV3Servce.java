@@ -32,8 +32,13 @@ public class AppMeV3Servce {
 	
 	@Autowired
 	private NotificationUserStateDao notificationUserStateDao;
-	
-	/**   Twitter : @taylorwang789 
+
+    @Autowired
+    private NotificationService notiSender;
+    @Autowired
+    private DictionaryUtil dictionaryUtil;
+
+    /**   Twitter : @taylorwang789
 	 * Creat time : Apr 7, 2016    6:40:10 PM
 	 * @param properties
 	 * @return
@@ -76,22 +81,16 @@ public class AppMeV3Servce {
 	public Object follow(SessionProperty properties, String follow_user_id) throws HongZhiException {
 		int insert_count = appMeDao.follow(Integer.parseInt(follow_user_id),Integer.parseInt(properties.getUser_id()));
 		if(insert_count==1){
-			/**
-			 * @author Saxon 
-			 * add notification
-			 * date time:20160508
-			 * */
-			List<FollowingEntity> list = appMeDao.findFollowUserInfoById(Integer.parseInt(properties.getUser_id()));
-			
-			NotificationEntity notificationEntity = new NotificationEntity();
-			notificationEntity.setNoti_from(1);
-			notificationEntity.setNoti_to(Integer.parseInt(follow_user_id));
-			notificationEntity.setNoti_category("1");
-			notificationEntity.setNotification_body(list.get(0).getUser_name() + "关注了您。");
-			
-			notificationUserStateDao.saveNewNoti(notificationEntity);
-			return "success";
-		}else{
+
+			List<String> list = appMeDao.findFollowUserInfoById(Integer.parseInt(properties.getUser_id()));
+
+            System.out.println("before send notification");
+            if (!ObjectUtil.isEmpty(list) && list.size()>0) {
+                System.out.println("send notification"+list.get(0));
+                notiSender.sendNoti(Integer.parseInt(properties.getUser_id()), null , Integer.valueOf(follow_user_id) , "1", list.get(0)+dictionaryUtil.getCodeValue("follow", "data_alias", properties.getLanguage()) );
+            }
+            return "success";
+		} else {
 			throw new HongZhiException("1041");
 		}
 	}

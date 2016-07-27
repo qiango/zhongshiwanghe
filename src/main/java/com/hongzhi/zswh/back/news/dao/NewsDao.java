@@ -3,6 +3,7 @@ package com.hongzhi.zswh.back.news.dao;
 import com.hongzhi.zswh.back.news.entity.NewsImageEntity;
 import com.hongzhi.zswh.back.news.entity.NewsParam;
 import com.hongzhi.zswh.back.news.entity.NewsRangeEntity;
+import com.hongzhi.zswh.back.news.entity.PushRecord;
 import com.hongzhi.zswh.util.page.PageModel;
 import org.apache.ibatis.annotations.Param;
 
@@ -84,4 +85,8 @@ public interface NewsDao {
 
 
     List<NewsParam>  listNewsByPage(@Param("pageModel")PageModel pageModel,@Param("max") int max);
+
+    Map<String,Object> selectPushRecord(PushRecord pushRecord);
+
+    void savePushRecord(PushRecord pushRecord);
 }

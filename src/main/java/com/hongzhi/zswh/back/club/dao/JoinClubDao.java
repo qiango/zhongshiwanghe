@@ -42,4 +42,8 @@ public interface JoinClubDao {
 	List<Integer> selectClubMembers(String club_id);
 
 	void updateClubStatusByClubId(String club_id);
+
+	Map<String,Object> queryUserInfoByUserId(String user_id);
+
+	List<Integer> queryClubAdmin(String club_id);
 }

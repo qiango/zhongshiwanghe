@@ -3,7 +3,8 @@
 <mapper namespace="com.hongzhi.zswh.app_v5.dao.V5NewsDao">
     
     <select id="latestNewsList" resultType="com.hongzhi.zswh.app_v5.entity.V5LatestNewsEntity">
-        select 
+        select
+           DISTINCT
             a.news_id
            ,coalesce(a.news_type    ,'')  as  news_type
            ,coalesce(a.news_title   ,'')  as  news_title

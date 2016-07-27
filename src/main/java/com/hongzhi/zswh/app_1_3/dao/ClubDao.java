@@ -3,6 +3,7 @@ package com.hongzhi.zswh.app_1_3.dao;
 
 import com.hongzhi.zswh.app_1_3.entity.Club;
 import com.hongzhi.zswh.app_1_3.entity.ClubQueryEntity;
+import com.hongzhi.zswh.app_1_3.entity.UserDetailEntity;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
@@ -47,5 +48,19 @@ public interface ClubDao {
     List<Map<String, Object>>  selectClub();
 
 
-    void updateClubStatus(String club_id);
+   // void updateClubStatus(String club_id);
+
+   // List<Integer> selectClubMembersByClubId(String club_id);
+
+    List<UserDetailEntity> queryClub(@Param("multipleReceiver") List<Integer> multiple_receiver);
+
+    void insetIntoUserDetail(@Param("detailList") List<UserDetailEntity> user_detail_list);
+
+    void clubUnbuild(@Param("reciver") List<Integer> multiple_receiver);
+
+    void updateClubStatus(@Param("club_id") List<Integer> club_id_list);
+
+    List<Integer> selectClubMembersByClubId(@Param("clubId") List<Integer> club_id_list);
+
+    void updateClubReminderMark(@Param("reminder") List<Integer> club_id_reminder_list);
 }

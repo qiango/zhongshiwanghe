@@ -31,11 +31,13 @@
 			end,
 			' '
 		) as competition_status,
-		ifnull(
-			a.competition_publicity_pictures,
-			''
-		) as competition_publicity_pictures,
-		ifnull(a.registration_start_date, '') as registration_start_date,
+
+    case when  substr(ifnull(a.competition_publicity_pictures, '' ),2,6) = 'upload'
+         then  ifnull(a.competition_publicity_pictures, '' )
+         else  concat('/pic.htmls?p=',a.competition_publicity_pictures)
+         end
+               as competition_publicity_pictures ,
+    ifnull(a.registration_start_date, '') as registration_start_date,
 		ifnull(a.registration_end_date, '') as registration_end_date,
 		ifnull(a.competition_start_date, '') as competition_start_date,
 		ifnull(a.competition_end_date, '') as competition_end_date,

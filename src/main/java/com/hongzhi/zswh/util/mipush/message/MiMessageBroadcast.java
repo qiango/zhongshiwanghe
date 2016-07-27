@@ -20,77 +20,52 @@ import java.util.List;
  * Created by taylor on 7/20/16.
  * twitter: @taylorwang789
  */
-public class MiMessage {
+public class MiMessageBroadcast {
 
-
-    private List<AppRegid> regidList  = new ArrayList<>();
 
     private String msgContent="";
 
-    private String iOS = "1";
-
-    private String android = "2";
-
     private String messageType = "";
 
-    public MiMessage(MessageType messageType) {
+    private String msgUrl = "";
+
+    public MiMessageBroadcast(MessageType messageType) {
         this.messageType = messageType.toString();
     }
 
-    public void sendMessage(String content , List<AppRegid> regids){
+    public MiMessageBroadcast(String messageType) {
+        this.messageType = messageType ;
+    }
+
+    public void sendMessage(String content ,String url){
         msgContent = content;
-        regidList = regids;
-        if (!ObjectUtil.isEmpty(regidList) && regidList.size()>0) {
-            send();
-        }
+        msgUrl = url;
+        send();
     }
 
     public void send() {
-        List<String> regids_iOS = new ArrayList<>();
-        List<Integer> regids_iOS_badge = new ArrayList<>();
-        List<String> regids_Android = new ArrayList<>();
-
-        for (int i = 0; i < regidList.size(); i++) {
-            if(regidList.get(i).getApp_type().equals(iOS)){
-                regids_iOS.add(regidList.get(i).getRegid());
-                regids_iOS_badge.add((Integer) ObjectUtil.getProperty(regidList.get(i).getNoti_count(),0));
-            }
-            if(regidList.get(i).getApp_type().equals(android)){
-                regids_Android.add(regidList.get(i).getRegid());
-            }
-        }
-        if (!ObjectUtil.isEmpty(regids_iOS) && regids_iOS.size()>0) {
-            sendiOS(regids_iOS, regids_iOS_badge );
-        }
-        if (!ObjectUtil.isEmpty(regids_Android) && regids_Android.size() > 0 ) {
-            sendAndroid(regids_Android);
-        }
+        sendIOS();
+        sendAndroid();
     }
 
 
-    private void sendiOS(List<String> regids, List<Integer> regids_iOS_badge){
-        for (int i = 0; i < regids.size() ; i++) {
-            sendiOS(regids.get(i), (Integer) ObjectUtil.getProperty(regids_iOS_badge.get(i),0));
-        }
-    }
 
-
-    private void sendiOS(String regids,Integer regids_iOS_badge){
+    private void sendIOS(){
         Constants.useOfficial();
         Message message = new Message.IOSBuilder()
                 .description(msgContent)
                 .soundURL("default")
-                .badge(regids_iOS_badge)
+//                .badge(1)
                 .category("action")
                 .extra("pushType", String.valueOf(ObjectUtil.coalesce(messageType)))
-                .extra("content","")
+                .extra("content",ObjectUtil.coalesce(msgUrl,"").toString())
                 .build();
 
         Sender sender = new Sender(MiPushConfig.appSecret(DEVICE.iOS));
         try {
-            Result result =  sender.send(message,regids,0);
+            Result result =  sender.broadcastAll(message,0);
             ErrorCode ec = result.getErrorCode();
-            System.out.println("iOS:"+regids+":"+ec.getDescription());
+            System.out.println("iOS broadcast:"+ec.getDescription());
         } catch (IOException e) {
             e.printStackTrace();
         } catch (ParseException e) {
@@ -98,7 +73,7 @@ public class MiMessage {
         }
     }
 
-    private void sendAndroid(List<String> regids){
+    private void sendAndroid(){
         Constants.useOfficial();
         Message message = new Message.Builder()
                 .title("ChengJuBei")
@@ -106,15 +81,15 @@ public class MiMessage {
                 .restrictedPackageName("com.chengjubei.activity")
                 .notifyType(1)     // 使用默认提示音提示
                 .extra("pushType", String.valueOf(ObjectUtil.coalesce(messageType)))
-                .extra("content","")
+                .extra("content",ObjectUtil.coalesce(msgUrl,"").toString())
                 .extra(Constants.EXTRA_PARAM_NOTIFY_FOREGROUND, "0")
                 .build();
 
         Sender sender = new Sender(MiPushConfig.appSecret(DEVICE.Android));
         try {
-            Result result = sender.send(message, regids, 0);
+            Result result = sender.broadcastAll(message,0);
             ErrorCode ec = result.getErrorCode();
-            System.out.println("Android:"+ec.getDescription());
+            System.out.println("Android broadcast:"+ec.getDescription());
         } catch (IOException e) {
             e.printStackTrace();
         } catch (ParseException e) {

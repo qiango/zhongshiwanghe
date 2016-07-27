@@ -68,7 +68,7 @@
 			tds += "<td>"+data[i].weights_order+"</td>";
 			tds += "<td>"+data[i].create_time+"</td>";
 			tds += "<td>"+data[i].news_status_name+"</td>";
-			tds += "<td class='text-ellipsis'><a href='#/news/modify' edit_id='"+data[i].news_id+"' class='fa fa-pencil-square-o v-align wj_edit_data' title='编辑'></a><a href='javascript:void(0);' delete_id='"+data[i].news_id+"' delete_path='/news/delete.htmls?news_id="+ data[i].news_id +"' back_path='/news/index' class='fa fa-trash-o wj_delete_data' title='删除'></a></td>";
+			tds += "<td class='text-ellipsis'><a href='#/news/modify' edit_id='"+data[i].news_id+"' class='fa fa-pencil-square-o v-align wj_edit_data' title='编辑'></a><a href='javascript:void(0);' delete_id='"+data[i].news_id+"' delete_path='/news/delete.htmls?news_id="+ data[i].news_id +"' back_path='/news/index' class='fa fa-trash-o wj_delete_data' title='删除'></a><a href='javascript:void(0);'  data-path='/news/miPush.htmls?news_title="+ data[i].news_title +"' class='fa fa-gavel v-align push-btn' title='推送'></a></td>";
 		//	tds += "<td class='text-ellipsis'><a href='#/news/modify' edit_id='"+data[i].news_id+"' class='fa fa-pencil-square-o v-align wj_edit_data' title='编辑'></a><a href='javascript:void(0);' delete_id='"+data[i].news_id+"' delete_path='/news/delete.htmls?news_id="+ data[i].news_id +"' back_path='/news/index' class='fa fa-trash-o wj_delete_data' title='删除'></a><a href='#' detail_path='"+ url +"/news/index.htmls?news_id="+ data[i].news_id +"' class='fa fa-eye wj_view_data' title='资讯详情'></a></td>";
 			tds +='</tr>';
 			trs +=tds;
@@ -76,5 +76,11 @@
 		$('table.table-align tbody').html(trs);
 		ns.ellipsis('.wj-title');
 	}
-	
+	$('table').on('click','.push-btn',function(){
+		$.get(url + $(this).attr('data-path'))
+				.done(function(data){
+					data.code == 0 && !alert('推送成功') || alert(data.message);
+				})
+				.fail(internal_error);
+	});
 	</script>

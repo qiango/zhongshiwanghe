@@ -2,6 +2,7 @@ package com.hongzhi.zswh.app_controller;
 
 import com.hongzhi.zswh.app_1_3.entity.MiPushRegid;
 import com.hongzhi.zswh.app_1_3.service.MiPushService;
+import com.hongzhi.zswh.app_1_4.service.VoteService;
 import com.hongzhi.zswh.util.basic.DictionaryUtil;
 import com.hongzhi.zswh.util.basic.ObjectUtil;
 import com.hongzhi.zswh.util.basic.SessionUtil;
@@ -22,69 +23,73 @@ import javax.servlet.http.HttpSession;
  * Time: 10:03
  * To change this template use File | Settings | File Templates.
  */
-@Controller("app_mipush_controller")
-@RequestMapping("/{version}/mi_push")
-public class AppMiPushController {
+@Controller("app_vote_controller")
+@RequestMapping("/{version}/vote")
+public class AppVoteController {
 
     @Autowired
     private SessionUtil sess;
     @Autowired
     private DictionaryUtil dic;
     @Autowired
-    private MiPushService miPushService;
-    @ResponseBody
-    @RequestMapping(value = "/regid")
-    public String saveRegid(HttpSession session, String session_id, MiPushRegid miPushRegid, @PathVariable String version) {
+    private VoteService voteService;
 
-        SessionProperty property;
-        String language = "zh";
-        try {
-            switch (version){
-                case "v1.3":
-                    property = sess.sessionEffective(session,session_id,"/v1.3/mi_push/regid");
-                    miPushRegid.setUser_id(property.getUser_id());
-                    return ObjectUtil.jsonOut(miPushService.saveRegid(miPushRegid));
-                default:
-                    return null;
-            }
-        }catch (HongZhiException e){
-            return ObjectUtil.jsonOutError(e.getCode(), dic.getCodeValue(e.getCode(), language ) );
-        }
-    }
     @ResponseBody
-    @RequestMapping(value = "/cancel_regid")
-    public String cancelRegid(HttpSession session, String session_id, MiPushRegid miPushRegid, @PathVariable String version){
+    @RequestMapping(value = "/list")
+    public String list(HttpSession session, String session_id,Integer vote_id, @PathVariable String version){
         SessionProperty property;
         String language = "zh";
         try{
             switch (version){
-                case "v1.3":
-                    property = sess.sessionEffective(session,session_id,"/v1.3/mi_push/cance_regid");
-                    return ObjectUtil.jsonOut(miPushService.cancelRegid(miPushRegid));
+                case "v1.4":
+                    property = sess.sessionEffective(session,session_id,"/v1.4/vote/list");
+                    return ObjectUtil.jsonOutDT( voteService.votes(vote_id) , property.getLanguage());
                 default:
-                    return null;
+                    return "hello";
             }
         }catch (HongZhiException e){
             return ObjectUtil.jsonOutError(e.getCode(), dic.getCodeValue(e.getCode(), language ) );
         }
     }
 
+
     @ResponseBody
-    @RequestMapping(value = "/broadcast")
-    public String broadcast(HttpSession session , String session_id , String message_title, String message_url ,String message_type, @PathVariable String version ) {
+    @RequestMapping(value = "/items")
+    public String item(HttpSession session, String session_id,Integer vote_id,Integer page_number,Integer page_size, @PathVariable String version){
         SessionProperty property;
         String language = "zh";
         try{
             switch (version){
-                case "v1.3":
-                    property = sess.sessionEffective(session,session_id,"/v1.3/mi_push/broadcast");
-                    return ObjectUtil.jsonOut(miPushService.broadcast(message_title,message_url,message_type));
+                case "v1.4":
+                    property = sess.sessionEffective(session,session_id,"/v1.4/vote/item");
+                    return ObjectUtil.jsonOutDT( voteService.items(vote_id,Integer.valueOf(ObjectUtil.coalesce(page_number,1).toString()),Integer.valueOf(ObjectUtil.coalesce(page_size,20).toString())) , property.getLanguage());
                 default:
-                    return null;
+                    return "hello";
             }
         }catch (HongZhiException e){
             return ObjectUtil.jsonOutError(e.getCode(), dic.getCodeValue(e.getCode(), language ) );
         }
     }
+
+    @ResponseBody
+    @RequestMapping(value = "/vote")
+    public String vote(HttpSession session, String session_id,Integer vote_id,Integer item_id, @PathVariable String version){
+        SessionProperty property;
+        String language = "zh";
+        try{
+            switch (version){
+                case "v1.4":
+                    property = sess.sessionEffective(session,session_id,"/v1.4/vote/item");
+                    return ObjectUtil.jsonOutDT( voteService.vote(property,vote_id,item_id ) , property.getLanguage());
+                default:
+                    return "hello";
+            }
+        }catch (HongZhiException e){
+            return ObjectUtil.jsonOutError(e.getCode(), dic.getCodeValue(e.getCode(), language ) );
+        }
+    }
+
+
+
 
 }
