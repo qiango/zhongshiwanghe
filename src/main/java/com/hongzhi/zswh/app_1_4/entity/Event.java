@@ -23,6 +23,8 @@ public class Event {
     private String image ;
     private Integer event_status ;
     private String event_status_code ;
+    private Integer view_guests;
+    private String view_guests_code;
 
     public Integer getEvent_id() {
         return event_id;
@@ -143,5 +145,22 @@ public class Event {
 
     public void setEvent_status_code(String event_status_code) {
         this.event_status_code = event_status_code;
+    }
+
+    public Integer getView_guests() {
+        return view_guests;
+    }
+
+    public void setView_guests(Integer view_guests) {
+        this.view_guests = view_guests;
+        this.view_guests_code = EventViewGuests.getEventViewGuests(view_guests).name();
+    }
+
+    public String getView_guests_code() {
+        return view_guests_code;
+    }
+
+    public void setView_guests_code(String view_guests_code) {
+        this.view_guests_code = view_guests_code;
     }
 }

@@ -6,6 +6,7 @@ import java.util.Map;
 
 import javax.servlet.http.HttpSession;
 
+import com.hongzhi.zswh.util.basic.dictionaryDao.DictionaryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
@@ -24,18 +25,50 @@ public class DictionaryUtil {
 	
 	@Autowired
 	private SessionUtil sessionUtil;
+
+    @Autowired
+    private DictionaryService dicService;
+
+    public static Map<String,String>  dics  = new HashMap<>();
+
+
+    public void init() {
+        List<Dictionary> dictionaries = dicService.dictionaries();
+
+        dics.clear();
+
+        for (Dictionary dic : dictionaries) {
+            dics.put(dic.getCode()+"_"+dic.getP_code()+"_"+dic.getLanguage(),dic.getValue() );
+        }
+    }
+
+    public String getValue(String... param) {
+        if (ObjectUtil.isEmpty(dics) || dics.size() == 0) {
+            init();
+        }
+        String key = "";
+        for (int i = 0; i < param.length; i++) {
+            key += param[i] ;
+            if (i != ( param.length - 1 ) ) {
+                key += "_" ;
+            }
+        }
+        return dics.get(key);
+    }
 	
 	public String getCodeValue(String code,String language){
 		if(ObjectUtil.isEmpty(language)){
 			language="zh";
 		}
-		Dictionary dictionary=dictionaryDao.selectByCodeAndLanguage(code, language,"return_info");
-		return ObjectUtil.getProperty(dictionary, dictionary.getValue(),"").toString();
+//		Dictionary dictionary=dictionaryDao.selectByCodeAndLanguage(code, language,"return_info");
+//		return ObjectUtil.getProperty(dictionary, dictionary.getValue(),"").toString();
+        return getValue(code,"return_info",language);
 	}
 	
 	public String getCodeValue(String code,String p_code ,String language){
-		Dictionary dictionary=dictionaryDao.selectByCodeAndLanguage(code, language,p_code);
-		return ObjectUtil.getProperty(dictionary, dictionary.getValue(),"").toString();
+//		Dictionary dictionary=dictionaryDao.selectByCodeAndLanguage(code, language,p_code);
+//		return ObjectUtil.getProperty(dictionary, dictionary.getValue(),"").toString();
+        return getValue(code,p_code,language);
 	}
 	
 	public void verifyData(boolean cond, String code) throws HongZhiException {
