@@ -16,6 +16,7 @@ public class EventService {
 
 
     public Object events(Integer club_id) {
+
         return  null;
     }
 }
