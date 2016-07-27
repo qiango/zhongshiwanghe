@@ -13,8 +13,8 @@ public class Vote {
     private String image;
     private Timestamp start_time ;
     private Timestamp end_time ;
-    private String status ;
-    private Integer index ;
+    private Integer vote_status ;
+    private Integer vote_index ;
 
     public Integer getVote_id() {
         return vote_id;
@@ -48,14 +48,6 @@ public class Vote {
         this.end_time = end_time;
     }
 
-    public String getStatus() {
-        return status;
-    }
-
-    public void setStatus(String status) {
-        this.status = status;
-    }
-
     public String getImage() {
         return image;
     }
@@ -64,11 +56,19 @@ public class Vote {
         this.image = image;
     }
 
-    public Integer getIndex() {
-        return index;
+    public Integer getVote_status() {
+        return vote_status;
     }
 
-    public void setIndex(Integer index) {
-        this.index = index;
+    public void setVote_status(Integer vote_status) {
+        this.vote_status = vote_status;
+    }
+
+    public Integer getVote_index() {
+        return vote_index;
+    }
+
+    public void setVote_index(Integer vote_index) {
+        this.vote_index = vote_index;
     }
 }

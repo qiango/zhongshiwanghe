@@ -12,15 +12,15 @@
         ,image
         ,start_time
         ,end_time
-        ,status
-        ,index
+        ,vote_status
+        ,vote_index
     from vote
     <where>
         <if test=" voteID != null and voteID !='' ">
-            and vote_id = #{voteID}
+            vote_id = #{voteID}
         </if>
         <if test=" statuses.size() > 0 " >
-            and status in (
+            and vote_status in (
             <foreach collection="statuses" item="stat" separator="," >
                 #{stat}
             </foreach>
@@ -29,5 +29,73 @@
     </where>
     </select>
 
+<!--
+    List<Item> items(@Param("voteID") Integer vote_id,@Param("startRow") Integer start_row,@Param("pageSize") Integer page_size);
+    -->
+    <select id="items" resultType="com.hongzhi.zswh.app_1_4.entity.Item" >
+    SELECT
+        item_id
+       ,vote_id
+       ,`name`
+       ,image
+       ,`describe`
+       ,votes
+    from vote_item
+    where vote_id = #{voteID}
+    order by `index` , vote_id
+    limit #{startRow},#{pageSize}
+    </select>
+
+
+    <select id="userIds" resultType="Integer" >
+        (select
+            b.user_id
+          from vote_range a,user_info b
+          where a.range_type = 0
+          and a.vote_id = #{voteID}
+        )
+        union all
+        (select
+            b.user_id
+          from vote_range a
+          left join user_competition b
+           on a.circle_id = b.competition_id
+           and b.user_id = #{userID}
+          where a.range_type = 1
+          and a.vote_id = #{voteID}
+        )
+        union all
+        (select
+            b.user_id
+          from vote_range a
+          left join user_detail b
+           on a.circle_id = b.club_id
+           and b.user_id = #{userID}
+          where a.range_type = 2
+          and a.vote_id = #{voteID}
+        )
+        union all
+        (select
+            a.circle_id as user_id
+          from vote_range a
+          where a.range_type = 3
+          and a.vote_id = #{voteID}
+        )
+    </select>
+
+
+    <select id="vote" resultType="Integer" >
+    insert into vote_result (
+       user_id
+      ,item_id
+      ,vote_id
+      ,create_time
+    ) values (
+       #{userID}
+      ,#{itemID}
+      ,#{voteID}
+      ,now()
+    )
+    </select>
 
 </mapper>
