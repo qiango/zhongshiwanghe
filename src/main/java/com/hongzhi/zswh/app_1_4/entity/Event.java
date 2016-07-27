@@ -1,5 +1,10 @@
 package com.hongzhi.zswh.app_1_4.entity;
 
+import com.hongzhi.zswh.util.basic.DictionaryUtil;
+import com.hongzhi.zswh.util.basic.ObjectUtil;
+import com.hongzhi.zswh.util.basic.dictionaryDao.Dictionary;
+import org.springframework.beans.factory.annotation.Autowired;
+
 import java.sql.Timestamp;
 
 /**
@@ -7,6 +12,9 @@ import java.sql.Timestamp;
  * twitter: @taylorwang789
  */
 public class Event {
+
+    @Autowired
+    private DictionaryUtil dictionaryUtil;
 
     private Integer event_id ;
     private String event_name ;
@@ -25,6 +33,8 @@ public class Event {
     private String event_status_code ;
     private Integer view_guests;
     private String view_guests_code;
+    private String button_show_code;
+    private String button_show_content;
 
     public Integer getEvent_id() {
         return event_id;
@@ -163,4 +173,51 @@ public class Event {
     public void setView_guests_code(String view_guests_code) {
         this.view_guests_code = view_guests_code;
     }
+
+    public String getButton_show_code() {
+        return button_show_code;
+    }
+
+    public void setButton_show_code(boolean isRegistered, Integer current_registered_people,String language ) {
+        this.button_show_code = getButtonShow(isRegistered,current_registered_people);
+        if (ObjectUtil.isEmpty(language)) {
+            language = "zh";
+        }
+        this.button_show_content = dictionaryUtil.getValue(this.button_show_code.toLowerCase(),"event_button",language);
+    }
+
+    public String getButton_show_content() {
+        return button_show_content;
+    }
+
+    public void setButton_show_content(String button_show_content) {
+        this.button_show_content = button_show_content;
+    }
+
+    private String getButtonShow(boolean isRegistered, Integer current_registered_people ){
+        long current = System.currentTimeMillis();
+
+        if ( end_time.getTime() < current) {
+            return EventButton.FINISH.name();
+        } else if ( EventStatus.getEventStatus(event_status).name().equals(EventStatus.OVER.name()) ) {
+            return EventButton.ABORT.name();
+        } else if ( isRegistered ) {
+            return EventButton.REGISTERED.name();
+        } else if ( register_end_time.getTime() < current ) {
+            return EventButton.STOP_REGISTER.name();
+        } else if ( current_registered_people >= max_people ) {
+            return EventButton.FULL.name();
+        } else if ( register_start_time.getTime() < current && register_end_time.getTime() > current ) {
+            return EventButton.I_WANNA_JOIN.name();
+        } else if ( register_start_time.getTime() > current ) {
+            return EventButton.PREPARE.name();
+        } else if ( EventStatus.getEventStatus(event_status).name().equals(EventStatus.UNDER_REVIEW.name()) ) {
+            return EventButton.UNDER_REVIEW.name();
+        } else if ( EventStatus.getEventStatus(event_status).name().equals(EventStatus.FAIL_REVIEW.name()) ) {
+            return EventButton.FAIL_REVIEW.name();
+        } else {
+            return  "";
+        }
+    }
+
 }

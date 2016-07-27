@@ -4,4 +4,15 @@
 
 
 
+    <select id="statusInfo" resultType="map" >
+    select
+         case when user_id = #{userID}
+              then 'true'
+              else 'false'
+              end as is_registered
+        ,count(1) as registered_count
+    from event_registration
+    where event_id = #{eventID}
+    </select>
+
 </mapper>

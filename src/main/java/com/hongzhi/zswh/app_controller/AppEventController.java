@@ -28,14 +28,14 @@ public class AppEventController {
     // event list
     @ResponseBody
     @RequestMapping(value = "/list")
-    public String list(HttpSession session, String session_id,Integer club_id, @PathVariable String version){
+    public String list(HttpSession session, String session_id,Integer club_id,Integer event_id, @PathVariable String version){
         SessionProperty property;
         String language = "zh";
         try{
             switch (version){
                 case "v1.4":
                     property = sess.sessionEffective(session,session_id,"/v1.4/event/list");
-                    return ObjectUtil.jsonOut( eventService.events(club_id) );
+                    return ObjectUtil.jsonOutDT( eventService.events(property,club_id,event_id) ,property.getLanguage());
                 default:
                     return "404";
             }
