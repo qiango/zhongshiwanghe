@@ -13,6 +13,13 @@ public class ExcepUtil {
 		}
 		return obj;
 	}
+
+    public static Object verify( Object obj , String code , String p_code)  throws HongZhiException {
+        if (ObjectUtil.isEmpty(obj)) {
+            throw new HongZhiException(code,p_code);
+        }
+        return obj;
+    }
 	
 	
 

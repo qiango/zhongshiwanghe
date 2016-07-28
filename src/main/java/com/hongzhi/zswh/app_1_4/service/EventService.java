@@ -2,9 +2,12 @@ package com.hongzhi.zswh.app_1_4.service;
 
 import com.hongzhi.zswh.app_1_4.dao.EventDao;
 import com.hongzhi.zswh.app_1_4.entity.Event;
+import com.hongzhi.zswh.app_1_4.entity.EventCreate;
+import com.hongzhi.zswh.app_1_4.entity.EventStatus;
 import com.hongzhi.zswh.util.basic.DictionaryUtil;
 import com.hongzhi.zswh.util.basic.ObjectUtil;
 import com.hongzhi.zswh.util.basic.sessionDao.SessionProperty;
+import com.hongzhi.zswh.util.exception.HongZhiException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -41,6 +44,52 @@ public class EventService {
         return map;
     }
 
+    public Object eventCreate(EventCreate event_create, SessionProperty property) throws HongZhiException {
+        event_create.setOrganizer_id(Integer.valueOf(property.getUser_id()));
+        event_create.verifyData();
+
+        String return_info = "";
+
+        if (property.getClub_user_level().equals("0")) {
+            event_create.setEvent_status(EventStatus.NORMAL.getValue());
+            return_info = EventStatus.NORMAL.name();
+        } else {
+            event_create.setEvent_status(EventStatus.UNDER_REVIEW.getValue());
+            return_info = EventStatus.UNDER_REVIEW.name();
+        }
+
+        eventDao.createEvent(event_create);
+
+        if (event_create.getOrganizer_join().toLowerCase().equals("true")) {
+            eventDao.organizerJoin(event_create);
+        }
+
+        Map<String,String > map = new HashMap<>() ;
+        map.put("info",return_info);
+        return  map ;
+    }
+
+
+    public Object eventReview(Integer event_id, SessionProperty property) throws HongZhiException {
+
+        List<Integer> event_ids = eventDao.eventIDs(property.getClub_id());
+
+        if (event_ids.contains(event_id)) {
+
+            int cnt = eventDao.passReview(event_id, EventStatus.NORMAL.getValue());
+
+            Map<String, String> map = new HashMap<>();
+            if (1 == cnt) {
+                map.put("status", "success");
+                return map;
+            } else {
+                throw new HongZhiException("review_fail", "event");
+            }
+        } else {
+            throw new HongZhiException("no_authority_review", "event");
+        }
+    }
+
     public Object latestEvent() {
 
         List<Event> events = eventDao.events(null, null);
@@ -48,4 +97,5 @@ public class EventService {
 
         return null;
     }
+
 }

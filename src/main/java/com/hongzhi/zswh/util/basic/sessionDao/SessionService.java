@@ -134,6 +134,8 @@ public class SessionService {
 			sessionProperty.setPlatform(attrList.get(i).get("platform").toString());
 			sessionProperty.setUser_id(attrList.get(i).get("user_id").toString());
 			sessionProperty.setUser_real_name(attrList.get(i).get("user_real_name").toString());
+            sessionProperty.setClub_id(Integer.valueOf( ObjectUtil.coalesce(attrList.get(i).get("club_id"),0).toString() ));
+            sessionProperty.setClub_user_level(attrList.get(i).get("club_user_level").toString());
 			map.put(Integer.parseInt(attrList.get(i).get("id").toString()), sessionProperty);
 		}
 		return map;

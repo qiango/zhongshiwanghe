@@ -15,6 +15,56 @@
     where event_id = #{eventID}
     </select>
 
+    <insert id="createEvent"  useGeneratedKeys="true"  keyProperty="event_id" >
+    insert into event (
+          event_name
+         ,club_id
+         ,start_time
+         ,end_time
+         ,register_start_time
+         ,register_end_time
+         ,organizer_id
+         ,event_address
+         ,min_people
+         ,max_people
+         ,fee
+         ,image
+         ,event_status
+         ,view_guests
+         ,form_item
+    ) values (
+          #{event_name}
+         ,#{club_id}
+         ,#{sql_start_time}
+         ,#{sql_end_time}
+         ,#{sql_register_start_time}
+         ,#{sql_register_end_time}
+         ,#{organizer_id}
+         ,#{event_address}
+         ,#{min_people}
+         ,#{max_people}
+         ,#{fee}
+         ,#{image}
+         ,#{event_status}
+         ,#{view_guests}
+         ,#{form_item}
+    )
+
+    </insert>
+
+    <select id="eventIDs" resultType="Integer" >
+    select
+        event_id
+    from event
+    where club_id = #{club_id}
+    </select>
+
+    <update id="passReview" >
+    update event
+      set  event_status = #{status}
+    where event_id = #{eventID}
+    </update>
+
     <select id="events" resultType="com.hongzhi.zswh.app_1_4.entity.Event">
         select
              a.event_id
