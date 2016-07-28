@@ -52,4 +52,17 @@
 
     </insert>
 
+    <select id="eventIDs" resultType="Integer" >
+    select
+        event_id
+    from event
+    where club_id = #{club_id}
+    </select>
+
+    <update id="passReview" >
+    update event
+      set  event_status = #{status}
+    where event_id = #{eventID}
+    </update>
+
 </mapper>

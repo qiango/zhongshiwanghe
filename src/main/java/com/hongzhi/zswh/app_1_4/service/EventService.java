@@ -66,7 +66,24 @@ public class EventService {
     }
 
 
-    public Object eventReview(Integer event_id, SessionProperty property) {
-        return null;
+    public Object eventReview(Integer event_id, SessionProperty property) throws HongZhiException {
+
+        List<Integer> event_ids = eventDao.eventIDs(property.getClub_id());
+
+        if (event_ids.contains(event_id)) {
+
+            int cnt = eventDao.passReview(event_id,EventStatus.NORMAL.getValue());
+
+            Map<String,String > map = new HashMap<>();
+            if ( 1 == cnt ) {
+                map.put("status","success");
+                return  map ;
+            } else {
+                throw new HongZhiException("review_fail","event");
+            }
+        } else {
+            throw new HongZhiException("no_authority_review","event");
+        }
+
     }
 }

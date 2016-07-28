@@ -19,4 +19,8 @@ public interface EventDao {
     int createEvent(EventCreate event_create);
 
     int organizerJoin(EventCreate event_create);
+
+    List<Integer> eventIDs(Integer club_id);
+
+    int passReview(@Param("eventID") Integer event_id,@Param("status") Integer status);
 }
