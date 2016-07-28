@@ -160,7 +160,7 @@ public class V3LoginService {
 						attribute_string.add("language,"+ loginParam.getLanguage() );
 						attribute_string.add("platform,"+ loginParam.getPlatform_id());
                         attribute_string.add("club_id,"+ 0);
-                        attribute_string.add("club_user_level,"+ 0 );
+                        attribute_string.add("club_user_level,"+ 99 );
 
 						int sess_id = sess.createNewSession(session.getId(), attribute_string);
 //						session.setAttribute("id", sess_id);

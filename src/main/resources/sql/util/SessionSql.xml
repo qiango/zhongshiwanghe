@@ -81,7 +81,11 @@
                ,max(case when a.key_name='language' then value_content  
                   else '' end ) as language
                ,max(case when a.key_name='platform' then value_content  
-                  else '' end ) as   platform  
+                  else '' end ) as   platform
+               ,max(case when a.key_name='club_id' then value_content
+                  else '' end ) as   club_id
+               ,max(case when a.key_name='club_user_level' then value_content
+                  else '' end ) as   club_user_level
             from session_attribute  a
           left join session_time  b 
           on a.id= b.id 

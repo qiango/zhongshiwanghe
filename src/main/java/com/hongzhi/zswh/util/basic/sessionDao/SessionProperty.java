@@ -1,6 +1,10 @@
 package com.hongzhi.zswh.util.basic.sessionDao;
 
-/**   Twitter : @taylorwang789 
+import com.hongzhi.zswh.util.basic.ObjectUtil;
+
+import java.util.Objects;
+
+/**   Twitter : @taylorwang789
  * Creat time : Apr 5, 2016    6:23:37 PM
  */
 public class SessionProperty {
@@ -47,7 +51,7 @@ public class SessionProperty {
 	}
 
     public Integer getClub_id() {
-        return club_id;
+        return Integer.valueOf(String.valueOf(ObjectUtil.coalesce(club_id,0)));
     }
 
     public void setClub_id(Integer club_id) {
@@ -55,7 +59,7 @@ public class SessionProperty {
     }
 
     public String getClub_user_level() {
-        return club_user_level;
+        return ObjectUtil.coalesce(club_user_level,"").toString();
     }
 
     public void setClub_user_level(String club_user_level) {

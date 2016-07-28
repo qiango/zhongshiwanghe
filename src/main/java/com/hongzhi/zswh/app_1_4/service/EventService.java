@@ -3,6 +3,7 @@ package com.hongzhi.zswh.app_1_4.service;
 import com.hongzhi.zswh.app_1_4.dao.EventDao;
 import com.hongzhi.zswh.app_1_4.entity.Event;
 import com.hongzhi.zswh.app_1_4.entity.EventCreate;
+import com.hongzhi.zswh.app_1_4.entity.EventStatus;
 import com.hongzhi.zswh.util.basic.ObjectUtil;
 import com.hongzhi.zswh.util.basic.sessionDao.SessionProperty;
 import com.hongzhi.zswh.util.exception.HongZhiException;
@@ -43,13 +44,23 @@ public class EventService {
         event_create.setOrganizer_id(Integer.valueOf(property.getUser_id()));
         event_create.verifyData();
 
+        String return_info = "";
+
+        if (property.getClub_user_level().equals("0")) {
+            event_create.setEvent_status(EventStatus.NORMAL.getValue());
+            return_info = EventStatus.NORMAL.name();
+        } else {
+            event_create.setEvent_status(EventStatus.UNDER_REVIEW.getValue());
+            return_info = EventStatus.UNDER_REVIEW.name();
+        }
+
         eventDao.createEvent(event_create);
 
         if (event_create.getOrganizer_join().toLowerCase().equals("true")) {
             eventDao.organizerJoin(event_create);
         }
 
-        return  "";
+        return  return_info;
     }
 
 
