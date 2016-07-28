@@ -60,7 +60,9 @@ public class EventService {
             eventDao.organizerJoin(event_create);
         }
 
-        return  return_info;
+        Map<String,String > map = new HashMap<>() ;
+        map.put("info",return_info);
+        return  map ;
     }
 
 

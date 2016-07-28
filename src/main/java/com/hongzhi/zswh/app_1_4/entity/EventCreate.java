@@ -35,7 +35,6 @@ public class EventCreate {
     private Integer event_status ;
     private Integer view_guests;
     private String organizer_join;
-    private String register_form_item ;
     private String event_detail ;
     private String event_notice ;
     private String form_item;
@@ -49,7 +48,7 @@ public class EventCreate {
         ExcepUtil.verify(event_name,"event_name_null",dic_p_code);
         ExcepUtil.verify(organizer_id,"organizer_id_null",dic_p_code);
         ExcepUtil.verify(view_guests,"view_guests_null",dic_p_code);
-        ExcepUtil.verify(register_form_item,"form_item_null",dic_p_code);
+        ExcepUtil.verify(form_item,"form_item_null",dic_p_code);
         ExcepUtil.verify(event_address,"event_address_null",dic_p_code);
         ExcepUtil.verify(club_id,"club_id_null",dic_p_code);
         ExcepUtil.verify(organizer_join,"organizer_join_null",dic_p_code);
@@ -59,7 +58,7 @@ public class EventCreate {
         ExcepUtil.verify(register_start_time,"register_start_null",dic_p_code);
         ExcepUtil.verify(register_end_time,"register_end_null",dic_p_code);
 
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm");
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm");
         try {
             sql_start_time = new Timestamp(simpleDateFormat.parse(start_time).getTime());
             sql_end_time = new Timestamp(simpleDateFormat.parse(end_time).getTime());
@@ -231,14 +230,6 @@ public class EventCreate {
 
     public void setOrganizer_join(String organizer_join) {
         this.organizer_join = organizer_join;
-    }
-
-    public String getRegister_form_item() {
-        return register_form_item;
-    }
-
-    public void setRegister_form_item(String register_form_item) {
-        this.register_form_item = register_form_item;
     }
 
     public String getEvent_detail() {
