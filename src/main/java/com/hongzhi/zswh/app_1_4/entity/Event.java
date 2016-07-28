@@ -1,8 +1,6 @@
 package com.hongzhi.zswh.app_1_4.entity;
 
 import com.hongzhi.zswh.util.basic.DictionaryUtil;
-import com.hongzhi.zswh.util.basic.ObjectUtil;
-import com.hongzhi.zswh.util.basic.dictionaryDao.Dictionary;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.sql.Timestamp;
@@ -180,10 +178,10 @@ public class Event {
 
     public void setButton_show_code(boolean isRegistered, Integer current_registered_people,String language ) {
         this.button_show_code = getButtonShow(isRegistered,current_registered_people);
-        if (ObjectUtil.isEmpty(language)) {
+       /* if (ObjectUtil.isEmpty(language)) {
             language = "zh";
         }
-        this.button_show_content = dictionaryUtil.getValue(this.button_show_code.toLowerCase(),"event_button",language);
+        this.button_show_content = dictionaryUtil.getValue(this.button_show_code.toLowerCase(),"event_button",language);*/
     }
 
     public String getButton_show_content() {
