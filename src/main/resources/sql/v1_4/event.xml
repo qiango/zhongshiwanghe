@@ -65,4 +65,38 @@
     where event_id = #{eventID}
     </update>
 
+    <select id="events" resultType="com.hongzhi.zswh.app_1_4.entity.Event">
+        select
+             a.event_id
+            ,a.club_id
+            ,a.end_time
+            ,a.event_address
+            ,a.event_name
+            ,a.event_status
+            ,a.fee
+            ,a.form_item
+            ,a.image
+            ,a.max_people
+            ,a.min_people
+            ,a.organizer_id
+            ,a.register_end_time
+            ,a.register_start_time
+            ,a.start_time
+            ,a.view_guests
+        from
+            event a
+        where
+        <if test=" event_id !=null  and   event_id !='' ">
+            a.event_id = #{event_id}
+        and
+        </if>
+        <if test="club_id !=null  and   club_id !='' ">
+            a.club_id = #{club_id}
+        and
+        </if>
+            a.event_status = 1
+        or
+          (a.event_status = 2 and a.end_time > now())
+
+    </select>
 </mapper>

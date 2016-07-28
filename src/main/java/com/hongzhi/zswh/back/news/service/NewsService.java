@@ -321,7 +321,7 @@ public class NewsService {
 
 			newsDao.savePushRecord(pushRecord);
 
-			String url = "/v5/news/detail.htmls?news_id=" + pushRecord.getNews_id();
+			String url = dictionaryUtil.getCodeValue("mi_push_header", "data_alias", "zh")+"/v5/news/detail.htmls?news_id=" + pushRecord.getNews_id();
 
 			miPushService.broadcast(pushRecord.getNews_title(), url, String.valueOf(MessageType.NEWS));
 
