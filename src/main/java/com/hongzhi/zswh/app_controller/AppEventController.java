@@ -65,6 +65,25 @@ public class AppEventController {
         }
     }
 
+    @ResponseBody
+    @RequestMapping(value = "/review")
+    public String review(HttpSession session, String session_id, Integer event_id , @PathVariable String version){
+        SessionProperty property;
+        String language = "zh";
+        try{
+            switch (version){
+                case "v1.4":
+                    property = sess.sessionEffective(session,session_id,"/v1.4/event/create");
+                    return ObjectUtil.jsonOut( eventService.eventReview(event_id,property) );
+                default:
+                    return "404";
+            }
+        }catch (HongZhiException e){
+            return ObjectUtil.jsonOutError(e.getCode(), dic.getCodeValue(e.getCode(),e.getMessage(), language ) );
+        }
+    }
+
+
     // event join
 
 

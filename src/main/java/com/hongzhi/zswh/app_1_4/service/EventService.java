@@ -66,4 +66,7 @@ public class EventService {
     }
 
 
+    public Object eventReview(Integer event_id, SessionProperty property) {
+        return null;
+    }
 }
