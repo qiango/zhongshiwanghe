@@ -33,21 +33,26 @@ public class EventCreate {
     private String fee ;
     private String image ;
     private Integer event_status ;
-    private String view_guests;
+    private Integer view_guests;
     private String organizer_join;
     private String register_form_item ;
     private String event_detail ;
     private String event_notice ;
+    private String form_item;
+
 
 
     private String dic_p_code = "event";
 
     public void verifyData() throws HongZhiException {
 
+        ExcepUtil.verify(event_name,"event_name_null",dic_p_code);
         ExcepUtil.verify(organizer_id,"organizer_id_null",dic_p_code);
         ExcepUtil.verify(view_guests,"view_guests_null",dic_p_code);
         ExcepUtil.verify(register_form_item,"form_item_null",dic_p_code);
         ExcepUtil.verify(event_address,"event_address_null",dic_p_code);
+        ExcepUtil.verify(club_id,"club_id_null",dic_p_code);
+        ExcepUtil.verify(organizer_join,"organizer_join_null",dic_p_code);
 
         ExcepUtil.verify(start_time,"start_time_null",dic_p_code);
         ExcepUtil.verify(end_time,"end_time_null",dic_p_code);
@@ -195,8 +200,8 @@ public class EventCreate {
         this.max_people = max_people;
     }
 
-    public String getFee() {
-        return fee;
+    public Double getFee() {
+        return Double.valueOf(fee);
     }
 
     public void setFee(String fee) {
@@ -219,13 +224,6 @@ public class EventCreate {
         this.event_status = event_status;
     }
 
-    public String getView_guests() {
-        return view_guests;
-    }
-
-    public void setView_guests(String view_guests) {
-        this.view_guests = view_guests;
-    }
 
     public String getOrganizer_join() {
         return organizer_join;
@@ -265,5 +263,21 @@ public class EventCreate {
 
     public void setDic_p_code(String dic_p_code) {
         this.dic_p_code = dic_p_code;
+    }
+
+    public Integer getView_guests() {
+        return view_guests;
+    }
+
+    public void setView_guests(Integer view_guests) {
+        this.view_guests = view_guests;
+    }
+
+    public String getForm_item() {
+        return form_item;
+    }
+
+    public void setForm_item(String form_item) {
+        this.form_item = form_item;
     }
 }

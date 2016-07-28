@@ -10,6 +10,8 @@ public class SessionProperty {
 	private String language;
 	private String user_real_name;
 	private String platform;
+    private Integer club_id;
+    private String club_user_level;
 	
 	public String getUser_real_name() {
 		return user_real_name;
@@ -44,8 +46,19 @@ public class SessionProperty {
 		this.platform = platform;
 	}
 
-	
-	
-	
-	
+    public Integer getClub_id() {
+        return club_id;
+    }
+
+    public void setClub_id(Integer club_id) {
+        this.club_id = club_id;
+    }
+
+    public String getClub_user_level() {
+        return club_user_level;
+    }
+
+    public void setClub_user_level(String club_user_level) {
+        this.club_user_level = club_user_level;
+    }
 }

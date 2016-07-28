@@ -40,10 +40,16 @@ public class EventService {
     }
 
     public Object eventCreate(EventCreate event_create, SessionProperty property) throws HongZhiException {
+        event_create.setOrganizer_id(Integer.valueOf(property.getUser_id()));
         event_create.verifyData();
 
+        eventDao.createEvent(event_create);
 
-        return  null ;
+        if (event_create.getOrganizer_join().toLowerCase().equals("true")) {
+            eventDao.organizerJoin(event_create);
+        }
+
+        return  "";
     }
 
 

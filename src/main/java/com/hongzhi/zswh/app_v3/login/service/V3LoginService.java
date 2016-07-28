@@ -69,6 +69,8 @@ public class V3LoginService {
 			attribute_string.add("user_real_name,"+ObjectUtil.getProperty(userInfo.get("user_real_name"),"  "));
 			attribute_string.add("language,"+ loginParam.getLanguage() );
 			attribute_string.add("platform,"+ loginParam.getPlatform_id());
+            attribute_string.add("club_id,"+ userInfo.get("club_id"));
+            attribute_string.add("club_user_level,"+ userInfo.get("club_user_level") );
 
 			int sess_id = sess.createNewSession(session.getId(), attribute_string);
 //			session.setAttribute("id", sess_id);
@@ -157,6 +159,8 @@ public class V3LoginService {
 						attribute_string.add("user_real_name,"+ObjectUtil.getProperty(userInfo.get("user_real_name"),"  "));
 						attribute_string.add("language,"+ loginParam.getLanguage() );
 						attribute_string.add("platform,"+ loginParam.getPlatform_id());
+                        attribute_string.add("club_id,"+ 0);
+                        attribute_string.add("club_user_level,"+ 0 );
 
 						int sess_id = sess.createNewSession(session.getId(), attribute_string);
 //						session.setAttribute("id", sess_id);

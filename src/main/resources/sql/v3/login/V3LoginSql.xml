@@ -4,22 +4,26 @@
 
     <select id="login" resultType="map">
      select 
-           user_id 
-          ,platform_id 
-          ,user_real_name  
-          ,user_login_name 
-          ,user_password   
-          ,phone   
-          ,mail_address    
-          ,user_status  
-          ,remark  
-          ,create_time 
-          ,create_date 
-          ,salt
-        from user_info    
-       where is_delete='0'
-         and phone=#{phone}
-         and platform_id=#{platform}
+           a.user_id
+          ,a.platform_id
+          ,a.user_real_name
+          ,a.user_login_name
+          ,a.user_password
+          ,a.phone
+          ,a.mail_address
+          ,a.user_status
+          ,a.remark
+          ,a.create_time
+          ,a.create_date
+          ,a.salt
+          ,b.club_id
+          ,b.user_level  as club_user_level
+        from user_info  a
+        left join user_detail b
+        on a.user_id = b.user_id
+       where a.is_delete='0'
+         and a.phone=#{phone}
+         and a.platform_id=#{platform}
     </select>
 
 </mapper>
