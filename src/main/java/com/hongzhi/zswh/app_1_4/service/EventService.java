@@ -2,8 +2,10 @@ package com.hongzhi.zswh.app_1_4.service;
 
 import com.hongzhi.zswh.app_1_4.dao.EventDao;
 import com.hongzhi.zswh.app_1_4.entity.Event;
+import com.hongzhi.zswh.app_1_4.entity.EventCreate;
 import com.hongzhi.zswh.util.basic.ObjectUtil;
 import com.hongzhi.zswh.util.basic.sessionDao.SessionProperty;
+import com.hongzhi.zswh.util.exception.HongZhiException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -36,4 +38,13 @@ public class EventService {
         map.put("events",events) ;
         return map;
     }
+
+    public Object eventCreate(EventCreate event_create, SessionProperty property) throws HongZhiException {
+        event_create.verifyData();
+
+
+        return  null ;
+    }
+
+
 }

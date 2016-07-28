@@ -1,5 +1,6 @@
 package com.hongzhi.zswh.app_controller;
 
+import com.hongzhi.zswh.app_1_4.entity.EventCreate;
 import com.hongzhi.zswh.app_1_4.service.EventService;
 import com.hongzhi.zswh.util.basic.DictionaryUtil;
 import com.hongzhi.zswh.util.basic.ObjectUtil;
@@ -40,12 +41,29 @@ public class AppEventController {
                     return "404";
             }
         }catch (HongZhiException e){
-            return ObjectUtil.jsonOutError(e.getCode(), dic.getCodeValue(e.getCode(), language ) );
+            return ObjectUtil.jsonOutError(e.getCode(), dic.getCodeValue(e.getCode(),e.getMessage(), language ) );
         }
     }
 
 
     // create event
+    @ResponseBody
+    @RequestMapping(value = "/create")
+    public String create(HttpSession session, String session_id,  EventCreate event_create, @PathVariable String version){
+        SessionProperty property;
+        String language = "zh";
+        try{
+            switch (version){
+                case "v1.4":
+                    property = sess.sessionEffective(session,session_id,"/v1.4/event/create");
+                    return ObjectUtil.jsonOut( eventService.eventCreate(event_create,property) );
+                default:
+                    return "404";
+            }
+        }catch (HongZhiException e){
+            return ObjectUtil.jsonOutError(e.getCode(), dic.getCodeValue(e.getCode(),e.getMessage(), language ) );
+        }
+    }
 
     // event join
 

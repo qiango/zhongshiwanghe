@@ -62,7 +62,11 @@ public class DictionaryUtil {
 	public String getCodeValue(String code,String p_code ,String language){
 //		Dictionary dictionary=dictionaryDao.selectByCodeAndLanguage(code, language,p_code);
 //		return ObjectUtil.getProperty(dictionary, dictionary.getValue(),"").toString();
-        return getValue(code,p_code,language);
+        if (ObjectUtil.isEmpty(p_code)) {
+            return getCodeValue(code,language);
+        } else  {
+            return getValue(code,p_code,language);
+        }
 	}
 	
 	public void verifyData(boolean cond, String code) throws HongZhiException {
