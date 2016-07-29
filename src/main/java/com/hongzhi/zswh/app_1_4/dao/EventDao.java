@@ -23,4 +23,6 @@ public interface EventDao {
     List<Integer> eventIDs(Integer club_id);
 
     int passReview(@Param("eventID") Integer event_id,@Param("status") Integer status);
+
+    List<Event> latestEventList();
 }

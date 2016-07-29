@@ -92,10 +92,12 @@ public class EventService {
 
     public Object latestEvent() {
 
-        List<Event> events = eventDao.events(null, null);
+        List<Event> events_list = eventDao.latestEventList();
 
+        Map<String, Object> map = new HashMap<>();
 
-        return null;
+        map.put("events_list", events_list);
+        return map;
     }
 
 }

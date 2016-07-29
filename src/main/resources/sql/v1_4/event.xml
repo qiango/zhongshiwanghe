@@ -99,4 +99,42 @@
           (a.event_status = 2 and a.end_time > now())
 
     </select>
+    <select id="latestEventList">
+          select
+              d.*
+          from
+             (
+             select
+                  COUNT(1) as sum_member
+                  ,a.event_id as event_id
+              from
+                  event a
+              left join
+                  event_registration b
+              on
+                  a.event_id = b.event_id
+        where
+            a.event_status = 1
+        and
+        <![CDATA[
+        a.register_start_time < now()
+        ]]>
+        and
+        <![CDATA[
+        a.register_end_time > NOW()
+        ]]>
+        GROUP BY a.event_id
+        ) c
+        LEFT JOIN
+            event d
+        on
+            d.event_id = c.event_id
+        where
+         <![CDATA[
+            c.sum_member < d.max_people
+        ]]>
+        or
+            coalesce(d.max_people,0) = 0
+        ORDER BY d.start_time desc
+    </select>
 </mapper>
