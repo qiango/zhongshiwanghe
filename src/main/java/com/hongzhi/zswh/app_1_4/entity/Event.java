@@ -1,8 +1,5 @@
 package com.hongzhi.zswh.app_1_4.entity;
 
-import com.hongzhi.zswh.util.basic.DictionaryUtil;
-import org.springframework.beans.factory.annotation.Autowired;
-
 import java.sql.Timestamp;
 
 /**
@@ -26,6 +23,8 @@ public class Event {
     private Double fee ;
     private String image ;
     private Integer event_status ;
+    private String event_status_name;
+    private String event_status_name_code;
     private String event_status_code ;
     private Integer view_guests;
     private String view_guests_code;
@@ -216,4 +215,33 @@ public class Event {
         }
     }
 
+    public String getEvent_status_name() {
+        return event_status_name;
+    }
+
+    public void setEvent_status_name(String event_status_name) {
+        this.event_status_name = event_status_name;
+    }
+
+    public String getEvent_status_name_code() {
+        return event_status_name_code;
+    }
+
+    public void setEvent_status_name_code() {
+        this.event_status_name_code = getEventStatusName();
+    }
+
+    public String getEventStatusName(){
+        if ( EventStatus.getEventStatus(event_status).name().equals(EventStatus.UNDER_REVIEW.name()) ){
+            return EventStatus.UNDER_REVIEW.name();
+        }else if ( EventStatus.getEventStatus(event_status).name().equals(EventStatus.NORMAL.name())){
+            return EventStatus.NORMAL.name();
+        }else if (EventStatus.getEventStatus(event_status).name().equals(EventStatus.FAIL_REVIEW.name())){
+            return EventStatus.FAIL_REVIEW.name();
+        }else if (EventStatus.getEventStatus(event_status).name().equals(EventStatus.OVER.name())){
+            return EventStatus.OVER.name();
+        }else{
+            return "";
+        }
+    }
 }

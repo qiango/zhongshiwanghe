@@ -11,6 +11,7 @@ import com.hongzhi.zswh.util.exception.HongZhiException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -90,14 +91,76 @@ public class EventService {
         }
     }
 
-    public Object latestEvent() {
+    /**
+     * 最新活动
+     * @param property
+     * @return
+     */
+    public Object latestEvent(SessionProperty property) {
 
-        List<Event> events_list = eventDao.latestEventList();
+        List<Event> events_list = eventDao.latestEventList( property.getClub_id());
 
         Map<String, Object> map = new HashMap<>();
 
-        map.put("events_list", events_list);
+        if (events_list.size() > 0){
+            map.put("events_list", events_list);
+        }else{
+            map.put("events_list", new ArrayList<>());
+        }
+
         return map;
     }
 
+    /**
+     * 我的活动+我发起的活动
+     * @param property
+     * @return
+     */
+    public Object myActivities(SessionProperty property) {
+
+        List<Event> my_join_event_list = eventDao.myJoinEvent(property.getUser_id(),property.getClub_id());
+
+        List<Event> my_set_event_list = eventDao.mySetEvent(property.getUser_id(),property.getClub_id());
+
+        Map<String, Object> map = new HashMap<>();
+
+        if (my_join_event_list.size() > 0 ){
+            map.put("my_join_event_list", my_join_event_list);
+        }else{
+            map.put("my_join_event_list",  new ArrayList<>());
+        }
+        if (my_set_event_list.size() > 0){
+            map.put("my_set_event_list", my_set_event_list);
+        }else{
+            map.put("my_set_event_list",  new ArrayList<>());
+        }
+
+        return map;
+    }
+
+    /**
+     * 活动审核
+     * @return
+     * @param property
+     * @param property
+     */
+    public Object verifyEvent(SessionProperty property) {
+
+        List<Event> verify_event_list = eventDao.verifyEvent(property.getClub_id());
+
+        Map<String,Object> map = new HashMap<>();
+
+        if (verify_event_list.size() > 0){
+            for (Event event: verify_event_list){
+/*                Map<String, Object> info = eventDao.statusInfo(0, event.getEvent_id());
+                event.setButton_show_code(Boolean.valueOf(info.get("is_registered").toString()), Integer.valueOf(info.get("registered_count").toString()), property.getLanguage());
+                event.setButton_show_content( dictionaryUtil.getValue(event.getButton_show_code().toLowerCase(),"event_button",property.getLanguage()));*/
+                event.setEvent_status_name_code();
+                event.setEvent_status_name(dictionaryUtil.getValue(event.getEvent_status_name_code().toLowerCase(),"event_button",property.getLanguage()));
+            }
+        }
+        map.put("verify_event_list",verify_event_list);
+
+        return map;
+    }
 }
