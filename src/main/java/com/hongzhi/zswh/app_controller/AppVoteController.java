@@ -7,6 +7,7 @@ import com.hongzhi.zswh.util.basic.DictionaryUtil;
 import com.hongzhi.zswh.util.basic.ObjectUtil;
 import com.hongzhi.zswh.util.basic.SessionUtil;
 import com.hongzhi.zswh.util.basic.sessionDao.SessionProperty;
+import com.hongzhi.zswh.util.date.DateFormat;
 import com.hongzhi.zswh.util.exception.HongZhiException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -43,7 +44,8 @@ public class AppVoteController {
             switch (version){
                 case "v1.4":
                     property = sess.sessionEffective(session,session_id,"/v1.4/vote/list");
-                    return ObjectUtil.jsonOutDT( voteService.votes(vote_id) , property.getLanguage());
+                    language=property.getLanguage();
+                    return ObjectUtil.jsonOutDT( voteService.votes(vote_id) , DateFormat.getFormatWithTime(language) );
                 default:
                     return "hello";
             }
@@ -62,7 +64,8 @@ public class AppVoteController {
             switch (version){
                 case "v1.4":
                     property = sess.sessionEffective(session,session_id,"/v1.4/vote/item");
-                    return ObjectUtil.jsonOutDT( voteService.items(vote_id,Integer.valueOf(ObjectUtil.coalesce(page_number,1).toString()),Integer.valueOf(ObjectUtil.coalesce(page_size,20).toString())) , property.getLanguage());
+                    language=property.getLanguage();
+                    return ObjectUtil.jsonOutDT( voteService.items(vote_id,Integer.valueOf(ObjectUtil.coalesce(page_number,1).toString()),Integer.valueOf(ObjectUtil.coalesce(page_size,20).toString())) ,DateFormat.getFormatWithTime(language));
                 default:
                     return "hello";
             }
@@ -80,7 +83,8 @@ public class AppVoteController {
             switch (version){
                 case "v1.4":
                     property = sess.sessionEffective(session,session_id,"/v1.4/vote/item");
-                    return ObjectUtil.jsonOutDT( voteService.vote(property,vote_id,item_id ) , property.getLanguage());
+                    language=property.getLanguage();
+                    return ObjectUtil.jsonOutDT( voteService.vote(property,vote_id,item_id ) , DateFormat.getFormatWithTime(language) );
                 default:
                     return "hello";
             }
