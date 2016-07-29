@@ -24,5 +24,11 @@ public interface EventDao {
 
     int passReview(@Param("eventID") Integer event_id,@Param("status") Integer status);
 
-    List<Event> latestEventList();
+    List<Event> latestEventList(@Param("club_id") Integer club_id);
+
+    List<Event> myJoinEvent(@Param("user_id") String user_id, @Param("club_id") Integer club_id);
+
+    List<Event> mySetEvent(@Param("user_id") String user_id, @Param("club_id") Integer club_id);
+
+    List<Event> verifyEvent(@Param("club_id") Integer club_id);
 }
