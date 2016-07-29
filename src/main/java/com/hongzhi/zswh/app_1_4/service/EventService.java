@@ -107,8 +107,8 @@ public class EventService {
 
     public Object eventForm(Integer event_id, SessionProperty property) throws HongZhiException {
 
-        List<Map<String,Object>>  formItems = eventDao.formItems(event_id);
-//       map : a.event_id ,a.club_id ,b.item_code ,c.item_name
+        List<Map<String,Object>>  formItems = eventDao.formItems(event_id, Integer.valueOf(property.getUser_id()));
+//       map : a.event_id ,a.club_id ,b.item_code ,c.item_name, item_value
 
         if (! formItems.get(0).get("club_id").equals(property.getClub_id())) {
             throw new HongZhiException("not_own_club","event");
@@ -117,5 +117,12 @@ public class EventService {
         Map<String,Object> map = new HashMap<>();
         map.put("items",formItems);
         return map;
+    }
+
+    public Object eventRegister(Integer event_id, SessionProperty property) {
+
+        int effect_count = eventDao.saveUserRegister(event_id, Integer.valueOf(property.getUser_id()));
+
+        return null;
     }
 }

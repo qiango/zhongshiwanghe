@@ -93,9 +93,8 @@ CREATE TABLE `event_registration` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-CREATE TABLE `event_registration_info` (
+CREATE TABLE `user_profile` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
-  `event_id` int(11) DEFAULT NULL,
   `user_id` int(11) DEFAULT NULL,
   `item_code` varchar(100) DEFAULT NULL,
   `item_value` varchar(300) DEFAULT NULL,

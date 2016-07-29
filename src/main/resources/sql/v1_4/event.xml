@@ -158,14 +158,32 @@
         ,a.club_id
         ,b.item_code
         ,c.item_name
+        ,coalesce(d.item_value,'')  as item_value
     from event a
     left join event_form b
            on a.event_id = b.event_id
     left join event_form_item c
            on b.item_code = c.item_code
+    left join user_profile d
+           on b.item_code = d.item_code
+          and d.user_id = #{userID}
     where a.event_id = #{eventID}
     order by c.index
     </select>
+
+    <insert id="saveUserRegister" >
+    insert into  event_registration (
+      event_id
+     ,user_id
+     ,create_time
+     ,my_status
+    ) values (
+      #{eventID}
+     ,#{userID}
+     ,now()
+     ,1
+    )
+    </insert>
 
 
 </mapper>
