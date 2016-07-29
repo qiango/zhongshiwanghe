@@ -7,12 +7,14 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.hongzhi.zswh.util.basic.DictionaryUtil;
 import com.hongzhi.zswh.util.exception.HongZhiException;
 import com.hongzhi.zswh.util.picture.service.PictureService;
+import org.springframework.web.servlet.ModelAndView;
 
 /**   Twitter : @taylorwang789 
  * Creat time : May 30, 2016    2:29:55 PM
@@ -29,7 +31,14 @@ public class PictureController {
             // return file upload path
             return picService.picUpload(request).toString();
     }
-    
+
+    @RequestMapping("/webPicUpload")  //  picutre upload
+    public String  webspringUpload(HttpServletRequest request, Model model) throws IllegalStateException, IOException {
+        String picUrl = picService.picUpload(request).toString();
+        model.addAttribute("picUrl",picUrl);
+        return "/init/upload";
+    }
+
     @RequestMapping("/pic")  // p : path 
     public void showPic(HttpServletRequest request,HttpServletResponse response,String p) {
         picService.showPic(request,response,p);

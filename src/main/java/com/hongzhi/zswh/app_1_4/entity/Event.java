@@ -11,8 +11,6 @@ import java.sql.Timestamp;
  */
 public class Event {
 
-    @Autowired
-    private DictionaryUtil dictionaryUtil;
 
     private Integer event_id ;
     private String event_name ;

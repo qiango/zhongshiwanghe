@@ -38,10 +38,10 @@ public class DateFormat {
 	public static String getFormatWithTime(String language ) {
 		 for(int i=0;i<formats.size();i++){
 			 if(formats.get(i).contains(language.trim().toLowerCase())){
-				 return formats.get(i).get(0)+"  HH:mm:ss";
+				 return formats.get(i).get(0)+" HH:mm:ss";
 			 }
 		 }
-		 return "yyyy-MM-dd  hh:mm:ss";
+		 return "yyyy-MM-dd HH:mm:ss";
 	}
 	
 	public static String getDateFromMillis(String language,Long millis){

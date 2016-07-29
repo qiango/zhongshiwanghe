@@ -73,11 +73,11 @@
             ,a.event_address
             ,a.event_name
             ,a.event_status
-            ,a.fee
+            ,coalesce(a.fee,0.0)  as fee
             ,a.form_item
-            ,a.image
-            ,a.max_people
-            ,a.min_people
+            ,concat('/pic.htmls?p=',coalesce(a.image,'')) as image
+            ,coalesce(a.max_people,0) as max_people
+            ,coalesce(a.min_people,0) as min_people
             ,a.organizer_id
             ,a.register_end_time
             ,a.register_start_time

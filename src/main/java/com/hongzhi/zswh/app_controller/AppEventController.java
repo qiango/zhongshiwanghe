@@ -6,6 +6,7 @@ import com.hongzhi.zswh.util.basic.DictionaryUtil;
 import com.hongzhi.zswh.util.basic.ObjectUtil;
 import com.hongzhi.zswh.util.basic.SessionUtil;
 import com.hongzhi.zswh.util.basic.sessionDao.SessionProperty;
+import com.hongzhi.zswh.util.date.DateFormat;
 import com.hongzhi.zswh.util.exception.HongZhiException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -36,7 +37,8 @@ public class AppEventController {
             switch (version){
                 case "v1.4":
                     property = sess.sessionEffective(session,session_id,"/v1.4/event/list");
-                    return ObjectUtil.jsonOutDT( eventService.events(property,club_id,event_id) ,property.getLanguage());
+                    language=property.getLanguage();
+                    return ObjectUtil.jsonOutDT( eventService.events(property,club_id,event_id) , "MM月dd日 HH:mm");
                 default:
                     return "404";
             }
@@ -53,7 +55,8 @@ public class AppEventController {
             switch (version){
                 case "v1.4":
                     property = sess.sessionEffective(session,session_id,"/v1.4/event/latest_event");
-                    return ObjectUtil.jsonOutDT( eventService.latestEvent(),property.getLanguage());
+                    language=property.getLanguage();
+                    return ObjectUtil.jsonOutDT( eventService.latestEvent(),DateFormat.getFormatWithTime(language));
                 default:
                     return "404";
             }
@@ -72,6 +75,7 @@ public class AppEventController {
             switch (version){
                 case "v1.4":
                     property = sess.sessionEffective(session,session_id,"/v1.4/event/create");
+                    language=property.getLanguage();
                     return ObjectUtil.jsonOut( eventService.eventCreate(event_create,property) );
                 default:
                     return "404";
@@ -90,6 +94,7 @@ public class AppEventController {
             switch (version){
                 case "v1.4":
                     property = sess.sessionEffective(session,session_id,"/v1.4/event/create");
+                    language=property.getLanguage();
                     return ObjectUtil.jsonOut( eventService.eventReview(event_id,property) );
                 default:
                     return "404";
