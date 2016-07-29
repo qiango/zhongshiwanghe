@@ -56,7 +56,7 @@ public class AppEventController {
                 case "v1.4":
                     property = sess.sessionEffective(session,session_id,"/v1.4/event/latest_event");
                     language=property.getLanguage();
-                    return ObjectUtil.jsonOutDT( eventService.latestEvent(),DateFormat.getFormatWithTime(language));
+                    return ObjectUtil.jsonOutDT( eventService.latestEvent(property),DateFormat.getFormatWithTime(language));
                 default:
                     return "404";
             }
@@ -104,6 +104,43 @@ public class AppEventController {
         }
     }
 
+    @ResponseBody
+    @RequestMapping(value = "/my_event")
+    public String myActivities(HttpSession session, String session_id, @PathVariable String version) {
+        SessionProperty property;
+        String language = "zh";
+        try{
+            switch (version){
+                case "v1.4":
+                    property = sess.sessionEffective(session,session_id,"/v1.4/event/my_event");
+                    language = property.getLanguage();
+                    return ObjectUtil.jsonOutDT( eventService.myActivities(property),DateFormat.getFormatWithTime(language) );
+                default:
+                    return "404";
+            }
+        }catch (HongZhiException e){
+            return ObjectUtil.jsonOutError(e.getCode(), dic.getCodeValue(e.getCode(),e.getMessage(), language ) );
+        }
+    }
+    @ResponseBody
+    @RequestMapping(value = "/verify_event")
+    public String verifyEvent(HttpSession session,String session_id,@PathVariable String version){
+        SessionProperty property;
+        String language = "zh";
+        try {
+            switch (version){
+                case "v1.4":
+                    property = sess.sessionEffective(session,session_id,"/v1.4/event/verify_event");
+                    language = property.getLanguage();
+                    return ObjectUtil.jsonOutDT( eventService.verifyEvent(property),DateFormat.getFormatWithTime(language) );
+                default:
+                    return "404";
+            }
+        }catch (HongZhiException e){
+            return ObjectUtil.jsonOutError(e.getCode(), dic.getCodeValue(e.getCode(),e.getMessage(), language ) );
+
+        }
+    }
 
     // event join
 
@@ -164,7 +201,6 @@ public class AppEventController {
             return ObjectUtil.jsonOutError(e.getCode(), dic.getCodeValue(e.getCode(),e.getMessage(), language ) );
         }
     }
-
 
 
 

@@ -33,4 +33,12 @@ public interface EventDao {
     int saveUserRegister(@Param("eventID") Integer event_id,@Param("userID") Integer user_id);
 
     int unregister(@Param("eventID") Integer event_id,@Param("userID") Integer user_id) ;
+
+    List<Event> latestEventList(@Param("club_id") Integer club_id);
+
+    List<Event> myJoinEvent(@Param("user_id") String user_id, @Param("club_id") Integer club_id);
+
+    List<Event> mySetEvent(@Param("user_id") String user_id, @Param("club_id") Integer club_id);
+
+    List<Event> verifyEvent(@Param("club_id") Integer club_id);
 }

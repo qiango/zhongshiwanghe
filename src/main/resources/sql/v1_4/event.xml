@@ -99,9 +99,24 @@
           (a.event_status = 2 and a.end_time > now())
 
     </select>
-    <select id="latestEventList">
+    <select id="latestEventList" resultType="com.hongzhi.zswh.app_1_4.entity.Event">
           select
-              d.*
+             d.event_id
+            ,d.club_id
+            ,d.end_time
+            ,d.event_address
+            ,d.event_name
+            ,d.event_status
+            ,coalesce(d.fee,0.0)  as fee
+            ,d.form_item
+            ,concat('/pic.htmls?p=',coalesce(d.image,'')) as image
+            ,coalesce(d.max_people,0) as max_people
+            ,coalesce(d.min_people,0) as min_people
+            ,d.organizer_id
+            ,d.register_end_time
+            ,d.register_start_time
+            ,d.start_time
+            ,d.view_guests
           from
              (
              select
@@ -135,6 +150,10 @@
         ]]>
         or
             coalesce(d.max_people,0) = 0
+         <if  test="club_id !=0 ">
+             and d.club_id = #{club_id}
+         </if>
+
         ORDER BY d.start_time desc
     </select>
 
@@ -193,4 +212,85 @@
     </update>
 
 
+    <select id="myJoinEvent" resultType="com.hongzhi.zswh.app_1_4.entity.Event">
+          select
+             b.event_id
+            ,b.club_id
+            ,b.end_time
+            ,b.event_address
+            ,b.event_name
+            ,b.event_status
+            ,coalesce(b.fee,0.0)  as fee
+            ,b.form_item
+            ,concat('/pic.htmls?p=',coalesce(b.image,'')) as image
+            ,coalesce(b.max_people,0) as max_people
+            ,coalesce(b.min_people,0) as min_people
+            ,b.organizer_id
+            ,b.register_end_time
+            ,b.register_start_time
+            ,b.start_time
+            ,b.view_guests
+          from
+              event_registration a
+          LEFT JOIN
+              event b
+          on
+              a.event_id = b.event_id
+          where
+              a.user_id =#{user_id}
+          and
+              a.my_status = 1
+          and
+              b.club_id = #{club_id}
+    </select>
+    <select id="mySetEvent" resultType="com.hongzhi.zswh.app_1_4.entity.Event">
+          select
+             a.event_id
+            ,a.club_id
+            ,a.end_time
+            ,a.event_address
+            ,a.event_name
+            ,a.event_status
+            ,coalesce(a.fee,0.0)  as fee
+            ,a.form_item
+            ,concat('/pic.htmls?p=',coalesce(a.image,'')) as image
+            ,coalesce(a.max_people,0) as max_people
+            ,coalesce(a.min_people,0) as min_people
+            ,a.organizer_id
+            ,a.register_end_time
+            ,a.register_start_time
+            ,a.start_time
+            ,a.view_guests
+          from
+              event a
+          where
+              a.club_id = #{club_id}
+          and
+              a.organizer_id = #{user_id}
+    </select>
+    <select id="verifyEvent" resultType="com.hongzhi.zswh.app_1_4.entity.Event">
+          select
+                 a.event_id
+                ,a.club_id
+                ,a.end_time
+                ,a.event_address
+                ,a.event_name
+                ,a.event_status
+                ,coalesce(a.fee,0.0)  as fee
+                ,a.form_item
+                ,concat('/pic.htmls?p=',coalesce(a.image,'')) as image
+                ,coalesce(a.max_people,0) as max_people
+                ,coalesce(a.min_people,0) as min_people
+                ,a.organizer_id
+                ,a.register_end_time
+                ,a.register_start_time
+                ,a.start_time
+                ,a.view_guests
+          from
+              event a
+          where
+              a.event_status = 0
+          and
+              a.club_id = #{club_id}
+    </select>
 </mapper>
