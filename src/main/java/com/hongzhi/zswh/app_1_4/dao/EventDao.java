@@ -25,4 +25,8 @@ public interface EventDao {
     int passReview(@Param("eventID") Integer event_id,@Param("status") Integer status);
 
     List<Event> latestEventList();
+
+    int saveEventItems(@Param("eventID") Integer event_id,@Param("items") List<String> items);
+
+    List<Map<String,Object>> formItems(@Param("eventID") Integer event_id);
 }

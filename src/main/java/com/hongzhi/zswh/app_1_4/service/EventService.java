@@ -11,6 +11,7 @@ import com.hongzhi.zswh.util.exception.HongZhiException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -60,6 +61,10 @@ public class EventService {
 
         eventDao.createEvent(event_create);
 
+        List<String> items = Arrays.asList(event_create.getForm_item().split(","));
+
+        eventDao.saveEventItems(event_create.getEvent_id(),items);
+
         if (event_create.getOrganizer_join().toLowerCase().equals("true")) {
             eventDao.organizerJoin(event_create);
         }
@@ -100,4 +105,17 @@ public class EventService {
         return map;
     }
 
+    public Object eventForm(Integer event_id, SessionProperty property) throws HongZhiException {
+
+        List<Map<String,Object>>  formItems = eventDao.formItems(event_id);
+//       map : a.event_id ,a.club_id ,b.item_code ,c.item_name
+
+        if (! formItems.get(0).get("club_id").equals(property.getClub_id())) {
+            throw new HongZhiException("not_own_club","event");
+        }
+
+        Map<String,Object> map = new HashMap<>();
+        map.put("items",formItems);
+        return map;
+    }
 }

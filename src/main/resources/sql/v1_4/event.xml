@@ -137,4 +137,35 @@
             coalesce(d.max_people,0) = 0
         ORDER BY d.start_time desc
     </select>
+
+
+    <insert id="saveEventItems">
+    insert into event_form (
+         event_id
+        ,item_code
+    ) values
+    <foreach collection="items" item="item" separator="," >
+        (
+          #{eventID}
+         ,#{item}
+        )
+    </foreach>
+    </insert>
+
+    <select id="formItems" resultType="map" >
+    select
+         a.event_id
+        ,a.club_id
+        ,b.item_code
+        ,c.item_name
+    from event a
+    left join event_form b
+           on a.event_id = b.event_id
+    left join event_form_item c
+           on b.item_code = c.item_code
+    where a.event_id = #{eventID}
+    order by c.index
+    </select>
+
+
 </mapper>
