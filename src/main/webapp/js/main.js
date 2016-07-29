@@ -337,7 +337,7 @@ require(['jquery','ZeroClipboard','datepicker-zh','bs','validate-zh','chosen','a
     		}
     		var path = $(this).siblings('.file-path');
         	$.ajaxFileUpload({
-	   	    	 url : 'picUpload.htmls',
+	   	    	 url : 'webPicUpload.htmls',
 	   	    	 secureuri : false,
 	   	    	 fileElementId : 'fileToUpload',
 	   	    	 parentNode: parent,
