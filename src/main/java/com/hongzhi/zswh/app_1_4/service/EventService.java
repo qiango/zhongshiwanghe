@@ -119,9 +119,24 @@ public class EventService {
         return map;
     }
 
-    public Object eventRegister(Integer event_id, SessionProperty property) {
+    public Object eventRegister(Integer event_id, SessionProperty property) throws HongZhiException {
 
         int effect_count = eventDao.saveUserRegister(event_id, Integer.valueOf(property.getUser_id()));
+
+        // save new data
+
+        //
+
+        if ( 1 != effect_count ) {
+            throw new HongZhiException("register_fail","event");
+        } else {
+            return null;
+        }
+    }
+
+    public Object eventUnregister(Integer event_id, SessionProperty property) {
+
+        int effect_count = eventDao.unregister(event_id,Integer.valueOf(property.getUser_id()));
 
         return null;
     }

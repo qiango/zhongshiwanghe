@@ -185,5 +185,12 @@
     )
     </insert>
 
+    <update id="unregister" >
+     update  event_registration
+        set my_status = 0
+      where event_id = #{eventID}
+        and user_id = #{userID}
+    </update>
+
 
 </mapper>

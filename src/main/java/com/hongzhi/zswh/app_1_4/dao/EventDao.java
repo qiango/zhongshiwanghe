@@ -31,4 +31,6 @@ public interface EventDao {
     List<Map<String,Object>> formItems(@Param("eventID") Integer event_id,@Param("userID") Integer user_id);
 
     int saveUserRegister(@Param("eventID") Integer event_id,@Param("userID") Integer user_id);
+
+    int unregister(@Param("eventID") Integer event_id,@Param("userID") Integer user_id) ;
 }
