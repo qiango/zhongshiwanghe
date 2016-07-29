@@ -136,11 +136,73 @@ public class AppEventController {
                 default:
                     return "404";
             }
-
         }catch (HongZhiException e){
             return ObjectUtil.jsonOutError(e.getCode(), dic.getCodeValue(e.getCode(),e.getMessage(), language ) );
 
         }
     }
 
+    // event join
+
+    @ResponseBody
+    @RequestMapping(value = "/form")
+    public String form(HttpSession session, String session_id, Integer event_id , @PathVariable String version){
+        SessionProperty property;
+        String language = "zh";
+        try{
+            switch (version){
+                case "v1.4":
+                    property = sess.sessionEffective(session,session_id,"/v1.4/event/form");
+                    language=property.getLanguage();
+                    return ObjectUtil.jsonOut( eventService.eventForm(event_id,property) );
+                default:
+                    return "404";
+            }
+        }catch (HongZhiException e){
+            return ObjectUtil.jsonOutError(e.getCode(), dic.getCodeValue(e.getCode(),e.getMessage(), language ) );
+        }
     }
+
+
+    @ResponseBody
+    @RequestMapping(value = "/register")
+    public String register(HttpSession session, String session_id, Integer event_id , @PathVariable String version){
+        SessionProperty property;
+        String language = "zh";
+        try{
+            switch (version){
+                case "v1.4":
+                    property = sess.sessionEffective(session,session_id,"/v1.4/event/register");
+                    language=property.getLanguage();
+                    return ObjectUtil.jsonOut( eventService.eventRegister(event_id,property) );
+                default:
+                    return "404";
+            }
+        }catch (HongZhiException e){
+            return ObjectUtil.jsonOutError(e.getCode(), dic.getCodeValue(e.getCode(),e.getMessage(), language ) );
+        }
+    }
+
+    @ResponseBody
+    @RequestMapping(value = "/unregister")
+    public String unregister(HttpSession session, String session_id, Integer event_id , @PathVariable String version){
+        SessionProperty property;
+        String language = "zh";
+        try{
+            switch (version){
+                case "v1.4":
+                    property = sess.sessionEffective(session,session_id,"/v1.4/event/unregister");
+                    language=property.getLanguage();
+                    return ObjectUtil.jsonOut( eventService.eventUnregister(event_id,property) );
+                default:
+                    return "404";
+            }
+        }catch (HongZhiException e){
+            return ObjectUtil.jsonOutError(e.getCode(), dic.getCodeValue(e.getCode(),e.getMessage(), language ) );
+        }
+    }
+
+
+
+
+}

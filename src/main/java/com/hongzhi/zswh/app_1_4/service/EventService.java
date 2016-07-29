@@ -11,6 +11,7 @@ import com.hongzhi.zswh.util.exception.HongZhiException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Arrays;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -60,6 +61,10 @@ public class EventService {
         }
 
         eventDao.createEvent(event_create);
+
+        List<String> items = Arrays.asList(event_create.getForm_item().split(","));
+
+        eventDao.saveEventItems(event_create.getEvent_id(),items);
 
         if (event_create.getOrganizer_join().toLowerCase().equals("true")) {
             eventDao.organizerJoin(event_create);
@@ -138,6 +143,41 @@ public class EventService {
         return map;
     }
 
+    public Object eventForm(Integer event_id, SessionProperty property) throws HongZhiException {
+
+        List<Map<String,Object>>  formItems = eventDao.formItems(event_id, Integer.valueOf(property.getUser_id()));
+//       map : a.event_id ,a.club_id ,b.item_code ,c.item_name, item_value
+
+        if (! formItems.get(0).get("club_id").equals(property.getClub_id())) {
+            throw new HongZhiException("not_own_club","event");
+        }
+
+        Map<String,Object> map = new HashMap<>();
+        map.put("items",formItems);
+        return map;
+    }
+
+    public Object eventRegister(Integer event_id, SessionProperty property) throws HongZhiException {
+
+        int effect_count = eventDao.saveUserRegister(event_id, Integer.valueOf(property.getUser_id()));
+
+        // save new data
+
+        //
+
+        if ( 1 != effect_count ) {
+            throw new HongZhiException("register_fail","event");
+        } else {
+            return null;
+        }
+    }
+
+    public Object eventUnregister(Integer event_id, SessionProperty property) {
+
+        int effect_count = eventDao.unregister(event_id, Integer.valueOf(property.getUser_id()));
+
+        return null;
+    }
     /**
      * 活动审核
      * @return

@@ -24,6 +24,16 @@ public interface EventDao {
 
     int passReview(@Param("eventID") Integer event_id,@Param("status") Integer status);
 
+    List<Event> latestEventList();
+
+    int saveEventItems(@Param("eventID") Integer event_id,@Param("items") List<String> items);
+
+    List<Map<String,Object>> formItems(@Param("eventID") Integer event_id,@Param("userID") Integer user_id);
+
+    int saveUserRegister(@Param("eventID") Integer event_id,@Param("userID") Integer user_id);
+
+    int unregister(@Param("eventID") Integer event_id,@Param("userID") Integer user_id) ;
+
     List<Event> latestEventList(@Param("club_id") Integer club_id);
 
     List<Event> myJoinEvent(@Param("user_id") String user_id, @Param("club_id") Integer club_id);
