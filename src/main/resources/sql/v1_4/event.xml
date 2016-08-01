@@ -293,4 +293,15 @@
           and
               a.club_id = #{club_id}
     </select>
+    <select id="selectMyEvent" resultType="Integer">
+          select
+              COUNT(1) my_counts
+          from
+              event_registration a
+          where
+              a.user_id = #{user_id}
+          and
+              a.my_status = 1
+
+    </select>
 </mapper>

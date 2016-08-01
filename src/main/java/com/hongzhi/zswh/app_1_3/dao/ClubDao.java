@@ -11,7 +11,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
-@Repository("app_1_3_ClubDao")
+@Repository("app_1_4_ClubDao")
 public interface ClubDao {
 
     ClubQueryEntity clubInfo(@Param("userId") int userId, @Param("language") String language);

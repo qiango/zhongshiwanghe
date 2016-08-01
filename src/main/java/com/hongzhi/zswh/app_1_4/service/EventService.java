@@ -106,7 +106,11 @@ public class EventService {
 
         List<Event> events_list = eventDao.latestEventList(property.getClub_id());
 
+        int my_counts = eventDao.selectMyEvent(property.getUser_id());
+
         Map<String, Object> map = new HashMap<>();
+
+        map.put("my_counts",my_counts);
 
         if (events_list.size() > 0) {
             map.put("events_list", events_list);

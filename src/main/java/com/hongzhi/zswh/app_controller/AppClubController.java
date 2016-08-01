@@ -25,6 +25,8 @@ public class AppClubController {
     @Autowired
     private ClubService clubService;
     @Autowired
+    private com.hongzhi.zswh.app_1_4.service.ClubService v1_4_clubService;
+    @Autowired
     private SessionUtil sess;
     @Autowired
     private DictionaryUtil dic;
@@ -38,11 +40,14 @@ public class AppClubController {
                 case "v1.3":
                     property = sess.sessionEffective(session, session_id, "/v1.3/club/load_club_manage");
                     return ObjectUtil.jsonOut(clubService.loadClubManage(property));
+                case "v1.4":
+                    property = sess.sessionEffective(session,session_id,"/v1.4/club/load_club_manage");
+                    return ObjectUtil.jsonOut(v1_4_clubService.loadClubManage(property));
                 default:
                     return null;
             }
         } catch (HongZhiException e) {
-            return ObjectUtil.jsonOut(clubService.loadClubManageNotLogIn());
+            return ObjectUtil.jsonOut(v1_4_clubService.loadClubManageNotLogIn());
         }
     }
 
