@@ -6,6 +6,7 @@ import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by taylor on 7/26/16.
@@ -21,4 +22,8 @@ public interface VoteDao {
     List<Integer> userIds(@Param("voteID") Integer vote_id,@Param("userID") Integer user_id);
 
     int vote(@Param("userID") Integer user_id,@Param("voteID") Integer vote_id,@Param("itemID") Integer item_id);
+
+    int updateItemVotes(@Param("itemID") Integer item_id);
+
+    Map<String,Object> userVoteData(@Param("voteID") Integer vote_Id,@Param("userID") Integer user_id,@Param("today") String today,@Param("firstDayOfWeek") String firstDayOfWeek);
 }

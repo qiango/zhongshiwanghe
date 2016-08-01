@@ -84,7 +84,7 @@
     </select>
 
 
-    <select id="vote" resultType="Integer" >
+    <insert id="vote"  >
     insert into vote_result (
        user_id
       ,item_id
@@ -96,6 +96,43 @@
       ,#{voteID}
       ,now()
     )
+    </insert>
+
+
+    <update id="updateItemVotes" >
+    update vote_item a
+    left join (
+            select
+              item_id
+             ,count(1) as vote
+            from vote_result
+            where item_id = #{itemID}
+          ) b
+        on a.item_id = b.item_id
+       set a.votes = b.vote
+    where a.item_id = #{itemID}
+    </update>
+
+    <!--
+    Map<String,Object> userVoteData(@Param("voteID") Integer vote_Id,@Param("userID") Integer user_id,@Param("today") String today,@Param("firstDayOfWeek") String firstDayOfWeek);
+    -->
+    <select id="userVoteData" resultType="map" >
+    select
+        user_id
+       ,item_id
+       ,count(case when create_time >= cast( #{firstDayOfWeek} as date )
+                then 1
+	            else null
+	            end) as week_vote
+       ,count(case when create_time >= cast( #{today} as date )
+               then 1
+	           else null
+	           end) as today_vote
+    from vote_result
+    where create_time >= cast( #{firstDayOfWeek} as date )
+      and user_id = #{userID}
+      and vote_id = #{voteID}
     </select>
+
 
 </mapper>

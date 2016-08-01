@@ -89,7 +89,7 @@ public class AppVoteController {
                     return "hello";
             }
         }catch (HongZhiException e){
-            return ObjectUtil.jsonOutError(e.getCode(), dic.getCodeValue(e.getCode(), language ) );
+            return ObjectUtil.jsonOutError(e.getCode(), dic.getCodeValue(e.getCode(),e.getMessage(), language ) );
         }
     }
 
