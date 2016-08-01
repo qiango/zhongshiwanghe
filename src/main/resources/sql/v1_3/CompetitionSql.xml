@@ -22,13 +22,19 @@
     <select id="competitionNewsImages" resultType="com.hongzhi.zswh.app_1_3.entity.CompetitionNewsImage" >
      select
           news_id
-         ,media_url  as image_url
+         ,
+        case when  substr(coalesce(media_url, '' ),2,6) = 'upload'
+             then  coalesce(media_url, '' )
+             else  concat('/pic.htmls?p=',media_url)
+              end
+               as image_url
      from news_multimedia
       where news_id in (
      <foreach collection="newsID" item="id" separator="," >
           #{id}
      </foreach>
         )
+        and is_delete = 0
     </select>
 
     <select id="getJoinCompetition" resultType="map">
