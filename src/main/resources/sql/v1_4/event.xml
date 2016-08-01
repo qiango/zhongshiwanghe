@@ -293,4 +293,23 @@
           and
               a.club_id = #{club_id}
     </select>
+
+
+
+    <insert id="saveUserProfile" >
+    insert into user_profile
+        (
+        user_id
+       ,item_code
+       ,item_value
+       ) values
+       <foreach collection="profiles" item="profile" separator="," >
+       (
+        #{userID}
+       ,#{profile.item_code}
+       ,#{profile.item_value}
+       )
+       </foreach>
+    </insert>
+
 </mapper>

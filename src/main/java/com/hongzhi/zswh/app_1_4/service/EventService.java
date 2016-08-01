@@ -4,6 +4,7 @@ import com.hongzhi.zswh.app_1_4.dao.EventDao;
 import com.hongzhi.zswh.app_1_4.entity.Event;
 import com.hongzhi.zswh.app_1_4.entity.EventCreate;
 import com.hongzhi.zswh.app_1_4.entity.EventStatus;
+import com.hongzhi.zswh.app_1_4.entity.UserProfile;
 import com.hongzhi.zswh.util.basic.DictionaryUtil;
 import com.hongzhi.zswh.util.basic.ObjectUtil;
 import com.hongzhi.zswh.util.basic.sessionDao.SessionProperty;
@@ -157,13 +158,15 @@ public class EventService {
         return map;
     }
 
-    public Object eventRegister(Integer event_id, SessionProperty property) throws HongZhiException {
+    public Object eventRegister(Integer event_id, SessionProperty property, String new_info, UserProfile[] profiles) throws HongZhiException {
 
         int effect_count = eventDao.saveUserRegister(event_id, Integer.valueOf(property.getUser_id()));
 
         // save new data
-
-        //
+        if (Boolean.valueOf(new_info)) {
+            List<UserProfile>  inputProfiles = Arrays.asList(profiles);
+            eventDao.saveUserProfile(Integer.valueOf(property.getUser_id()),inputProfiles);
+        }
 
         if ( 1 != effect_count ) {
             throw new HongZhiException("register_fail","event");
@@ -172,11 +175,17 @@ public class EventService {
         }
     }
 
-    public Object eventUnregister(Integer event_id, SessionProperty property) {
+    public Object eventUnregister(Integer event_id, SessionProperty property) throws HongZhiException {
 
         int effect_count = eventDao.unregister(event_id, Integer.valueOf(property.getUser_id()));
 
-        return null;
+        if ( 1 == effect_count ) {
+            Map<String,String> map = new HashMap<>();
+            map.put("status","success");
+            return  map;
+        } else {
+            throw  new HongZhiException("unregister_fail","event");
+        }
     }
     /**
      * 活动审核
