@@ -38,7 +38,7 @@ public class EventService {
 
             Map<String, Object> info = eventDao.statusInfo(Integer.valueOf(property.getUser_id()), event_id);
             events.get(0).setButton_show_code(Boolean.valueOf(info.get("is_registered").toString()), Integer.valueOf(info.get("registered_count").toString()), property.getLanguage());
-            events.get(0).setButton_show_content( dictionaryUtil.getValue(events.get(0).getButton_show_code().toLowerCase(),"event_button",property.getLanguage()));
+            events.get(0).setButton_show_content(dictionaryUtil.getValue(events.get(0).getButton_show_code().toLowerCase(), "event_button", property.getLanguage()));
         }
 
         Map<String, Object> map = new HashMap<>();
@@ -64,15 +64,15 @@ public class EventService {
 
         List<String> items = Arrays.asList(event_create.getForm_item().split(","));
 
-        eventDao.saveEventItems(event_create.getEvent_id(),items);
+        eventDao.saveEventItems(event_create.getEvent_id(), items);
 
         if (event_create.getOrganizer_join().toLowerCase().equals("true")) {
             eventDao.organizerJoin(event_create);
         }
 
-        Map<String,String > map = new HashMap<>() ;
-        map.put("info",return_info);
-        return  map ;
+        Map<String, String> map = new HashMap<>();
+        map.put("info", return_info);
+        return map;
     }
 
 
@@ -98,18 +98,19 @@ public class EventService {
 
     /**
      * 最新活动
+     *
      * @param property
      * @return
      */
     public Object latestEvent(SessionProperty property) {
 
-        List<Event> events_list = eventDao.latestEventList( property.getClub_id());
+        List<Event> events_list = eventDao.latestEventList(property.getClub_id());
 
         Map<String, Object> map = new HashMap<>();
 
-        if (events_list.size() > 0){
+        if (events_list.size() > 0) {
             map.put("events_list", events_list);
-        }else{
+        } else {
             map.put("events_list", new ArrayList<>());
         }
 
@@ -118,26 +119,27 @@ public class EventService {
 
     /**
      * 我的活动+我发起的活动
+     *
      * @param property
      * @return
      */
     public Object myActivities(SessionProperty property) {
 
-        List<Event> my_join_event_list = eventDao.myJoinEvent(property.getUser_id(),property.getClub_id());
+        List<Event> my_join_event_list = eventDao.myJoinEvent(property.getUser_id(), property.getClub_id());
 
-        List<Event> my_set_event_list = eventDao.mySetEvent(property.getUser_id(),property.getClub_id());
+        List<Event> my_set_event_list = eventDao.mySetEvent(property.getUser_id(), property.getClub_id());
 
         Map<String, Object> map = new HashMap<>();
 
-        if (my_join_event_list.size() > 0 ){
+        if (my_join_event_list.size() > 0) {
             map.put("my_join_event_list", my_join_event_list);
-        }else{
-            map.put("my_join_event_list",  new ArrayList<>());
+        } else {
+            map.put("my_join_event_list", new ArrayList<>());
         }
-        if (my_set_event_list.size() > 0){
+        if (my_set_event_list.size() > 0) {
             map.put("my_set_event_list", my_set_event_list);
-        }else{
-            map.put("my_set_event_list",  new ArrayList<>());
+        } else {
+            map.put("my_set_event_list", new ArrayList<>());
         }
 
         return map;
@@ -145,15 +147,15 @@ public class EventService {
 
     public Object eventForm(Integer event_id, SessionProperty property) throws HongZhiException {
 
-        List<Map<String,Object>>  formItems = eventDao.formItems(event_id, Integer.valueOf(property.getUser_id()));
+        List<Map<String, Object>> formItems = eventDao.formItems(event_id, Integer.valueOf(property.getUser_id()));
 //       map : a.event_id ,a.club_id ,b.item_code ,c.item_name, item_value
 
-        if (! formItems.get(0).get("club_id").equals(property.getClub_id())) {
-            throw new HongZhiException("not_own_club","event");
+        if (!formItems.get(0).get("club_id").equals(property.getClub_id())) {
+            throw new HongZhiException("not_own_club", "event");
         }
 
-        Map<String,Object> map = new HashMap<>();
-        map.put("items",formItems);
+        Map<String, Object> map = new HashMap<>();
+        map.put("items", formItems);
         return map;
     }
 
@@ -165,8 +167,8 @@ public class EventService {
 
         //
 
-        if ( 1 != effect_count ) {
-            throw new HongZhiException("register_fail","event");
+        if (1 != effect_count) {
+            throw new HongZhiException("register_fail", "event");
         } else {
             return null;
         }
@@ -178,28 +180,29 @@ public class EventService {
 
         return null;
     }
+
     /**
      * 活动审核
+     *
+     * @param property
+     * @param property
      * @return
-     * @param property
-     * @param property
      */
     public Object verifyEvent(SessionProperty property) {
 
         List<Event> verify_event_list = eventDao.verifyEvent(property.getClub_id());
 
-        Map<String,Object> map = new HashMap<>();
+        Map<String, Object> map = new HashMap<>();
 
-        if (verify_event_list.size() > 0){
-            for (Event event: verify_event_list){
-/*                Map<String, Object> info = eventDao.statusInfo(0, event.getEvent_id());
-                event.setButton_show_code(Boolean.valueOf(info.get("is_registered").toString()), Integer.valueOf(info.get("registered_count").toString()), property.getLanguage());
-                event.setButton_show_content( dictionaryUtil.getValue(event.getButton_show_code().toLowerCase(),"event_button",property.getLanguage()));*/
+        if (verify_event_list.size() > 0) {
+            for (Event event : verify_event_list) {
                 event.setEvent_status_name_code();
-                event.setEvent_status_name(dictionaryUtil.getValue(event.getEvent_status_name_code().toLowerCase(),"event_button",property.getLanguage()));
+                event.setEvent_status_name(dictionaryUtil.getValue(event.getEvent_status_name_code().toLowerCase(), "event_button", property.getLanguage()));
             }
+            map.put("verify_event_list", verify_event_list);
+        }else{
+            map.put("verify_event_list", new ArrayList<>());
         }
-        map.put("verify_event_list",verify_event_list);
 
         return map;
     }
