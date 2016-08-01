@@ -615,4 +615,26 @@
         </foreach>
 
     </update>
+
+    <select id="queryEvent" resultType="Integer">
+        SELECT
+            a.event_id
+        from
+            event a
+        where
+            a.event_status = 0
+        and
+            a.club_id = #{club_id}
+    </select>
+
+    <select id="queryClub" resultType="Integer">
+        SELECT
+            a.user_id
+        from
+            user_detail a
+        where
+            a.join_club_status = 1
+         and
+            a.club_id = #{club_id}
+    </select>
 </mapper>

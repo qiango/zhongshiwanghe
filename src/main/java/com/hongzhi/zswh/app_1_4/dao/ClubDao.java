@@ -22,4 +22,7 @@ public interface ClubDao {
 
     List<Map<String,Object>>  listClub();
 
+    List<Integer> queryEvent(String club_id);
+
+    List<Integer> queryClub(String club_id);
 }

@@ -155,6 +155,7 @@
          </if>
 
         ORDER BY d.start_time desc
+        LIMIT 2
     </select>
 
 

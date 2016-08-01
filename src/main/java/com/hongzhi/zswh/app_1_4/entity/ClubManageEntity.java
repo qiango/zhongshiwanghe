@@ -20,10 +20,28 @@ public class ClubManageEntity {
 	private  String  join_club_status;
 	private  String  join_club_status_name;
 	private String   user_level;
+	private  String show_event;
+	private  String show_club;
 	
 	private Map<String,Object> club;
 	private List<Map<String,Object>> club_ranking_list;
 	private Map<String,Object> event;
+
+	public String getShow_event() {
+		return show_event;
+	}
+
+	public void setShow_event(String show_event) {
+		this.show_event = show_event;
+	}
+
+	public String getShow_club() {
+		return show_club;
+	}
+
+	public void setShow_club(String show_club) {
+		this.show_club = show_club;
+	}
 
 	public Map<String, Object> getEvent() {
 		return event;

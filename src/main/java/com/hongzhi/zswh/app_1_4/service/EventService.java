@@ -11,11 +11,7 @@ import com.hongzhi.zswh.util.exception.HongZhiException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.Arrays;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Created by taylor on 7/27/16.
@@ -110,7 +106,7 @@ public class EventService {
 
         Map<String, Object> map = new HashMap<>();
 
-        map.put("my_counts",my_counts);
+        map.put("my_event_counts",my_counts);
 
         if (events_list.size() > 0) {
             map.put("events_list", events_list);
@@ -186,7 +182,7 @@ public class EventService {
     }
 
     /**
-     * 活动审核
+     * 活动审核列表
      *
      * @param property
      * @param property
@@ -210,4 +206,10 @@ public class EventService {
 
         return map;
     }
+
+/*    public Object verifyEventDetails(String event_id, SessionProperty property) throws HongZhiException {
+        ExcepUtil.verify(event_id,"event_name_null","event");
+
+        return null;
+    }*/
 }

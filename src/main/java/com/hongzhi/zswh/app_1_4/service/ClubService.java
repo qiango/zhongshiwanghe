@@ -46,6 +46,17 @@ public class ClubService {
             out.setUser_level("99");//普通会员
         } else {
             out.setUser_level("0");//管理员
+            List<Integer> event_list =  clubDao.queryEvent(club_info.getClub_id());
+
+            List<Integer> club_list =  clubDao.queryClub(club_info.getClub_id());
+
+            if (event_list.size() > 0){
+                out.setShow_event("1");
+            }
+
+            if (club_list.size() > 0){
+                out.setShow_club("1");
+            }
         }
 
         String defaultVal = "0";

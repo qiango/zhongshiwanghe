@@ -44,7 +44,7 @@ public class AppClubController {
                     property = sess.sessionEffective(session,session_id,"/v1.4/club/load_club_manage");
                     return ObjectUtil.jsonOut(v1_4_clubService.loadClubManage(property));
                 default:
-                    return null;
+                    return "404";
             }
         } catch (HongZhiException e) {
             return ObjectUtil.jsonOut(v1_4_clubService.loadClubManageNotLogIn());
