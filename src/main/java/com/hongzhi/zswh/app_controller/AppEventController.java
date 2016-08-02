@@ -201,7 +201,24 @@ public class AppEventController {
             return ObjectUtil.jsonOutError(e.getCode(), dic.getCodeValue(e.getCode(),e.getMessage(), language ) );
         }
     }
-
+/*    @ResponseBody
+    @RequestMapping(value = "/verify_event_details")
+    public String verifyEventDetails(HttpSession session, String session_id, String event_id , @PathVariable String version){
+        SessionProperty property;
+        String language = "zh";
+        try {
+            switch (version){
+                case "v1,4":
+                    property = sess.sessionEffective(session,session_id,"/v1.4/event/unregister");
+                    language=property.getLanguage();
+                    return ObjectUtil.jsonOut( eventService.verifyEventDetails(event_id,property) );
+                default:
+                    return "404";
+            }
+        }catch (HongZhiException e){
+            return ObjectUtil.jsonOutError(e.getCode(), dic.getCodeValue(e.getCode(),e.getMessage(), language ) );
+        }
+    }*/
 
 
 

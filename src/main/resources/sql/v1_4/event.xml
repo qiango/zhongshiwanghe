@@ -155,6 +155,7 @@
          </if>
 
         ORDER BY d.start_time desc
+        LIMIT 2
     </select>
 
 
@@ -292,5 +293,16 @@
               a.event_status = 0
           and
               a.club_id = #{club_id}
+    </select>
+    <select id="selectMyEvent" resultType="Integer">
+          select
+              COUNT(1) my_counts
+          from
+              event_registration a
+          where
+              a.user_id = #{user_id}
+          and
+              a.my_status = 1
+
     </select>
 </mapper>

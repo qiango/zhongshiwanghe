@@ -41,4 +41,6 @@ public interface EventDao {
     List<Event> mySetEvent(@Param("user_id") String user_id, @Param("club_id") Integer club_id);
 
     List<Event> verifyEvent(@Param("club_id") Integer club_id);
+
+    int selectMyEvent(@Param("user_id") String user_id);
 }
