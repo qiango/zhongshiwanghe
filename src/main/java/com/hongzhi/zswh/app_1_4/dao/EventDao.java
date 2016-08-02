@@ -44,4 +44,6 @@ public interface EventDao {
     List<Event> verifyEvent(@Param("club_id") Integer club_id);
 
     int saveUserProfile(@Param("userID") Integer user_id ,@Param("profiles") List<UserProfile> inputProfiles);
+
+    int selectMyEvent(@Param("user_id") String user_id);
 }
