@@ -53,4 +53,5 @@ public interface EventDao {
 
     int clubEventsCount(@Param("clubID") Integer club_id );
 
+    int selectEventByClubId(Integer club_id);
 }

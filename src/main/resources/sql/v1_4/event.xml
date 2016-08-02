@@ -336,4 +336,16 @@
     )
 
     </insert>
+
+    <select id="selectEventByClubId" resultType="Integer">
+        select
+            COUNT(1) as counts
+        from
+            event a
+        where
+            a.event_status = 0
+        and
+            a.club_id = #{club_id}
+
+    </select>
 </mapper>

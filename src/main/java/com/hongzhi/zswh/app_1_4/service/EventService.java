@@ -28,17 +28,31 @@ public class EventService {
 
     public Object events(SessionProperty property, Integer club_id, Integer event_id) {
 
-        List<Event> events = eventDao.events(club_id, event_id);
+        Map<String, Object> map = new HashMap<>();
 
-        if (!ObjectUtil.isEmpty(event_id)) {
+        if (property.getClub_id() != 0 && "0".equals(property.getClub_user_level())) {
 
-            Map<String, Object> info = eventDao.statusInfo(Integer.valueOf(property.getUser_id()), event_id);
-            events.get(0).setButton_show_code(Boolean.valueOf(info.get("is_registered").toString()), Integer.valueOf(info.get("registered_count").toString()), property.getLanguage());
-            events.get(0).setButton_show_content(dictionaryUtil.getValue(events.get(0).getButton_show_code().toLowerCase(), "event_button", property.getLanguage()));
+            List<Event> events = eventDao.events(property.getClub_id(), event_id);
+
+            int counts = eventDao.selectEventByClubId(property.getClub_id());
+
+            if (!ObjectUtil.isEmpty(event_id)) {
+
+                Map<String, Object> info = eventDao.statusInfo(Integer.valueOf(property.getUser_id()), event_id);
+                events.get(0).setButton_show_code(Boolean.valueOf(info.get("is_registered").toString()), Integer.valueOf(info.get("registered_count").toString()), property.getLanguage());
+                events.get(0).setButton_show_content(dictionaryUtil.getValue(events.get(0).getButton_show_code().toLowerCase(), "event_button", property.getLanguage()));
+            }
+
+            map.put("club_user_level", property.getClub_user_level());
+            map.put("counts", counts);
+            map.put("events", events);
+        } else if (property.getClub_id() == 0) {
+
+            map.put("club_user_level", property.getClub_user_level());
+            map.put("counts", 0);
+            map.put("events", new ArrayList<>());
         }
 
-        Map<String, Object> map = new HashMap<>();
-        map.put("events", events);
         return map;
     }
 
