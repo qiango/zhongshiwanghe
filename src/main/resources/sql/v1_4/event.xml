@@ -52,9 +52,11 @@
 
     </insert>
 
-    <select id="eventIDs" resultType="Integer" >
+    <select id="eventIDs" resultType="map" >
     select
-        event_id
+        event_id as event_id
+        ,organizer_id as organizer_id
+        ,event_name as event_name
     from event
     where club_id = #{club_id}
     </select>
@@ -323,4 +325,18 @@
               a.my_status = 1
 
     </select>
+
+    <insert id="saveReviewReason">
+          insert into
+             event_reason (
+             event_id
+            ,reason_type
+            ,reason
+    ) values (
+          #{event_id}
+         ,#{reason_type}
+         ,#{review_reason}
+    )
+
+    </insert>
 </mapper>
