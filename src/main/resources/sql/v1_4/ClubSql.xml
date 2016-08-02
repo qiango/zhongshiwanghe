@@ -543,26 +543,7 @@
         </foreach>
             )
     </select>
-    <select id="queryClub" resultType="com.hongzhi.zswh.app_1_3.entity.UserDetailEntity">
-       SELECT
-          club_id,
-          user_id,
-          jump_club_number,
-          join_club_status,
-          user_level,
-          create_time,
-          change_status_time,
-          club_refuse_id
-        FROM
-          user_detail
-        where
-             user_id in (
-        <foreach collection ="multipleReceiver" item="item" index= "index" separator=",">
-            #{item}
-        </foreach>
-        )
 
-    </select>
     <insert id="insetIntoUserDetail" parameterType="com.hongzhi.zswh.app_1_3.entity.UserDetailEntity">
         INSERT INTO user_detail_bak(
         `club_id`,`user_id`,
