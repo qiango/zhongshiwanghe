@@ -1,17 +1,19 @@
 package com.hongzhi.zswh.app_1_4.service;
 
+import com.google.gson.Gson;
 import com.hongzhi.zswh.app_1_4.dao.EventDao;
-import com.hongzhi.zswh.app_1_4.entity.Event;
-import com.hongzhi.zswh.app_1_4.entity.EventCreate;
-import com.hongzhi.zswh.app_1_4.entity.EventStatus;
-import com.hongzhi.zswh.app_1_4.entity.UserProfile;
+import com.hongzhi.zswh.app_1_4.entity.*;
 import com.hongzhi.zswh.util.basic.DictionaryUtil;
 import com.hongzhi.zswh.util.basic.ObjectUtil;
 import com.hongzhi.zswh.util.basic.sessionDao.SessionProperty;
 import com.hongzhi.zswh.util.exception.HongZhiException;
+import com.hongzhi.zswh.util.picture.service.Picture;
+import com.hongzhi.zswh.util.picture.service.PictureService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.servlet.http.HttpServletRequest;
+import java.io.IOException;
 import java.util.*;
 
 /**
@@ -25,6 +27,9 @@ public class EventService {
     private EventDao eventDao;
     @Autowired
     private DictionaryUtil dictionaryUtil;
+    @Autowired
+    private PictureService pictureService;
+
 
 
     public Object events(SessionProperty property, Integer club_id, Integer event_id) {
@@ -43,7 +48,7 @@ public class EventService {
         return map;
     }
 
-    public Object eventCreate(EventCreate event_create, SessionProperty property) throws HongZhiException {
+    public Object eventCreate(HttpServletRequest request, EventCreate event_create, SessionProperty property) throws HongZhiException {
         event_create.setOrganizer_id(Integer.valueOf(property.getUser_id()));
         event_create.verifyData();
 
@@ -56,6 +61,29 @@ public class EventService {
             event_create.setEvent_status(EventStatus.UNDER_REVIEW.getValue());
             return_info = EventStatus.UNDER_REVIEW.name();
         }
+
+        List<Picture> pictures = new ArrayList<>();
+        // upload picture
+        try {
+            pictures = pictureService.picUploadMore(request);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        Gson  gson = new Gson();
+        System.out.println(event_create.getEvent_detail_rich_text());
+
+        EventCreateRichText[] richText = gson.fromJson(event_create.getEvent_detail_rich_text(),EventCreateRichText[].class);
+
+        int j =0;
+        for (int i = 0; i < richText.length ;i++) {
+            if (richText[i].getType().toLowerCase().equals("image") && pictures.size() >= j && !ObjectUtil.isEmpty(pictures.get(j))) {
+                richText[i].setContent(dictionaryUtil.getValue("picHead","data_alias",property.getLanguage())+pictures.get(j).getNewName());
+                j++;
+            }
+        }
+        event_create.setEvent_detail(gson.toJson(richText).toString());
+
 
         eventDao.createEvent(event_create);
 
