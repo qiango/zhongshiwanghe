@@ -61,7 +61,9 @@ public class AppClubController {
             switch (version) {
                 case "v1.3":
                     property = sess.sessionEffective(session,session_id,"/v1.3/club/set_club");
-                    return ObjectUtil.jsonOut(clubService.setClub(request,property,club));
+                    String return_str  =  ObjectUtil.jsonOut(clubService.setClub(request,property,club));
+                    sess.refreshAttribute();
+                    return return_str;
                 default:
                     return null;
             }
