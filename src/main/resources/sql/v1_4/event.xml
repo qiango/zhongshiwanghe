@@ -6,15 +6,15 @@
 
     <select id="statusInfo" resultType="map" >
     select
-         case when user_id = #{userID}
+         case when a.user_id = #{userID}
               then 'true'
               else 'false'
               end as is_registered
         ,count(1) as registered_count
-        ,b.event_detail
+        ,coalesce(b.event_detail,'') as event_detail
         ,coalesce(c.nickname,concat(substr(c.phone,1,3),'****',substr(c.phone,8)) ) as organizer_name
-        ,concat(substr(c.phone,1,3),'****',substr(c.phone,8)) as phone
-        ,c.profile_picture
+        ,coalesce(concat(substr(c.phone,1,3),'****',substr(c.phone,8)),'') as phone
+        ,coalesce(c.profile_picture,'') as profile_image
     from event_registration  a
     left join event b
     on a.event_id = b.event_id

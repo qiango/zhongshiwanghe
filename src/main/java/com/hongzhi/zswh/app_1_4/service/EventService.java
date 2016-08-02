@@ -44,7 +44,7 @@ public class EventService {
             events.get(0).setEvent_detail(gson.fromJson(info.get("event_detail").toString(),EventCreateRichText[].class));
             EventJoinMember organizer = new EventJoinMember();
             organizer.setName(info.get("organizer_name").toString());
-            organizer.setProfile_image(info.get("c.profile_picture").toString());
+            organizer.setProfile_image(info.get("profile_image").toString());
             organizer.setPhone(info.get("phone").toString());
             events.get(0).setOrganizer(organizer);
             events.get(0).setMembers(eventDao.eventMembers(event_id));
