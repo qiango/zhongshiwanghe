@@ -14,7 +14,8 @@
           on a.news_id = b.news_id
     where b.range_type = 2
       and b.circle_id = #{compID}
-
+      and b.is_delete = 0
+      and a.news_status='1'
     order by   coalesce( a.weights_order,9999999999) asc , a.create_time desc
     limit #{startRow } , #{size }
     </select>

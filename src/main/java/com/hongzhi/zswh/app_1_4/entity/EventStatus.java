@@ -1,5 +1,7 @@
 package com.hongzhi.zswh.app_1_4.entity;
 
+import com.hongzhi.zswh.util.basic.DictionaryUtil;
+
 import java.util.HashMap;
 
 /**
@@ -33,6 +35,10 @@ public enum EventStatus {
 
     public static EventStatus getEventStatus(int value) {
         return  map.get(value);
+    }
+
+    public static String findDictionary(int value){
+        return DictionaryUtil.find(map.get(value).name(),"event_enum","zh");
     }
 
 }

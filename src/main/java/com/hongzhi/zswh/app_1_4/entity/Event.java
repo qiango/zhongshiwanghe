@@ -1,5 +1,7 @@
 package com.hongzhi.zswh.app_1_4.entity;
 
+import com.hongzhi.zswh.util.basic.DictionaryUtil;
+
 import java.sql.Timestamp;
 
 /**
@@ -141,6 +143,7 @@ public class Event {
     public void setEvent_status(Integer event_status) {
         this.event_status = event_status;
         this.event_status_code = EventStatus.getEventStatus(event_status).name();
+        this.event_status_name = EventStatus.findDictionary(event_status);
     }
 
     public String getEvent_status_code() {

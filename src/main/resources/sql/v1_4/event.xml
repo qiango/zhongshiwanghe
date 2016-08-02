@@ -33,6 +33,7 @@
          ,view_guests
          ,form_item
          ,event_detail
+         ,event_notice
     ) values (
           #{event_name}
          ,#{club_id}
@@ -50,6 +51,7 @@
          ,#{view_guests}
          ,#{form_item}
          ,#{event_detail}
+         ,#{event_notice}
     )
 
     </insert>
