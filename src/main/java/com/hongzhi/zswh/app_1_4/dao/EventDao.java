@@ -2,6 +2,7 @@ package com.hongzhi.zswh.app_1_4.dao;
 
 import com.hongzhi.zswh.app_1_4.entity.Event;
 import com.hongzhi.zswh.app_1_4.entity.EventCreate;
+import com.hongzhi.zswh.app_1_4.entity.UserProfile;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
@@ -41,6 +42,8 @@ public interface EventDao {
     List<Event> mySetEvent(@Param("user_id") String user_id, @Param("club_id") Integer club_id);
 
     List<Event> verifyEvent(@Param("club_id") Integer club_id);
+
+    int saveUserProfile(@Param("userID") Integer user_id ,@Param("profiles") List<UserProfile> inputProfiles);
 
     int selectMyEvent(@Param("user_id") String user_id);
 }
