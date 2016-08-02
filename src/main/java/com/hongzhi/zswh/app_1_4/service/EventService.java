@@ -71,7 +71,13 @@ public class EventService {
         return map;
     }
 
-
+    /**
+     * 活动审核
+     * @param event
+     * @param property
+     * @return
+     * @throws HongZhiException
+     */
     public Object eventReview(EventEntity event, SessionProperty property) throws HongZhiException {
 
         List<Map<String, Object>> event_ids = eventDao.eventIDs(property.getClub_id());
@@ -145,11 +151,11 @@ public class EventService {
 
         List<Event> events_list = eventDao.latestEventList(property.getClub_id());
 
-        int my_counts = eventDao.selectMyEvent(property.getUser_id());
+        int club_events_counts = eventDao.clubEventsCount(property.getClub_id());
 
         Map<String, Object> map = new HashMap<>();
 
-        map.put("my_event_counts",my_counts);
+        map.put("event_counts",club_events_counts);
 
         if (events_list.size() > 0) {
             map.put("events_list", events_list);
@@ -247,8 +253,7 @@ public class EventService {
 
         if (verify_event_list.size() > 0) {
             for (Event event : verify_event_list) {
-                event.setEvent_status_name_code();
-                event.setEvent_status_name(dictionaryUtil.getValue(event.getEvent_status_name_code().toLowerCase(), "event_button", property.getLanguage()));
+                event.setEvent_status_name(dictionaryUtil.getValue(event.getEvent_status_code().toLowerCase(), "event_button", property.getLanguage()));
             }
             map.put("verify_event_list", verify_event_list);
         }else{

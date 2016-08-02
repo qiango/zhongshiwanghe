@@ -23,13 +23,12 @@ public class Event {
     private Double fee ;
     private String image ;
     private Integer event_status ;
-    private String event_status_name;
-    private String event_status_name_code;
+    private String event_status_name="";
     private String event_status_code ;
     private Integer view_guests;
     private String view_guests_code;
-    private String button_show_code;
-    private String button_show_content;
+    private String button_show_code="";
+    private String button_show_content="";
 
     public Integer getEvent_id() {
         return event_id;
@@ -223,13 +222,6 @@ public class Event {
         this.event_status_name = event_status_name;
     }
 
-    public String getEvent_status_name_code() {
-        return event_status_name_code;
-    }
-
-    public void setEvent_status_name_code() {
-        this.event_status_name_code = getEventStatusName();
-    }
 
     public String getEventStatusName(){
         if ( EventStatus.getEventStatus(event_status).name().equals(EventStatus.UNDER_REVIEW.name()) ){

@@ -46,7 +46,11 @@ public interface EventDao {
 
     int saveUserProfile(@Param("userID") Integer user_id ,@Param("profiles") List<UserProfile> inputProfiles);
 
+
     int selectMyEvent(@Param("user_id") String user_id);
 
     int saveReviewReason(EventEntity event);
+
+    int clubEventsCount(@Param("clubID") Integer club_id );
+
 }
