@@ -102,7 +102,7 @@ public class PictureService {
 //            while (iter.hasNext()) {
             for (int j = 0; j < files.size(); j++) {
 //                MultipartFile file = multiRequest.getFile(iter.next() .toString());
-                MultipartFile file = files.get(i);
+                MultipartFile file = files.get(j);
                 if (file != null) {
                     String originName = file.getOriginalFilename();
                     String fileOriginalName = file.getOriginalFilename().replaceAll(",", "-").replaceAll(" ", "-");
