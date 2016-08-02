@@ -6,6 +6,7 @@ import com.hongzhi.zswh.util.basic.DictionaryUtil;
 import com.hongzhi.zswh.util.basic.ObjectUtil;
 import com.hongzhi.zswh.util.basic.SessionUtil;
 import com.hongzhi.zswh.util.basic.sessionDao.SessionProperty;
+import com.hongzhi.zswh.util.date.DateFormat;
 import com.hongzhi.zswh.util.exception.HongZhiException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -42,7 +43,7 @@ public class AppClubController {
                     return ObjectUtil.jsonOut(clubService.loadClubManage(property));
                 case "v1.4":
                     property = sess.sessionEffective(session,session_id,"/v1.4/club/load_club_manage");
-                    return ObjectUtil.jsonOut(v1_4_clubService.loadClubManage(property));
+                    return ObjectUtil.jsonOutDT(v1_4_clubService.loadClubManage(property), "MM月dd日 HH:mm");
                 default:
                     return "404";
             }

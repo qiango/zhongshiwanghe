@@ -312,15 +312,12 @@
        </foreach>
     </insert>
 
-    <select id="selectMyEvent" resultType="Integer">
+    <select id="clubEventsCount" resultType="Integer">
           select
-              COUNT(1) my_counts
+              COUNT(1) evnets_count
           from
-              event_registration a
+              event  a
           where
-              a.user_id = #{user_id}
-          and
-              a.my_status = 1
-
+              a.club_id = #{clubID}
     </select>
 </mapper>
