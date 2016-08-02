@@ -103,7 +103,16 @@
        from session_time 
     where   due_time  > now() 
      </select>
-    
-	
+
+    <select id="clubInfo" resultType="map" >
+      select
+          user_id
+         ,club_id
+         ,join_club_status
+         ,user_level as club_user_level
+      from user_detail
+    </select>
+
+
 	
 </mapper>
