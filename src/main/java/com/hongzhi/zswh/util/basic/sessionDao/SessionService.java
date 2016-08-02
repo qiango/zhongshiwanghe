@@ -142,9 +142,14 @@ public class SessionService {
 			sessionProperty.setUser_id(attrList.get(i).get("user_id").toString());
 			sessionProperty.setUser_real_name(attrList.get(i).get("user_real_name").toString());
 
-            Map<String,Object>  userClub = userClubInfo.get( userIds.indexOf(attrList.get(i).get("user_id")) );
-            sessionProperty.setClub_id(Integer.valueOf(ObjectUtil.coalesce(userClub.get("club_id"),0).toString().replace("null","0")));
-            sessionProperty.setClub_user_level(ObjectUtil.coalesce("club_user_level","").toString());
+            if (userIds.contains(attrList.get(i).get("user_id"))) {
+                Map<String,Object>  userClub = userClubInfo.get( userIds.indexOf(attrList.get(i).get("user_id")) );
+                sessionProperty.setClub_id(Integer.valueOf(ObjectUtil.coalesce(userClub.get("club_id"),0).toString().replace("null","0")));
+                sessionProperty.setClub_user_level(ObjectUtil.coalesce("club_user_level","").toString());
+            } else {
+                sessionProperty.setClub_id(0);
+                sessionProperty.setClub_user_level("");
+            }
 
 //            sessionProperty.setClub_id(Integer.valueOf( ObjectUtil.coalesce(attrList.get(i).get("club_id"),0).toString().replace("null","0") ));
 //            sessionProperty.setClub_user_level(attrList.get(i).get("club_user_level").toString());

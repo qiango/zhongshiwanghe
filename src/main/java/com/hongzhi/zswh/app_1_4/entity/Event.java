@@ -1,8 +1,13 @@
 package com.hongzhi.zswh.app_1_4.entity;
 
+import com.google.gson.Gson;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonParser;
 import com.hongzhi.zswh.util.basic.DictionaryUtil;
 
 import java.sql.Timestamp;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by taylor on 7/27/16.
@@ -31,6 +36,13 @@ public class Event {
     private String view_guests_code;
     private String button_show_code="";
     private String button_show_content="";
+
+    private EventCreateRichText[] event_detail = {} ;
+    private String event_notice="";
+
+    private List<EventJoinMember> members = new ArrayList<>();
+    private EventJoinMember organizer = new EventJoinMember();
+
 
     public Integer getEvent_id() {
         return event_id;
@@ -239,4 +251,43 @@ public class Event {
             return "";
         }
     }
+
+    public void setButton_show_code(String button_show_code) {
+        this.button_show_code = button_show_code;
+    }
+
+
+    public String getEvent_notice() {
+        return event_notice;
+    }
+
+    public void setEvent_notice(String event_notice) {
+        this.event_notice = event_notice;
+    }
+
+    public List<EventJoinMember> getMembers() {
+        return members;
+    }
+
+    public void setMembers(List<EventJoinMember> members) {
+        this.members = members;
+    }
+
+    public EventJoinMember getOrganizer() {
+        return organizer;
+    }
+
+    public void setOrganizer(EventJoinMember organizer) {
+        this.organizer = organizer;
+    }
+
+
+    public EventCreateRichText[] getEvent_detail() {
+        return event_detail;
+    }
+
+    public void setEvent_detail(EventCreateRichText[] event_detail) {
+        this.event_detail= event_detail;
+    }
+
 }

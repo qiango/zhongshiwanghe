@@ -37,10 +37,17 @@ public class EventService {
         List<Event> events = eventDao.events(club_id, event_id);
 
         if (!ObjectUtil.isEmpty(event_id)) {
-
             Map<String, Object> info = eventDao.statusInfo(Integer.valueOf(property.getUser_id()), event_id);
             events.get(0).setButton_show_code(Boolean.valueOf(info.get("is_registered").toString()), Integer.valueOf(info.get("registered_count").toString()), property.getLanguage());
             events.get(0).setButton_show_content(dictionaryUtil.getValue(events.get(0).getButton_show_code().toLowerCase(), "event_button", property.getLanguage()));
+            Gson gson = new Gson();
+            events.get(0).setEvent_detail(gson.fromJson(info.get("event_detail").toString(),EventCreateRichText[].class));
+            EventJoinMember organizer = new EventJoinMember();
+            organizer.setName(info.get("organizer_name").toString());
+            organizer.setProfile_image(info.get("c.profile_picture").toString());
+            organizer.setPhone(info.get("phone").toString());
+            events.get(0).setOrganizer(organizer);
+            events.get(0).setMembers(eventDao.eventMembers(event_id));
         }
 
         Map<String, Object> map = new HashMap<>();
