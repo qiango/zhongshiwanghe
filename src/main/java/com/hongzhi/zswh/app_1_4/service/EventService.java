@@ -51,7 +51,9 @@ public class EventService {
                 events.get(0).setButton_show_code(Boolean.valueOf(info.get("is_registered").toString()), Integer.valueOf(info.get("registered_count").toString()), property.getLanguage());
                 events.get(0).setButton_show_content(dictionaryUtil.getValue(events.get(0).getButton_show_code().toLowerCase(), "event_button", property.getLanguage()));
                 Gson gson = new Gson();
-                events.get(0).setEvent_detail(gson.fromJson(info.get("event_detail").toString(), EventCreateRichText[].class));
+                if (!ObjectUtil.isEmpty(info.get("event_detail"))) {
+                    events.get(0).setEvent_detail(gson.fromJson(info.get("event_detail").toString(), EventCreateRichText[].class));
+                }
                 EventJoinMember organizer = new EventJoinMember();
                 organizer.setName(info.get("organizer_name").toString());
                 organizer.setProfile_image(info.get("profile_image").toString());
@@ -264,13 +266,15 @@ public class EventService {
         return map;
     }
 
-    public Object eventRegister(Integer event_id, SessionProperty property, String new_info, UserProfile[] profiles) throws HongZhiException {
+    public Object eventRegister(Integer event_id, SessionProperty property, String profiles) throws HongZhiException {
 
         int effect_count = eventDao.saveUserRegister(event_id, Integer.valueOf(property.getUser_id()));
 
         // save new data
-        if (Boolean.valueOf(new_info)) {
-            List<UserProfile>  inputProfiles = Arrays.asList(profiles);
+        if (!ObjectUtil.isEmpty(profiles)) {
+            Gson gson = new Gson();
+            UserProfile[] profileArray = gson.fromJson(profiles,UserProfile[].class);
+            List<UserProfile>  inputProfiles = Arrays.asList(profileArray);
             eventDao.saveUserProfile(Integer.valueOf(property.getUser_id()),inputProfiles);
         }
 

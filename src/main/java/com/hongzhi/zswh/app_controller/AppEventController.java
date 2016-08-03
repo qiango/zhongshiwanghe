@@ -169,7 +169,7 @@ public class AppEventController {
 
     @ResponseBody
     @RequestMapping(value = "/register")
-    public String register(HttpSession session, String session_id, Integer event_id, String new_info , UserProfile[] profiles, @PathVariable String version){
+    public String register(HttpSession session, String session_id, Integer event_id,  String profiles, @PathVariable String version){
         SessionProperty property;
         String language = "zh";
         try{
@@ -177,7 +177,7 @@ public class AppEventController {
                 case "v1.4":
                     property = sess.sessionEffective(session,session_id,"/v1.4/event/register");
                     language=property.getLanguage();
-                    return ObjectUtil.jsonOut( eventService.eventRegister(event_id,property,new_info,profiles) );
+                    return ObjectUtil.jsonOut( eventService.eventRegister(event_id,property,profiles) );
                 default:
                     return "404";
             }
