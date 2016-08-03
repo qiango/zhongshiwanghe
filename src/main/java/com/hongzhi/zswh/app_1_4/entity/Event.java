@@ -146,7 +146,11 @@ public class Event {
     }
 
     public void setImage(String image) {
-        this.image = DictionaryUtil.find("picHead","data_alias","zh")+ image;
+        if (image.startsWith("/pic.htmls")) {
+            this.image = image;
+        } else {
+            this.image = DictionaryUtil.find("picHead","data_alias","zh")+ image;
+        }
     }
 
     public Integer getEvent_status() {

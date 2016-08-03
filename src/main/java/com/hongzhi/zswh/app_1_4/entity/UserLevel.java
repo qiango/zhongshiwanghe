@@ -11,8 +11,9 @@ import java.util.HashMap;
  */
 public enum UserLevel {
      CLUB_MANAGER(0)
+    ,CLUB_MEMBER(99)
+
     ,EVENT_ORGANIZER(1)
-    ,CLUB_MEMBER(2)
     ,NOT_JOIN_CLUB(3)
     ,EVENT_MEMBER(4)
     ;
@@ -46,4 +47,10 @@ public enum UserLevel {
         return DictionaryUtil.find(level,"event_enum",language);
     }
 
+    public static String findDictionary(int level,String language){
+        if (ObjectUtil.isEmpty(language)) {
+            language = "zh";
+        }
+        return DictionaryUtil.find(getUserLevel(level).name(),"event_enum",language);
+    }
 }
