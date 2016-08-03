@@ -56,4 +56,6 @@ public interface EventDao {
 
     List<EventJoinMember> eventMembers(@Param("eventID") Integer event_id);
     int selectEventByClubId(Integer club_id);
+
+    List<Map<String,Object>> selectEventFormItem();
 }

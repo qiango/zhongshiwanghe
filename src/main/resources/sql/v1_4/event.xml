@@ -387,4 +387,15 @@
         and
             a.club_id = #{club_id}
     </select>
+    <select id="selectEventFormItem" resultType="map">
+        select
+             a.item_code
+            ,a.item_name
+            ,a.is_default
+            ,a.language
+            ,a.index
+        from
+            event_form_item a
+        ORDER BY a.index
+    </select>
 </mapper>
