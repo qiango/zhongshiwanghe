@@ -174,16 +174,25 @@
          a.event_id
         ,a.club_id
         ,b.item_code
-        ,c.item_name
-        ,coalesce(d.item_value,'')  as item_value
+        ,coalesce(c.item_name,'')  as item_name
+        ,coalesce(d.item_value,
+            case when b.item_code = 'name'
+                 then e.user_real_name
+                 when b.item_code = 'mobile'
+                 then e.phone
+                 else null
+                 end
+        ,'')  as item_value
     from event a
     left join event_form b
            on a.event_id = b.event_id
     left join event_form_item c
            on b.item_code = c.item_code
+    left join user_info e
+           on e.user_id = #{userID}
     left join user_profile d
            on b.item_code = d.item_code
-          and d.user_id = #{userID}
+          and d.user_id = e.user_id
     where a.event_id = #{eventID}
     order by c.index
     </select>
