@@ -9,6 +9,8 @@ public class EventCreateRichText {
     private String type;
     private String content;
     private String index;
+    private Integer width=0;
+    private Integer height=0;
 
     public String getType() {
         return type;
@@ -32,5 +34,21 @@ public class EventCreateRichText {
 
     public void setIndex(String index) {
         this.index = index;
+    }
+
+    public Integer getWidth() {
+        return width;
+    }
+
+    public void setWidth(Integer width) {
+        this.width = width;
+    }
+
+    public Integer getHeight() {
+        return height;
+    }
+
+    public void setHeight(Integer height) {
+        this.height = height;
     }
 }

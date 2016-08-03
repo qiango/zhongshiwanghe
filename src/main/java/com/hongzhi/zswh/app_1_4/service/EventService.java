@@ -137,6 +137,8 @@ public class EventService {
         for (int i = 0; i < richText.length ;i++) {
             if (richText[i].getType().toLowerCase().equals("image") && pictures.size() >= j && !ObjectUtil.isEmpty(pictures.get(j))) {
                 richText[i].setContent(dictionaryUtil.getValue("picHead","data_alias",property.getLanguage())+pictures.get(j).getNewName());
+                richText[i].setHeight(pictures.get(j).getHeight());
+                richText[i].setWidth(pictures.get(j).getWidth());
                 j++;
             }
         }
