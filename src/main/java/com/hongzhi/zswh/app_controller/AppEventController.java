@@ -157,7 +157,7 @@ public class AppEventController {
                 case "v1.4":
                     property = sess.sessionEffective(session,session_id,"/v1.4/event/form");
                     language=property.getLanguage();
-                    return ObjectUtil.jsonOut( eventService.eventForm(event_id,property) );
+                    return ObjectUtil.jsonOutDT( eventService.eventForm(event_id,property) , "MM月dd日 HH:mm");
                 default:
                     return "404";
             }
