@@ -145,7 +145,7 @@ public class SessionService {
             if (userIds.contains(Integer.valueOf(attrList.get(i).get("user_id").toString()))) {
                 Map<String,Object>  userClub = userClubInfo.get( userIds.indexOf(Integer.valueOf(attrList.get(i).get("user_id").toString())) );
                 sessionProperty.setClub_id(Integer.valueOf(ObjectUtil.coalesce(userClub.get("club_id"),0).toString().replace("null","0")));
-                sessionProperty.setClub_user_level(ObjectUtil.coalesce("club_user_level","").toString());
+                sessionProperty.setClub_user_level(ObjectUtil.coalesce(userClub.get("club_user_level"),"").toString());
             } else {
                 sessionProperty.setClub_id(0);
                 sessionProperty.setClub_user_level("");

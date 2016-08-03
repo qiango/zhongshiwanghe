@@ -1,14 +1,16 @@
 package com.hongzhi.zswh.app_1_4.entity;
 
+import com.hongzhi.zswh.util.basic.DictionaryUtil;
+
 /**
  * Created by taylor on 8/2/16.
  * twitter: @taylorwang789
  */
 public class EventJoinMember {
 
-    private String name;
-    private String profile_image;
-    private String phone;
+    private String name="";
+    private String profile_image="";
+    private String phone="";
 
     public String getName() {
         return name;
@@ -23,7 +25,7 @@ public class EventJoinMember {
     }
 
     public void setProfile_image(String profile_image) {
-        this.profile_image = profile_image;
+        this.profile_image = DictionaryUtil.find("picHead","data_alias","zh") + profile_image;
     }
 
     public String getPhone() {

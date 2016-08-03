@@ -103,17 +103,17 @@
         from
             event a
         where
+            a.event_status = #{eventStatus}
+        <if test=" eventStatus == 1 ">
+            or ( a.event_status = 3
+                and a.end_time >= now() )
+        </if>
         <if test=" event_id !=null  and   event_id !='' ">
-            a.event_id = #{event_id}
-        and
+          and a.event_id = #{event_id}
         </if>
         <if test="club_id !=null  and   club_id !='' ">
-            a.club_id = #{club_id}
-        and
+          and  a.club_id = #{club_id}
         </if>
-            a.event_status = 1
-        or
-          (a.event_status = 2 and a.end_time > now())
 
     </select>
     <select id="latestEventList" resultType="com.hongzhi.zswh.app_1_4.entity.Event">
