@@ -15,12 +15,15 @@
         ,coalesce(c.nickname,concat(substr(c.phone,1,3),'****',substr(c.phone,8)) ) as organizer_name
         ,coalesce(concat(substr(c.phone,1,3),'****',substr(c.phone,8)),'') as phone
         ,coalesce(c.profile_picture,'') as profile_image
+        ,coalesce(d.user_level,'99')  as organizer_level
     from event_registration  a
     left join event b
     on a.event_id = b.event_id
     and b.event_id = #{eventID}
     left join user_info c
     on b.organizer_id = c.user_id
+    left join user_detail d
+           on c.user_id = d.user_id
     where a.event_id = #{eventID}
     </select>
 

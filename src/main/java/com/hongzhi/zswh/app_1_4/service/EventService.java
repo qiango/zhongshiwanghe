@@ -45,6 +45,8 @@ public class EventService {
 
             int counts = eventDao.selectEventByClubId(property.getClub_id());
 
+            String club_user_level = "";
+            Integer organizer_level = 3 ;
             // detail
             if (!ObjectUtil.isEmpty(event_id)) {
                 Map<String, Object> info = eventDao.statusInfo(Integer.valueOf(property.getUser_id()), event_id);
@@ -60,15 +62,15 @@ public class EventService {
                 organizer.setPhone(info.get("phone").toString());
                 events.get(0).setOrganizer(organizer);
                 events.get(0).setMembers(eventDao.eventMembers(event_id));
+                organizer_level = Integer.valueOf(info.get("organizer_level").toString());
             }
 
-            String club_user_level = "";
             if ( 1 == events.size() ){
                 club_user_level = userLevel(property,events.get(0).getOrganizer_id(),events.get(0).getEvent_id());
             }
 
             map.put("club_user_level", club_user_level );
-            map.put("club_user_level_name", UserLevel.findDictionary(club_user_level,property.getLanguage()));
+            map.put("organizer_level_name", UserLevel.findDictionary(organizer_level,property.getLanguage()));
             map.put("events", events);
 
             if (property.getClub_user_level().equals("0")) {
@@ -81,7 +83,7 @@ public class EventService {
         }else if (property.getClub_id() == 0) {
 
             map.put("club_user_level", UserLevel.NOT_JOIN_CLUB.name() );
-            map.put("club_user_level_name", UserLevel.findDictionary(UserLevel.NOT_JOIN_CLUB.name(),property.getLanguage()));
+            map.put("organizer_level_name", "" );
             map.put("review_counts", 0);
             map.put("events", new ArrayList<>());
         }
