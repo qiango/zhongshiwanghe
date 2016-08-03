@@ -391,4 +391,15 @@
             event_form_item a
         ORDER BY a.index
     </select>
+
+    <select id="selectDefaultImage" resultType="map">
+        select
+            a.id
+            ,concat('/pic.htmls?p=',coalesce(a.image,'')) as image
+            ,a.index
+        from
+            event_image a
+        ORDER BY a.index
+
+    </select>
 </mapper>

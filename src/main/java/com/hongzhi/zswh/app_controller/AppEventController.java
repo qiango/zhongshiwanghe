@@ -2,7 +2,6 @@ package com.hongzhi.zswh.app_controller;
 
 import com.hongzhi.zswh.app_1_4.entity.EventCreate;
 import com.hongzhi.zswh.app_1_4.entity.EventEntity;
-import com.hongzhi.zswh.app_1_4.entity.UserProfile;
 import com.hongzhi.zswh.app_1_4.service.EventService;
 import com.hongzhi.zswh.util.basic.DictionaryUtil;
 import com.hongzhi.zswh.util.basic.ObjectUtil;
@@ -224,7 +223,7 @@ public class AppEventController {
     }*/
 
     @ResponseBody
-    @RequestMapping(value = "register_information")
+    @RequestMapping(value = "/register_information")
     public String registerInformation(HttpSession session, String session_id, @PathVariable String version){
         SessionProperty property;
         String language = "zh";
@@ -238,6 +237,24 @@ public class AppEventController {
                     return "404";
             }
 
+        }catch (HongZhiException e){
+            return ObjectUtil.jsonOutError(e.getCode(), dic.getCodeValue(e.getCode(),e.getMessage(), language ) );
+        }
+    }
+    @ResponseBody
+    @RequestMapping(value = "/default_image")
+    public String defaultImage(HttpSession session, String session_id, @PathVariable String version){
+        SessionProperty property;
+        String language = "zh";
+        try {
+            switch (version){
+                case "v1.4":
+                    property = sess.sessionEffective(session,session_id,"/v1.4/event/default_image");
+                    language=property.getLanguage();
+                    return ObjectUtil.jsonOut( eventService.defaultImage() );
+                default:
+                    return "404";
+            }
         }catch (HongZhiException e){
             return ObjectUtil.jsonOutError(e.getCode(), dic.getCodeValue(e.getCode(),e.getMessage(), language ) );
         }

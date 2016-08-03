@@ -4,7 +4,6 @@ import com.google.gson.Gson;
 import com.hongzhi.zswh.app_1_4.dao.EventDao;
 import com.hongzhi.zswh.app_1_4.entity.*;
 import com.hongzhi.zswh.app_v3.notification.service.NotificationService;
-import com.hongzhi.zswh.back.basic.entity.User;
 import com.hongzhi.zswh.util.basic.DictionaryUtil;
 import com.hongzhi.zswh.util.basic.ObjectUtil;
 import com.hongzhi.zswh.util.basic.sessionDao.SessionProperty;
@@ -350,12 +349,31 @@ public class EventService {
         return map;
     }
 
+    /**
+     * 选择报名信息
+     * @return
+     */
     public Object registerInformation() {
 
         List<Map<String,Object>> register_info_list  = eventDao.selectEventFormItem();
 
         Map<String, Object> map = new HashMap<>();
         map.put("register_info_list", register_info_list);
+
+        return map;
+    }
+
+    /**
+     *
+     * 选择默认图片
+     * @return
+     */
+    public Object defaultImage() {
+
+        List<Map<String,Object>> default_image_list  = eventDao.selectDefaultImage();
+
+        Map<String, Object> map = new HashMap<>();
+        map.put("default_image", default_image_list);
 
         return map;
     }
