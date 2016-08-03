@@ -319,6 +319,17 @@ public class EventService {
         return map;
     }
 
+    public Object registerInformation() {
+
+        List<Map<String,Object>> register_info_list  = eventDao.selectEventFormItem();
+
+        Map<String, Object> map = new HashMap<>();
+        map.put("register_info_list", register_info_list);
+
+        return map;
+    }
+
+
 /*    public Object verifyEventDetails(String event_id, SessionProperty property) throws HongZhiException {
         ExcepUtil.verify(event_id,"event_name_null","event");
 
