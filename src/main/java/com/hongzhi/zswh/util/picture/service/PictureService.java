@@ -1,5 +1,6 @@
 package com.hongzhi.zswh.util.picture.service;
 
+import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -7,6 +8,7 @@ import java.io.InputStream;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
+import javax.imageio.ImageIO;
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -119,7 +121,11 @@ public class PictureService {
                     file.transferTo(new File( basePath + file_name ));
                     // save to db
                     pictueUpload.saveUploadPictureName(originName,file_name);
+
                     Picture picture = new Picture();
+                    BufferedImage image = ImageIO.read(file.getInputStream());
+                    picture.setWidth(image.getWidth());
+                    picture.setHeight(image.getHeight());
                     picture.setIndex(i++);
                     picture.setOriginName(originName);
                     picture.setNewName(file_name);

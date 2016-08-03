@@ -9,6 +9,8 @@ public class Picture {
     private Integer index;
     private String originName;
     private String newName ;
+    private Integer width;
+    private Integer height;
 
     public Integer getIndex() {
         return index;
@@ -32,5 +34,21 @@ public class Picture {
 
     public void setNewName(String newName) {
         this.newName = newName;
+    }
+
+    public Integer getWidth() {
+        return width;
+    }
+
+    public void setWidth(Integer width) {
+        this.width = width;
+    }
+
+    public Integer getHeight() {
+        return height;
+    }
+
+    public void setHeight(Integer height) {
+        this.height = height;
     }
 }
