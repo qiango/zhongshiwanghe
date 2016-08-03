@@ -52,10 +52,14 @@ public class ClubService {
 
             if (event_list.size() > 0){
                 out.setShow_event("1");
+            }else{
+                out.setShow_event("0");
             }
 
             if (club_list.size() > 0){
                 out.setShow_club("1");
+            }else{
+                out.setShow_club("0");
             }
         }
 
