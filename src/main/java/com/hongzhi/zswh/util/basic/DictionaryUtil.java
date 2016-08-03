@@ -42,6 +42,11 @@ public class DictionaryUtil {
         }
     }
 
+    public static String find(String code,String p_code ,String language) {
+        String key = code+"_"+p_code+"_"+language;
+        return dics.get(key);
+    }
+
     public String getValue(String code,String p_code ,String language){
         if (ObjectUtil.isEmpty(dics) || dics.size() == 0) {
             init();

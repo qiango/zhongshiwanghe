@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 @Controller("app_event_controller")
@@ -70,7 +71,7 @@ public class AppEventController {
     // create event
     @ResponseBody
     @RequestMapping(value = "/create")
-    public String create(HttpSession session, String session_id,  EventCreate event_create, @PathVariable String version){
+    public String create(HttpServletRequest request, HttpSession session, String session_id, EventCreate event_create, @PathVariable String version){
         SessionProperty property;
         String language = "zh";
         try{
@@ -78,7 +79,7 @@ public class AppEventController {
                 case "v1.4":
                     property = sess.sessionEffective(session,session_id,"/v1.4/event/create");
                     language=property.getLanguage();
-                    return ObjectUtil.jsonOut( eventService.eventCreate(event_create,property) );
+                    return ObjectUtil.jsonOut( eventService.eventCreate(request,event_create,property) );
                 default:
                     return "404";
             }

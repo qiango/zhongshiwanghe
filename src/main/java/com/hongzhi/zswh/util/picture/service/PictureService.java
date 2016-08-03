@@ -5,14 +5,13 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.Iterator;
-import java.util.Properties;
+import java.util.*;
 
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.google.gson.JsonArray;
 import com.hongzhi.zswh.util.encryption.SHA256;
 import com.hongzhi.zswh.util.picture.dao.PictueUpload;
 import org.apache.ibatis.io.Resources;
@@ -85,6 +84,50 @@ public class PictureService {
         JsonObject obj = new JsonObject();
         obj.addProperty("picUrl",file_name);
         return obj.toString();
+    }
+
+    public List<Picture> picUploadMore(HttpServletRequest request) throws IllegalStateException, IOException {
+        // 将当前上下文初始化给 CommonsMutipartResolver （多部分解析器）
+        CommonsMultipartResolver multipartResolver = new CommonsMultipartResolver( request.getSession().getServletContext());
+        // 检查form中是否有enctype="multipart/form-data"
+        List<Picture> pictures = new ArrayList<>();
+        String file_name = "";
+        if (multipartResolver.isMultipart(request)) {
+            // 将request变成多部分request
+            MultipartHttpServletRequest multiRequest = (MultipartHttpServletRequest) request;
+            // 获取multiRequest 中所有的文件名
+//            Iterator iter = multiRequest.getFileNames();
+            List<MultipartFile> files = multiRequest.getFiles("ClubActivity");
+            int i=1;
+//            while (iter.hasNext()) {
+            for (int j = 0; j < files.size(); j++) {
+//                MultipartFile file = multiRequest.getFile(iter.next() .toString());
+                MultipartFile file = files.get(j);
+                if (file != null) {
+                    String originName = file.getOriginalFilename();
+                    String fileOriginalName = file.getOriginalFilename().replaceAll(",", "-").replaceAll(" ", "-");
+
+                    String type = "" ;
+                    if(fileOriginalName.lastIndexOf(".") == -1){
+                        type = ".jpg";
+                    }else{
+                        type = fileOriginalName.substring(fileOriginalName.lastIndexOf("."));
+                    }
+
+                    file_name =  newFilePath(basePath) + System.currentTimeMillis() +"_"+ SHA256.getSalt(6) + type;
+                    // 上传
+                    file.transferTo(new File( basePath + file_name ));
+                    // save to db
+                    pictueUpload.saveUploadPictureName(originName,file_name);
+                    Picture picture = new Picture();
+                    picture.setIndex(i++);
+                    picture.setOriginName(originName);
+                    picture.setNewName(file_name);
+                    pictures.add(picture);
+                }
+            }
+        }
+        return pictures;
     }
 
     /**   Twitter : @taylorwang789 

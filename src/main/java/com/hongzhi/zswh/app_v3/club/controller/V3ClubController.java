@@ -112,7 +112,9 @@ public class V3ClubController {
 		try {
 			properties = sess.sessionEffective(session,clubParam.getSession_id(), " club members join club ");
 			language = properties.getLanguage();
-			return ObjectUtil.jsonOut(club.clubJoin(properties,clubParam.Vclub_id() , clubParam.Vclub_user_id() ,clubParam.Vjoin_club_status(),clubParam));
+			String return_str = ObjectUtil.jsonOut(club.clubJoin(properties,clubParam.Vclub_id() , clubParam.Vclub_user_id() ,clubParam.Vjoin_club_status(),clubParam));
+            sess.refreshAttribute();
+            return return_str;
 		} catch (HongZhiException e) {
 			return ObjectUtil.jsonOutError(e.getCode(), dic.getCodeValue(e.getCode(), language ) );
 		}

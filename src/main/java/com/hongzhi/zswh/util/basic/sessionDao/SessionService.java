@@ -126,6 +126,13 @@ public class SessionService {
 	 */
 	public Map<Integer, SessionProperty> listSessionAttribute() {
 		List<Map<String,Object>>  attrList = m00sess.listAttribute();
+        List<Map<String,Object>>  userClubInfo = m00sess.clubInfo();
+
+        List<Integer> userIds = new ArrayList<>();
+        for (int i = 0; i < userClubInfo.size(); i++) {
+            userIds.add(Integer.valueOf(userClubInfo.get(i).get("user_id").toString()));
+        }
+
 		Map<Integer,SessionProperty>  map = new HashMap<>();
 		for(int i=0;i<attrList.size();i++){
 			SessionProperty sessionProperty = new SessionProperty();
@@ -134,8 +141,18 @@ public class SessionService {
 			sessionProperty.setPlatform(attrList.get(i).get("platform").toString());
 			sessionProperty.setUser_id(attrList.get(i).get("user_id").toString());
 			sessionProperty.setUser_real_name(attrList.get(i).get("user_real_name").toString());
-            sessionProperty.setClub_id(Integer.valueOf( ObjectUtil.coalesce(attrList.get(i).get("club_id"),0).toString().replace("null","0") ));
-            sessionProperty.setClub_user_level(attrList.get(i).get("club_user_level").toString());
+
+            if (userIds.contains(attrList.get(i).get("user_id"))) {
+                Map<String,Object>  userClub = userClubInfo.get( userIds.indexOf(attrList.get(i).get("user_id")) );
+                sessionProperty.setClub_id(Integer.valueOf(ObjectUtil.coalesce(userClub.get("club_id"),0).toString().replace("null","0")));
+                sessionProperty.setClub_user_level(ObjectUtil.coalesce("club_user_level","").toString());
+            } else {
+                sessionProperty.setClub_id(0);
+                sessionProperty.setClub_user_level("");
+            }
+
+//            sessionProperty.setClub_id(Integer.valueOf( ObjectUtil.coalesce(attrList.get(i).get("club_id"),0).toString().replace("null","0") ));
+//            sessionProperty.setClub_user_level(attrList.get(i).get("club_user_level").toString());
 			map.put(Integer.parseInt(attrList.get(i).get("id").toString()), sessionProperty);
 		}
 		return map;

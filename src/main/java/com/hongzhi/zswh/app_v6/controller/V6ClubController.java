@@ -36,7 +36,9 @@ public class V6ClubController {
         try {
             properties = sess.sessionEffective(session,session_id , "/v6/club/outofclub");
             language = properties.getLanguage();
-            return ObjectUtil.jsonOut( clubService.OutOfClub(properties.getUser_id()));
+            String return_str  = ObjectUtil.jsonOut( clubService.OutOfClub(properties.getUser_id()));
+            sess.refreshAttribute();
+            return return_str;
         } catch (HongZhiException e) {
             return ObjectUtil.jsonOutError(e.getCode(), dic.getCodeValue(e.getCode(), language ) );
         }
@@ -169,7 +171,9 @@ public class V6ClubController {
         String language = "zh";
         try {
             property = sess.sessionEffective(session,session_id,"/v6/club/set_club");
-            return ObjectUtil.jsonOut(clubService.setClub(request,property,club));
+            String return_str = ObjectUtil.jsonOut(clubService.setClub(request,property,club));
+            sess.refreshAttribute();
+            return return_str;
         }catch (HongZhiException e){
             return ObjectUtil.jsonOutError(e.getCode(), dic.getCodeValue(e.getCode(), language ) );
         }

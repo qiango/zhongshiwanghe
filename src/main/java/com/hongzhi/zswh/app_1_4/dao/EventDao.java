@@ -2,6 +2,7 @@ package com.hongzhi.zswh.app_1_4.dao;
 
 import com.hongzhi.zswh.app_1_4.entity.Event;
 import com.hongzhi.zswh.app_1_4.entity.EventCreate;
+import com.hongzhi.zswh.app_1_4.entity.EventJoinMember;
 import com.hongzhi.zswh.app_1_4.entity.EventEntity;
 import com.hongzhi.zswh.app_1_4.entity.UserProfile;
 import org.apache.ibatis.annotations.Param;
@@ -53,5 +54,6 @@ public interface EventDao {
 
     int clubEventsCount(@Param("clubID") Integer club_id );
 
+    List<EventJoinMember> eventMembers(@Param("eventID") Integer event_id);
     int selectEventByClubId(Integer club_id);
 }

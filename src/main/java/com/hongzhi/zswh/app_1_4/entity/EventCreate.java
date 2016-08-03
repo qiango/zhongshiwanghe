@@ -39,6 +39,8 @@ public class EventCreate {
     private String event_notice ;
     private String form_item;
 
+    private String event_detail_rich_text;
+
 
 
     private String dic_p_code = "event";
@@ -201,6 +203,7 @@ public class EventCreate {
 
     public Double getFee() {
         return Double.valueOf(fee);
+//        return 0.0;
     }
 
     public void setFee(String fee) {
@@ -270,5 +273,13 @@ public class EventCreate {
 
     public void setForm_item(String form_item) {
         this.form_item = form_item;
+    }
+
+    public String getEvent_detail_rich_text() {
+        return event_detail_rich_text;
+    }
+
+    public void setEvent_detail_rich_text(String event_detail_rich_text) {
+        this.event_detail_rich_text = event_detail_rich_text;
     }
 }

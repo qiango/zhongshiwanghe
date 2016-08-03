@@ -1,5 +1,6 @@
 package com.hongzhi.zswh.app_1_4.service;
 
+import com.google.gson.Gson;
 import com.hongzhi.zswh.app_1_4.dao.EventDao;
 import com.hongzhi.zswh.app_1_4.entity.*;
 import com.hongzhi.zswh.app_v3.notification.service.NotificationService;
@@ -7,9 +8,13 @@ import com.hongzhi.zswh.util.basic.DictionaryUtil;
 import com.hongzhi.zswh.util.basic.ObjectUtil;
 import com.hongzhi.zswh.util.basic.sessionDao.SessionProperty;
 import com.hongzhi.zswh.util.exception.HongZhiException;
+import com.hongzhi.zswh.util.picture.service.Picture;
+import com.hongzhi.zswh.util.picture.service.PictureService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.servlet.http.HttpServletRequest;
+import java.io.IOException;
 import java.util.*;
 
 /**
@@ -24,6 +29,9 @@ public class EventService {
     @Autowired
     private DictionaryUtil dictionaryUtil;
     @Autowired
+    private PictureService pictureService;
+
+
     private NotificationService notificationService;
 
     public Object events(SessionProperty property, Integer club_id, Integer event_id) {
@@ -37,16 +45,22 @@ public class EventService {
             int counts = eventDao.selectEventByClubId(property.getClub_id());
 
             if (!ObjectUtil.isEmpty(event_id)) {
-
                 Map<String, Object> info = eventDao.statusInfo(Integer.valueOf(property.getUser_id()), event_id);
                 events.get(0).setButton_show_code(Boolean.valueOf(info.get("is_registered").toString()), Integer.valueOf(info.get("registered_count").toString()), property.getLanguage());
                 events.get(0).setButton_show_content(dictionaryUtil.getValue(events.get(0).getButton_show_code().toLowerCase(), "event_button", property.getLanguage()));
+                Gson gson = new Gson();
+                events.get(0).setEvent_detail(gson.fromJson(info.get("event_detail").toString(), EventCreateRichText[].class));
+                EventJoinMember organizer = new EventJoinMember();
+                organizer.setName(info.get("organizer_name").toString());
+                organizer.setProfile_image(info.get("profile_image").toString());
+                organizer.setPhone(info.get("phone").toString());
+                events.get(0).setOrganizer(organizer);
+                events.get(0).setMembers(eventDao.eventMembers(event_id));
+                map.put("club_user_level", property.getClub_user_level());
+                map.put("counts", counts);
+                map.put("events", events);
             }
-
-            map.put("club_user_level", property.getClub_user_level());
-            map.put("counts", counts);
-            map.put("events", events);
-        } else if (property.getClub_id() == 0) {
+        }else if (property.getClub_id() == 0) {
 
             map.put("club_user_level", property.getClub_user_level());
             map.put("counts", 0);
@@ -56,7 +70,7 @@ public class EventService {
         return map;
     }
 
-    public Object eventCreate(EventCreate event_create, SessionProperty property) throws HongZhiException {
+    public Object eventCreate(HttpServletRequest request, EventCreate event_create, SessionProperty property) throws HongZhiException {
         event_create.setOrganizer_id(Integer.valueOf(property.getUser_id()));
         event_create.verifyData();
 
@@ -69,6 +83,29 @@ public class EventService {
             event_create.setEvent_status(EventStatus.UNDER_REVIEW.getValue());
             return_info = EventStatus.UNDER_REVIEW.name();
         }
+
+        List<Picture> pictures = new ArrayList<>();
+        // upload picture
+        try {
+            pictures = pictureService.picUploadMore(request);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        Gson  gson = new Gson();
+        System.out.println(event_create.getEvent_detail_rich_text());
+
+        EventCreateRichText[] richText = gson.fromJson(event_create.getEvent_detail_rich_text(),EventCreateRichText[].class);
+
+        int j =0;
+        for (int i = 0; i < richText.length ;i++) {
+            if (richText[i].getType().toLowerCase().equals("image") && pictures.size() >= j && !ObjectUtil.isEmpty(pictures.get(j))) {
+                richText[i].setContent(dictionaryUtil.getValue("picHead","data_alias",property.getLanguage())+pictures.get(j).getNewName());
+                j++;
+            }
+        }
+        event_create.setEvent_detail(gson.toJson(richText).toString());
+
 
         eventDao.createEvent(event_create);
 
