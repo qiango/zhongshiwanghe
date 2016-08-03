@@ -103,10 +103,14 @@
         from
             event a
         where
-            a.event_status = #{eventStatus}
+        <if test=" eventStatus == 1 ">
+            (
+        </if>
+        a.event_status = #{eventStatus}
         <if test=" eventStatus == 1 ">
             or ( a.event_status = 3
-                and a.end_time >= now() )
+            and a.end_time >= now() )
+            )
         </if>
         <if test=" event_id !=null  and   event_id !='' ">
           and a.event_id = #{event_id}
