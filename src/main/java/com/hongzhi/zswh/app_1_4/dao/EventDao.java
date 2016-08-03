@@ -3,6 +3,7 @@ package com.hongzhi.zswh.app_1_4.dao;
 import com.hongzhi.zswh.app_1_4.entity.Event;
 import com.hongzhi.zswh.app_1_4.entity.EventCreate;
 import com.hongzhi.zswh.app_1_4.entity.EventJoinMember;
+import com.hongzhi.zswh.app_1_4.entity.EventEntity;
 import com.hongzhi.zswh.app_1_4.entity.UserProfile;
 import org.apache.ibatis.annotations.Param;
 
@@ -22,7 +23,7 @@ public interface EventDao {
 
     int organizerJoin(EventCreate event_create);
 
-    List<Integer> eventIDs(Integer club_id);
+    List<Map<String, Object>> eventIDs(Integer club_id);
 
     int passReview(@Param("eventID") Integer event_id,@Param("status") Integer status);
 
@@ -46,7 +47,13 @@ public interface EventDao {
 
     int saveUserProfile(@Param("userID") Integer user_id ,@Param("profiles") List<UserProfile> inputProfiles);
 
+
+    int selectMyEvent(@Param("user_id") String user_id);
+
+    int saveReviewReason(EventEntity event);
+
     int clubEventsCount(@Param("clubID") Integer club_id );
 
     List<EventJoinMember> eventMembers(@Param("eventID") Integer event_id);
+    int selectEventByClubId(Integer club_id);
 }

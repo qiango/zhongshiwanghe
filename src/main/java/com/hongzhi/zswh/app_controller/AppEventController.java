@@ -1,6 +1,7 @@
 package com.hongzhi.zswh.app_controller;
 
 import com.hongzhi.zswh.app_1_4.entity.EventCreate;
+import com.hongzhi.zswh.app_1_4.entity.EventEntity;
 import com.hongzhi.zswh.app_1_4.entity.UserProfile;
 import com.hongzhi.zswh.app_1_4.service.EventService;
 import com.hongzhi.zswh.util.basic.DictionaryUtil;
@@ -89,7 +90,7 @@ public class AppEventController {
 
     @ResponseBody
     @RequestMapping(value = "/review")
-    public String review(HttpSession session, String session_id, Integer event_id , @PathVariable String version){
+    public String review(HttpSession session, String session_id, EventEntity event , @PathVariable String version){
         SessionProperty property;
         String language = "zh";
         try{
@@ -97,7 +98,7 @@ public class AppEventController {
                 case "v1.4":
                     property = sess.sessionEffective(session,session_id,"/v1.4/event/create");
                     language=property.getLanguage();
-                    return ObjectUtil.jsonOut( eventService.eventReview(event_id,property) );
+                    return ObjectUtil.jsonOut( eventService.eventReview(event,property) );
                 default:
                     return "404";
             }

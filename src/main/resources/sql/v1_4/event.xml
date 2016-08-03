@@ -65,9 +65,11 @@
 
     </insert>
 
-    <select id="eventIDs" resultType="Integer" >
+    <select id="eventIDs" resultType="map" >
     select
-        event_id
+        event_id as event_id
+        ,organizer_id as organizer_id
+        ,event_name as event_name
     from event
     where club_id = #{club_id}
     </select>
@@ -359,5 +361,30 @@
      left join user_info b
             on a.user_id = b.user_id
       where a.event_id = #{eventID}
+    </select>
+
+    <insert id="saveReviewReason">
+          insert into
+             event_reason (
+             event_id
+            ,reason_type
+            ,reason
+    ) values (
+          #{event_id}
+         ,#{reason_type}
+         ,#{review_reason}
+    )
+
+    </insert>
+
+    <select id="selectEventByClubId" resultType="Integer">
+        select
+            COUNT(1) as counts
+        from
+            event a
+        where
+            a.event_status = 0
+        and
+            a.club_id = #{club_id}
     </select>
 </mapper>
