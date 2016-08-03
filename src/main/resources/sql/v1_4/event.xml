@@ -117,61 +117,41 @@
 
     </select>
     <select id="latestEventList" resultType="com.hongzhi.zswh.app_1_4.entity.Event">
-          select
-             d.event_id
-            ,d.club_id
-            ,d.end_time
-            ,d.event_address
-            ,d.event_name
-            ,d.event_status
-            ,coalesce(d.fee,0.0)  as fee
-            ,d.form_item
-            ,concat('/pic.htmls?p=',coalesce(d.image,'')) as image
-            ,coalesce(d.max_people,0) as max_people
-            ,coalesce(d.min_people,0) as min_people
-            ,d.organizer_id
-            ,d.register_end_time
-            ,d.register_start_time
-            ,d.start_time
-            ,d.view_guests
-          from
-             (
-             select
-                  COUNT(1) as sum_member
-                  ,a.event_id as event_id
-              from
-                  event a
-              left join
-                  event_registration b
-              on
-                  a.event_id = b.event_id
-        where
-            a.event_status = 1
-        and
-        <![CDATA[
-        a.register_start_time < now()
-        ]]>
-        and
-        <![CDATA[
-        a.register_end_time > NOW()
-        ]]>
-        GROUP BY a.event_id
-        ) c
-        LEFT JOIN
-            event d
-        on
-            d.event_id = c.event_id
-        where
-         <![CDATA[
-            c.sum_member < d.max_people
-        ]]>
-        or
-            coalesce(d.max_people,0) = 0
-         <if  test="club_id !=0 ">
-             and d.club_id = #{club_id}
-         </if>
-
-        ORDER BY d.start_time desc
+    select
+         t1.event_id
+        ,t1.event_name
+        ,t1.club_id
+        ,t1.start_time
+        ,t1.end_time
+        ,t1.register_start_time
+        ,t1.register_end_time
+        ,t1.organizer_id
+        ,t1.event_address
+        ,t1.min_people
+        ,t1.max_people
+        ,t1.fee
+        ,t1.image
+        ,t1.event_status
+        ,t1.view_guests
+        ,t1.form_item
+        ,t1.event_detail
+        ,t1.event_notice
+     from event t1
+     left join (
+        select  a.event_id ,  count(b.user_id)  as member_cnt
+        from  event a
+        left join event_registration  b
+        on a.event_id = b.event_id
+        where a.club_id = #{club_id}
+        group by a.event_id
+     )t2
+        on t1.event_id = t2.event_id
+     where t1.club_id = #{club_id}
+     <![CDATA[    and t1.register_start_time < now() ]]>
+       and t1.register_end_time > NOW()
+       and (t1.max_people > t2.member_cnt
+            or coalesce(t1.max_people,0) = 0 )
+        ORDER BY t1.start_time desc
         LIMIT 2
     </select>
 

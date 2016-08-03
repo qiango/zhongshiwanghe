@@ -4,6 +4,7 @@ import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonParser;
 import com.hongzhi.zswh.util.basic.DictionaryUtil;
+import com.hongzhi.zswh.util.basic.dictionaryDao.Dictionary;
 
 import java.sql.Timestamp;
 import java.util.ArrayList;
@@ -145,7 +146,7 @@ public class Event {
     }
 
     public void setImage(String image) {
-        this.image = image;
+        this.image = DictionaryUtil.find("picHead","data_alias","zh")+ image;
     }
 
     public Integer getEvent_status() {
