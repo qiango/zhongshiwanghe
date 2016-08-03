@@ -4,6 +4,7 @@ import com.google.gson.Gson;
 import com.hongzhi.zswh.app_1_4.dao.EventDao;
 import com.hongzhi.zswh.app_1_4.entity.*;
 import com.hongzhi.zswh.app_v3.notification.service.NotificationService;
+import com.hongzhi.zswh.back.basic.entity.User;
 import com.hongzhi.zswh.util.basic.DictionaryUtil;
 import com.hongzhi.zswh.util.basic.ObjectUtil;
 import com.hongzhi.zswh.util.basic.sessionDao.SessionProperty;
@@ -41,7 +42,7 @@ public class EventService {
         if (property.getClub_id() != 0) {
 // && "0".equals(property.getClub_user_level())
             List<Event> events = eventDao.events(property.getClub_id(), event_id,EventStatus.NORMAL.getValue());
-            List<Event> events_review = eventDao.events(property.getClub_id(), event_id, EventStatus.UNDER_REVIEW.getValue());
+//            List<Event> events_review = eventDao.events(property.getClub_id(), event_id, EventStatus.UNDER_REVIEW.getValue());
 
             int counts = eventDao.selectEventByClubId(property.getClub_id());
 
@@ -62,19 +63,45 @@ public class EventService {
                 events.get(0).setMembers(eventDao.eventMembers(event_id));
             }
 
-            map.put("club_user_level", property.getClub_user_level());
-            map.put("counts", counts);
+            String club_user_level = "";
+            if ( 1 == events.size() ){
+                club_user_level = userLevel(property,events.get(0).getOrganizer_id());
+            }
+
+            map.put("club_user_level", club_user_level );
             map.put("events", events);
-            map.put("events_review", events_review);
+
+            if (property.getClub_user_level().equals("0")) {
+                map.put("review_counts", counts);
+            } else {
+                map.put("review_counts", 0 );
+            }
+
 
         }else if (property.getClub_id() == 0) {
 
-            map.put("club_user_level", property.getClub_user_level());
-            map.put("counts", 0);
+            map.put("club_user_level", UserLevel.NOT_JOIN_CLUB.name() );
+            map.put("review_counts", 0);
             map.put("events", new ArrayList<>());
         }
 
         return map;
+    }
+
+    private String userLevel(SessionProperty property, Integer organizer_id) {
+        String level = "";
+        switch (property.getClub_user_level()) {
+            case "0" : level = UserLevel.CLUB_MANAGER.name();break;
+            case "99":
+                if ( property.getUser_id().equals(organizer_id.toString() ) ) {
+                    level = UserLevel.EVENT_ORGANIZER.name();
+                } else {
+                    level = UserLevel.CLUB_MANAGER.name();
+                }
+                break;
+            default: level = UserLevel.NOT_JOIN_CLUB.name() ; break;
+        }
+        return  level;
     }
 
     public Object eventCreate(HttpServletRequest request, EventCreate event_create, SessionProperty property) throws HongZhiException {
