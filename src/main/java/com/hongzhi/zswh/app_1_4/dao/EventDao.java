@@ -15,7 +15,7 @@ import java.util.Map;
  * twitter: @taylorwang789
  */
 public interface EventDao {
-    List<Event> events(@Param("club_id") Integer club_id, @Param("event_id") Integer event_id);
+    List<Event> events(@Param("club_id") Integer club_id, @Param("event_id") Integer event_id,@Param("eventStatus") Integer status);
 
     Map<String,Object> statusInfo(@Param("userID") Integer user_id,@Param("eventID") Integer event_id);
 
