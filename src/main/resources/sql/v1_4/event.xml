@@ -151,7 +151,7 @@
        and t1.register_end_time > NOW()
        and (t1.max_people > t2.member_cnt
             or coalesce(t1.max_people,0) = 0 )
-        ORDER BY d1.start_time desc
+        ORDER BY t1.start_time desc
         LIMIT 2
     </select>
 
