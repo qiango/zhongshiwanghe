@@ -58,4 +58,6 @@ public interface EventDao {
     int selectEventByClubId(Integer club_id);
 
     List<Map<String,Object>> selectEventFormItem();
+
+    List<Map<String,Object>> selectDefaultImage();
 }
