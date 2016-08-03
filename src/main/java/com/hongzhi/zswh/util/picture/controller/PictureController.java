@@ -37,7 +37,7 @@ public class PictureController {
     @RequestMapping("/appPicUpload")  //  picutre upload
     public String  appspringUpload(HttpServletRequest request) throws IllegalStateException, IOException {
         // return file upload path
-        return "/pic.htmls?p="+picService.picUpload(request).toString();
+        return picService.picUpload(request,"/pic.htmls?p=").toString();
     }
 
     @RequestMapping("/webPicUpload")  //  picutre upload
