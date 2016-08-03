@@ -14,6 +14,7 @@ public enum UserLevel {
     ,EVENT_ORGANIZER(1)
     ,CLUB_MEMBER(2)
     ,NOT_JOIN_CLUB(3)
+    ,EVENT_MEMBER(4)
     ;
 
     private int value;

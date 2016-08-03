@@ -65,7 +65,7 @@ public class EventService {
 
             String club_user_level = "";
             if ( 1 == events.size() ){
-                club_user_level = userLevel(property,events.get(0).getOrganizer_id());
+                club_user_level = userLevel(property,events.get(0).getOrganizer_id(),events.get(0).getEvent_id());
             }
 
             map.put("club_user_level", club_user_level );
@@ -90,7 +90,7 @@ public class EventService {
         return map;
     }
 
-    private String userLevel(SessionProperty property, Integer organizer_id) {
+    private String userLevel(SessionProperty property, Integer organizer_id, Integer event_id) {
         String level = "";
         switch (property.getClub_user_level()) {
             case "0" : level = UserLevel.CLUB_MANAGER.name();break;
@@ -98,7 +98,16 @@ public class EventService {
                 if ( property.getUser_id().equals(organizer_id.toString() ) ) {
                     level = UserLevel.EVENT_ORGANIZER.name();
                 } else {
-                    level = UserLevel.CLUB_MANAGER.name();
+                    List<Event> myEvents = eventDao.myJoinEvent(property.getUser_id(),property.getClub_id());
+                    List<Integer> myEventsIDs = new ArrayList<>();
+                    for (int i = 0; i < myEvents.size() ; i++) {
+                        myEventsIDs.add(myEvents.get(i).getEvent_id());
+                    }
+                    if (myEventsIDs.contains(event_id)) {
+                        level = UserLevel.EVENT_MEMBER.name();
+                    } else {
+                        level = UserLevel.CLUB_MANAGER.name();
+                    }
                 }
                 break;
             default: level = UserLevel.NOT_JOIN_CLUB.name() ; break;
@@ -285,6 +294,7 @@ public class EventService {
 
     public Object eventForm(Integer event_id, SessionProperty property) throws HongZhiException {
 
+        Event eventInfo = eventDao.events(property.getClub_id(), event_id,EventStatus.NORMAL.getValue()).get(0);
         List<Map<String, Object>> formItems = eventDao.formItems(event_id, Integer.valueOf(property.getUser_id()));
 //       map : a.event_id ,a.club_id ,b.item_code ,c.item_name, item_value
 
@@ -294,6 +304,7 @@ public class EventService {
 
         Map<String, Object> map = new HashMap<>();
         map.put("items", formItems);
+        map.put("event_info",eventInfo);
         return map;
     }
 
