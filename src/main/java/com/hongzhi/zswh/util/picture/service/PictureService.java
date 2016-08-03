@@ -51,6 +51,42 @@ public class PictureService {
             e.printStackTrace();
         }
     }
+
+    public String picUpload(HttpServletRequest request,String head) throws IllegalStateException, IOException {
+        // 将当前上下文初始化给 CommonsMutipartResolver （多部分解析器）
+        CommonsMultipartResolver multipartResolver = new CommonsMultipartResolver( request.getSession().getServletContext());
+        // 检查form中是否有enctype="multipart/form-data"
+        String file_name = "";
+        if (multipartResolver.isMultipart(request)) {
+            // 将request变成多部分request
+            MultipartHttpServletRequest multiRequest = (MultipartHttpServletRequest) request;
+            // 获取multiRequest 中所有的文件名
+            Iterator iter = multiRequest.getFileNames();
+            while (iter.hasNext()) {
+                MultipartFile file = multiRequest.getFile(iter.next() .toString());
+                if (file != null) {
+                    String originName = file.getOriginalFilename();
+                    String fileOriginalName = file.getOriginalFilename().replaceAll(",", "-").replaceAll(" ", "-");
+
+                    String type = "" ;
+                    if(fileOriginalName.lastIndexOf(".") == -1){
+                        type = ".jpg";
+                    }else{
+                        type = fileOriginalName.substring(fileOriginalName.lastIndexOf("."));
+                    }
+
+                    file_name =  newFilePath(basePath) + System.currentTimeMillis() +"_"+ SHA256.getSalt(6) + type;
+                    // 上传
+                    file.transferTo(new File( basePath + file_name ));
+                    // save to db
+                    pictueUpload.saveUploadPictureName(originName,file_name);
+                }
+            }
+        }
+        JsonObject obj = new JsonObject();
+        obj.addProperty("picUrl",head+file_name);
+        return obj.toString();
+    }
     
     public String picUpload(HttpServletRequest request) throws IllegalStateException, IOException {
         // 将当前上下文初始化给 CommonsMutipartResolver （多部分解析器）
