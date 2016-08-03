@@ -69,6 +69,7 @@ public class EventService {
             }
 
             map.put("club_user_level", club_user_level );
+            map.put("club_user_level_name", UserLevel.findDictionary(club_user_level,property.getLanguage()));
             map.put("events", events);
 
             if (property.getClub_user_level().equals("0")) {
@@ -81,6 +82,7 @@ public class EventService {
         }else if (property.getClub_id() == 0) {
 
             map.put("club_user_level", UserLevel.NOT_JOIN_CLUB.name() );
+            map.put("club_user_level_name", UserLevel.findDictionary(UserLevel.NOT_JOIN_CLUB.name(),property.getLanguage()));
             map.put("review_counts", 0);
             map.put("events", new ArrayList<>());
         }

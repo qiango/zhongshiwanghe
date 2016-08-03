@@ -1,5 +1,8 @@
 package com.hongzhi.zswh.app_1_4.entity;
 
+import com.hongzhi.zswh.util.basic.DictionaryUtil;
+import com.hongzhi.zswh.util.basic.ObjectUtil;
+
 import java.util.HashMap;
 
 /**
@@ -34,4 +37,12 @@ public enum UserLevel {
     public static UserLevel getUserLevel(int value) {
         return  map.get(value);
     }
+
+    public static String findDictionary(String level,String language){
+        if (ObjectUtil.isEmpty(language)) {
+            language = "zh";
+        }
+        return DictionaryUtil.find(level,"event_enum",language);
+    }
+
 }
