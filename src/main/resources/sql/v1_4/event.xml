@@ -93,7 +93,7 @@
             ,a.event_status
             ,coalesce(a.fee,0.0)  as fee
             ,a.form_item
-            ,concat('/pic.htmls?p=',coalesce(a.image,'')) as image
+            ,coalesce(a.image,'') as image
             ,coalesce(a.max_people,0) as max_people
             ,coalesce(a.min_people,0) as min_people
             ,a.organizer_id
