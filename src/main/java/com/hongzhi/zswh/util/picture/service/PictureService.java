@@ -154,12 +154,13 @@ public class PictureService {
 
                     file_name =  newFilePath(basePath) + System.currentTimeMillis() +"_"+ SHA256.getSalt(6) + type;
                     // 上传
-                    file.transferTo(new File( basePath + file_name ));
+                    File newFile = new File( basePath + file_name );
+                    file.transferTo(newFile);
                     // save to db
                     pictueUpload.saveUploadPictureName(originName,file_name);
 
                     Picture picture = new Picture();
-                    BufferedImage image = ImageIO.read(file.getInputStream());
+                    BufferedImage image = ImageIO.read(newFile);
                     picture.setWidth(image.getWidth());
                     picture.setHeight(image.getHeight());
                     picture.setIndex(i++);

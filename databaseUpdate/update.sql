@@ -177,3 +177,37 @@ VALUES
 	(X'4E4F545F4A4F494E5F434C5542', X'E69CAAE58AA0E585A5E4BFB1E4B990E983A8', X'6576656E745F656E756D', X'7A68'),
 	(X'434C55425F4D454D424552', X'E4BFB1E4B990E983A8E68890E59198', X'6576656E745F656E756D', X'7A68');
 
+
+insert into user_profile (user_id,item_code,item_value)
+select
+  user_id
+  ,'name' as item_code
+  ,user_real_name  as item_value
+ from user_info
+where   user_real_name is not null
+union all
+select
+  user_id
+  ,'mobile'
+  ,phone
+ from user_info
+ where   phone is not null
+union all
+select
+  user_id
+  ,'nickname'
+  ,nickname
+ from user_info
+where   nickname is not null
+union all
+select
+  user_id
+  ,'email'
+  ,mail_address
+ from user_info
+where   mail_address is not null  ;
+
+
+
+
+

@@ -6,22 +6,22 @@
 
     <select id="statusInfo" resultType="map" >
     select
-         case when a.user_id = #{userID}
+         case when b.user_id = #{userID}
               then 'true'
               else 'false'
               end as is_registered
         ,count(1) as registered_count
-        ,coalesce(b.event_detail,'') as event_detail
+        ,coalesce(a.event_detail,'') as event_detail
         ,coalesce(c.nickname,concat(substr(c.phone,1,3),'****',substr(c.phone,8)) ) as organizer_name
         ,coalesce(concat(substr(c.phone,1,3),'****',substr(c.phone,8)),'') as phone
         ,coalesce(c.profile_picture,'') as profile_image
         ,coalesce(d.user_level,'99')  as organizer_level
-    from event_registration  a
-    left join event b
+    from event  a
+    left join event_registration  b
     on a.event_id = b.event_id
     and b.event_id = #{eventID}
     left join user_info c
-    on b.organizer_id = c.user_id
+    on a.organizer_id = c.user_id
     left join user_detail d
            on c.user_id = d.user_id
     where a.event_id = #{eventID}
@@ -93,7 +93,7 @@
             ,a.event_status
             ,coalesce(a.fee,0.0)  as fee
             ,a.form_item
-            ,concat('/pic.htmls?p=',coalesce(a.image,'')) as image
+            ,coalesce(a.image,'') as image
             ,coalesce(a.max_people,0) as max_people
             ,coalesce(a.min_people,0) as min_people
             ,a.organizer_id
@@ -197,7 +197,7 @@
     from event a
     left join event_form b
            on a.event_id = b.event_id
-    left join event_form_item c
+    left join user_profile_item c
            on b.item_code = c.item_code
     left join user_info e
            on e.user_id = #{userID}
@@ -354,7 +354,8 @@
 
     <select id="eventMembers" resultType="com.hongzhi.zswh.app_1_4.entity.EventJoinMember">
     select
-         coalesce(b.nickname,concat(substr(b.phone,1,3),'****',substr(b.phone,8)) ) as name
+         a.user_id
+        ,coalesce(b.nickname,concat(substr(b.phone,1,3),'****',substr(b.phone,8)) ) as name
         ,b.profile_picture as  profile_image
         ,concat(substr(b.phone,1,3),'****',substr(b.phone,8))  as phone
      from event_registration a
@@ -395,7 +396,7 @@
             ,a.language
             ,a.index
         from
-            event_form_item a
+            user_profile_item a
         ORDER BY a.index
     </select>
 
@@ -409,4 +410,21 @@
         ORDER BY a.index
 
     </select>
+
+    <update id="abort" >
+      update event a
+      left join (
+                select
+                     event_id
+                    ,count(1) as cnt
+                from event_registration
+                group by event_id
+                )  b
+          on a.event_id = b.event_id
+         set a.event_status = 3
+       where a.organizer_id = #{userID}
+         and a.event_id = #{eventID}
+         and ( a.start_time >= now()
+        	 or (a.start_time > now() and b.cnt = 0 )  )
+    </update>
 </mapper>

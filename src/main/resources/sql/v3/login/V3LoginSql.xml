@@ -26,4 +26,15 @@
          and a.platform_id=#{platform}
     </select>
 
+    <select id="profileInfos" resultType="map" >
+    select
+       a.item_code
+      ,coalesce(b.item_value,'') as item_value
+    from user_profile_item a
+    left join user_profile b
+           on a.item_code = b.item_code
+          and b.user_id = #{userID}
+          and b.is_delete = 0
+    </select>
+
 </mapper>
