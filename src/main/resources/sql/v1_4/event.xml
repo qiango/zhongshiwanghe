@@ -354,7 +354,8 @@
 
     <select id="eventMembers" resultType="com.hongzhi.zswh.app_1_4.entity.EventJoinMember">
     select
-         coalesce(b.nickname,concat(substr(b.phone,1,3),'****',substr(b.phone,8)) ) as name
+         a.user_id
+        ,coalesce(b.nickname,concat(substr(b.phone,1,3),'****',substr(b.phone,8)) ) as name
         ,b.profile_picture as  profile_image
         ,concat(substr(b.phone,1,3),'****',substr(b.phone,8))  as phone
      from event_registration a

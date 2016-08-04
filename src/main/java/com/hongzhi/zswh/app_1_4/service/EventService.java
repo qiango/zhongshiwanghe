@@ -49,6 +49,7 @@ public class EventService {
             String club_user_level = "";
             Integer organizer_level = 3 ;
             boolean abort_event = false ;
+            boolean user_join_event = false;
             // detail
             if (!ObjectUtil.isEmpty(event_id)) {
                 Map<String, Object> info = eventDao.statusInfo(Integer.valueOf(property.getUser_id()), event_id);
@@ -59,6 +60,7 @@ public class EventService {
                     events.get(0).setEvent_detail(gson.fromJson(info.get("event_detail").toString(), EventCreateRichText[].class));
                 }
                 EventJoinMember organizer = new EventJoinMember();
+                organizer.setUser_id(events.get(0).getOrganizer_id());
                 organizer.setName(info.get("organizer_name").toString());
                 organizer.setProfile_image(info.get("profile_image").toString());
                 organizer.setPhone(info.get("phone").toString());
@@ -78,6 +80,13 @@ public class EventService {
                      }
                 }
 
+                List<Integer>  joinEventUserIDs = new ArrayList<>() ;
+                for (int i = 0; i < events.get(0).getMembers().size(); i++) {
+                    joinEventUserIDs.add(events.get(0).getMembers().get(i).getUser_id()) ;
+                }
+                if (joinEventUserIDs.contains(Integer.valueOf(property.getUser_id()))) {
+                    user_join_event = true;
+                }
 
             }
 
@@ -87,6 +96,7 @@ public class EventService {
             map.put("events", events);
             map.put("abort_event", abort_event );
             map.put("abort_event_name", DictionaryUtil.find("abort_event","event",property.getLanguage()) );
+            map.put("user_join_event", user_join_event);
 
             if (property.getClub_user_level().equals("0")) {
                 map.put("review_counts", counts);
@@ -103,6 +113,7 @@ public class EventService {
             map.put("events", new ArrayList<>());
             map.put("abort_event", false );
             map.put("abort_event_name", "" );
+            map.put("user_join_event", false);
         }
 
         return map;
