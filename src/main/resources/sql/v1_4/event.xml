@@ -410,4 +410,21 @@
         ORDER BY a.index
 
     </select>
+
+    <update id="abort" >
+      update event a
+      left join (
+                select
+                     event_id
+                    ,count(1) as cnt
+                from event_registration
+                group by event_id
+                )  b
+          on a.event_id = b.event_id
+         set a.event_status = 3
+       where a.organizer_id = #{userID}
+         and a.event_id = #{eventID}
+         and ( a.start_time >= now()
+        	 or (a.start_time > now() and b.cnt = 0 )  )
+    </update>
 </mapper>
