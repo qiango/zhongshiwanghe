@@ -248,7 +248,7 @@ public class EventService {
      */
     public Object latestEvent(SessionProperty property) {
 
-        List<Event> events_list = eventDao.latestEventList(property.getClub_id());
+        List<Event> events_list = eventDao.latestEventList(property.getClub_id(),Integer.valueOf(property.getUser_id()));
 
         int club_events_counts = eventDao.clubEventsCount(property.getClub_id());
 
