@@ -118,6 +118,7 @@ public class EventService {
 
     public Object eventCreate(HttpServletRequest request, EventCreate event_create, SessionProperty property) throws HongZhiException {
         event_create.setOrganizer_id(Integer.valueOf(property.getUser_id()));
+        event_create.setClub_id(property.getClub_id());
         event_create.verifyData();
 
         String return_info = "";
