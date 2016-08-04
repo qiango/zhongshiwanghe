@@ -197,7 +197,7 @@
     from event a
     left join event_form b
            on a.event_id = b.event_id
-    left join event_form_item c
+    left join user_profile_item c
            on b.item_code = c.item_code
     left join user_info e
            on e.user_id = #{userID}
@@ -396,7 +396,7 @@
             ,a.language
             ,a.index
         from
-            event_form_item a
+            user_profile_item a
         ORDER BY a.index
     </select>
 
