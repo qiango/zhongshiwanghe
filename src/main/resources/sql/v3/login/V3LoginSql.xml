@@ -16,6 +16,8 @@
           ,a.create_time
           ,a.create_date
           ,a.salt
+          ,a.birthdate
+          ,a.gender
           ,b.club_id
           ,b.user_level  as club_user_level
         from user_info  a
