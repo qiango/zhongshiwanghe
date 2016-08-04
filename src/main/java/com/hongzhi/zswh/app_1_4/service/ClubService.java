@@ -43,6 +43,8 @@ public class ClubService {
         List is_admin_list = clubDao.selectClubAdmin(club_info.getClub_id(), property.getUser_id());//查看是否是俱乐部管理员
 
         if (is_admin_list.size() == 0) {
+            out.setShow_event("0");
+            out.setShow_club("0");
             out.setUser_level("99");//普通会员
         } else {
             out.setUser_level("0");//管理员
@@ -107,6 +109,8 @@ public class ClubService {
         out.setMy_club_ranking(defaultVal);
         out.setClub(null);
         out.setClub_ranking_list(clubDao.clubRanking("   limit 3   ", 0));
+        out.setShow_event("0");
+        out.setShow_club("0");
         Map<String, Object> map = new HashMap<>();
         map.put("club_interface_data", out);
         return map;
