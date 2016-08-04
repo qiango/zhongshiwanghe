@@ -80,4 +80,7 @@ public interface V6ClubDao {
 
 
     List<Integer> queryClubAdmin(String club_id);
+
+    List<Map<String,Object>> selectEvent(Integer integer);
+
 }
