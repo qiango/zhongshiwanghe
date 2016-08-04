@@ -153,6 +153,10 @@
         group by a.event_id
      )t2
         on t1.event_id = t2.event_id
+     left join  event_registration  t3
+            on t1.event_id = t3.event_id
+           and t3.user_id = #{userID}
+           and t3.my_status = 1
      where t1.club_id = #{club_id}
      <![CDATA[    and t1.register_start_time < now() ]]>
        and t1.register_end_time > NOW()
