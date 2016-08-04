@@ -1,5 +1,6 @@
 package com.hongzhi.zswh.app_v3.login.dao;
 
+import java.util.List;
 import java.util.Map;
 
 import org.apache.ibatis.annotations.Param;
@@ -17,7 +18,7 @@ public interface V3LoginDao {
 	 * @return
 	 */
 	Map<String, Object> login(@Param("phone") String vPhone, @Param("platform") String vPlatform_id);
-	
-	
 
+
+    List<Map<String,Object>> profileInfos(@Param("userID") Integer user_id);
 }
