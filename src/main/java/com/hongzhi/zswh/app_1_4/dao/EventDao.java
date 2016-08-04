@@ -60,4 +60,6 @@ public interface EventDao {
     List<Map<String,Object>> selectEventFormItem();
 
     List<Map<String,Object>> selectDefaultImage();
+
+    int abort(@Param("userID") Integer user_id,@Param("eventID") Integer event_id);
 }

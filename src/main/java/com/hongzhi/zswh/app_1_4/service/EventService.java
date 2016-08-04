@@ -424,6 +424,17 @@ public class EventService {
         return map;
     }
 
+    public Object abort(SessionProperty property, String event_id) throws HongZhiException {
+
+        int effectCount = eventDao.abort(Integer.valueOf(property.getUser_id()),Integer.valueOf(event_id));
+
+        if ( 1 == effectCount ) {
+            return null;
+        } else {
+           throw new HongZhiException("abort_fail","event") ;
+        }
+    }
+
 
 /*    public Object verifyEventDetails(String event_id, SessionProperty property) throws HongZhiException {
         ExcepUtil.verify(event_id,"event_name_null","event");

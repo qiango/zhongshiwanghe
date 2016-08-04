@@ -262,15 +262,15 @@ public class AppEventController {
 
     @ResponseBody
     @RequestMapping(value = "/abort")
-    public String abort(HttpSession session, String session_id, @PathVariable String version){
+    public String abort(HttpSession session, String session_id,String event_id, @PathVariable String version){
         SessionProperty property;
         String language = "zh";
         try {
             switch (version){
                 case "v1.4":
-                    property = sess.sessionEffective(session,session_id,"/v1.4/event/default_image");
+                    property = sess.sessionEffective(session,session_id,"/v1.4/event/abort");
                     language=property.getLanguage();
-                    return ObjectUtil.jsonOut( eventService.defaultImage() );
+                    return ObjectUtil.jsonOut( eventService.abort(property,event_id) );
                 default:
                     return "404";
             }
