@@ -259,4 +259,24 @@ public class AppEventController {
             return ObjectUtil.jsonOutError(e.getCode(), dic.getCodeValue(e.getCode(),e.getMessage(), language ) );
         }
     }
+
+    @ResponseBody
+    @RequestMapping(value = "/abort")
+    public String abort(HttpSession session, String session_id, @PathVariable String version){
+        SessionProperty property;
+        String language = "zh";
+        try {
+            switch (version){
+                case "v1.4":
+                    property = sess.sessionEffective(session,session_id,"/v1.4/event/default_image");
+                    language=property.getLanguage();
+                    return ObjectUtil.jsonOut( eventService.defaultImage() );
+                default:
+                    return "404";
+            }
+        }catch (HongZhiException e){
+            return ObjectUtil.jsonOutError(e.getCode(), dic.getCodeValue(e.getCode(),e.getMessage(), language ) );
+        }
+    }
+
 }

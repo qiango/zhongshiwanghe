@@ -8,6 +8,7 @@ import com.hongzhi.zswh.util.basic.DictionaryUtil;
  */
 public class EventJoinMember {
 
+    private Integer user_id;
     private String name="";
     private String profile_image="";
     private String phone="";
@@ -34,5 +35,13 @@ public class EventJoinMember {
 
     public void setPhone(String phone) {
         this.phone = phone;
+    }
+
+    public Integer getUser_id() {
+        return user_id;
+    }
+
+    public void setUser_id(Integer user_id) {
+        this.user_id = user_id;
     }
 }
