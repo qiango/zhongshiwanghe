@@ -7,7 +7,6 @@ import com.hongzhi.zswh.app_1_4.entity.ClubQueryEntity;
 import com.hongzhi.zswh.util.basic.ObjectUtil;
 import com.hongzhi.zswh.util.basic.sessionDao.SessionProperty;
 import com.hongzhi.zswh.util.exception.HongZhiException;
-import com.hongzhi.zswh.util.picture.service.PictureService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -20,8 +19,6 @@ import java.util.Map;
 public class ClubService {
     @Autowired
     private ClubDao clubDao;
-    @Autowired
-    private PictureService picService;
     @Autowired
     private EventService eventService;
     /**
