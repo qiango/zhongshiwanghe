@@ -16,8 +16,8 @@
           ,a.create_time
           ,a.create_date
           ,a.salt
-          ,a.birthdate
-          ,a.gender
+          ,coalesce(DATE_FORMAT(a.birthdate,'%Y-%m-%d'),'')  as birthdate
+          ,coalesce(a.gender,'')  as gender
           ,b.club_id
           ,b.user_level  as club_user_level
         from user_info  a
