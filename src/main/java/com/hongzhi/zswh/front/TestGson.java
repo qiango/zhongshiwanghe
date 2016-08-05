@@ -1,5 +1,6 @@
 package com.hongzhi.zswh.front;
 
+import java.util.Calendar;
 import java.util.regex.Pattern;
 
 /**   Twitter : @taylorwang789 
@@ -7,11 +8,21 @@ import java.util.regex.Pattern;
  */
 public class TestGson {
 	public static void main(String[] args) {
-	    Pattern p = Pattern.compile("\\d+");
-	    String reg = "\\d+";
-	    String str = "2342345";
-	    
-	    System.out.println(str.matches("\\d+"));
-	   
-	}
+
+        Calendar calendar =  Calendar.getInstance();
+        calendar.set(Calendar.DAY_OF_MONTH,5);
+        calendar.set(Calendar.HOUR_OF_DAY,00);
+        calendar.set(Calendar.MINUTE,30);
+
+        System.out.println(calendar.getTime());
+        System.out.println(calendar.getTimeInMillis());
+
+        calendar.set(Calendar.HOUR_OF_DAY,18);
+        calendar.set(Calendar.MINUTE,00);
+         System.out.println(calendar.getTime());
+        System.out.println(calendar.getTimeInMillis());
+
+
+
+    }
 }

@@ -49,6 +49,7 @@
           <if test=" goods_id !=null and goods_id !=0 ">
            and id = #{goods_id}     
           </if>
+          order by create_time desc
     </select>
     
     <select id="goodsPicturesByGoodsId"  resultType="com.hongzhi.zswh.app_v4.mall.entity.V4GoodsPicture">
