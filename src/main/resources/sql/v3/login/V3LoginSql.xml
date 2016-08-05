@@ -16,6 +16,7 @@
           ,a.create_time
           ,a.create_date
           ,a.salt
+          ,coalesce(a.profile_picture,'') as profile_picture
           ,coalesce(DATE_FORMAT(a.birthdate,'%Y-%m-%d'),'')  as birthdate
           ,coalesce(a.gender,'')  as gender
           ,b.club_id

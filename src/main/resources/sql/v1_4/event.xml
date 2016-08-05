@@ -18,7 +18,8 @@
         ,coalesce(d.user_level,'99')  as organizer_level
     from event  a
     left join event_registration  b
-    on a.event_id = b.event_id
+           on a.event_id = b.event_id
+          and b.my_status = 1
     and b.event_id = #{eventID}
     left join user_info c
     on a.organizer_id = c.user_id
