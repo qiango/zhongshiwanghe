@@ -219,7 +219,7 @@ public class Event {
             return EventButton.REGISTERED.name();
         } else if ( register_end_time.getTime() < current ) {
             return EventButton.STOP_REGISTER.name();
-        } else if ( current_registered_people >= max_people ) {
+        } else if ( max_people > 0 && current_registered_people >= max_people ) {
             return EventButton.FULL.name();
         } else if ( register_start_time.getTime() < current && register_end_time.getTime() > current ) {
             return EventButton.I_WANNA_JOIN.name();
