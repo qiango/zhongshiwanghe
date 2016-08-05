@@ -158,6 +158,7 @@
            and t3.user_id = #{userID}
            and t3.my_status = 1
      where t1.club_id = #{club_id}
+       and t1.event_status = 1
      <![CDATA[    and t1.register_start_time < now() ]]>
        and t1.register_end_time > NOW()
        and (t1.max_people > t2.member_cnt
@@ -336,6 +337,7 @@
               event  a
           where
               a.club_id = #{clubID}
+           and a.event_status = 1
     </select>
 
     <insert id="organizerJoin" >
