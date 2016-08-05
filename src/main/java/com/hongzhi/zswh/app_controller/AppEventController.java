@@ -97,7 +97,7 @@ public class AppEventController {
                 case "v1.4":
                     property = sess.sessionEffective(session,session_id,"/v1.4/event/create");
                     language=property.getLanguage();
-                    return ObjectUtil.jsonOut( eventService.eventReview(event,property) );
+                    return ObjectUtil.jsonOut( eventService.eventReview(event,property),DictionaryUtil.find("event_review_success","event",language) );
                 default:
                     return "404";
             }
