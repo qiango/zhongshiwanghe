@@ -70,7 +70,7 @@ public class EventService {
 
                 club_user_level = userLevel(property,events.get(0).getOrganizer_id(),events.get(0).getEvent_id());
 
-                if ( events.get(0).getOrganizer_id().equals(Integer.valueOf(property.getUser_id())) ) {
+                if ( events.get(0).getOrganizer_id().equals(Integer.valueOf(property.getUser_id())) && !events.get(0).getEvent_status().equals(EventStatus.OVER.getValue()) ) {
                      if (events.get(0).getStart_time().getTime() > System.currentTimeMillis() ) {
                          abort_event = true;
                      } else if ( events.get(0).getMembers().size() == 0 ){
