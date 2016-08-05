@@ -195,7 +195,7 @@ public class AppEventController {
                 case "v1.4":
                     property = sess.sessionEffective(session,session_id,"/v1.4/event/unregister");
                     language=property.getLanguage();
-                    return ObjectUtil.jsonOut( eventService.eventUnregister(event_id,property) );
+                    return ObjectUtil.jsonOut( eventService.eventUnregister(event_id,property) ,DictionaryUtil.find("unregister_success","event",language));
                 default:
                     return "404";
             }
@@ -270,7 +270,7 @@ public class AppEventController {
                 case "v1.4":
                     property = sess.sessionEffective(session,session_id,"/v1.4/event/abort");
                     language=property.getLanguage();
-                    return ObjectUtil.jsonOut( eventService.abort(property,event_id) );
+                    return ObjectUtil.jsonOut( eventService.abort(property,event_id) ,DictionaryUtil.find("abort_success","event",language) );
                 default:
                     return "404";
             }
