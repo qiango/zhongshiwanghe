@@ -213,6 +213,10 @@ public class Event {
 
         if ( end_time.getTime() < current) {
             return EventButton.FINISH.name();
+        } else if ( EventStatus.getEventStatus(event_status).name().equals(EventStatus.UNDER_REVIEW.name()) ) {
+            return EventButton.UNDER_REVIEW.name();
+        } else if ( EventStatus.getEventStatus(event_status).name().equals(EventStatus.FAIL_REVIEW.name()) ) {
+            return EventButton.FAIL_REVIEW.name();
         } else if ( EventStatus.getEventStatus(event_status).name().equals(EventStatus.OVER.name()) ) {
             return EventButton.ABORT.name();
         } else if ( isRegistered ) {
@@ -225,10 +229,6 @@ public class Event {
             return EventButton.I_WANNA_JOIN.name();
         } else if ( register_start_time.getTime() > current ) {
             return EventButton.PREPARE.name();
-        } else if ( EventStatus.getEventStatus(event_status).name().equals(EventStatus.UNDER_REVIEW.name()) ) {
-            return EventButton.UNDER_REVIEW.name();
-        } else if ( EventStatus.getEventStatus(event_status).name().equals(EventStatus.FAIL_REVIEW.name()) ) {
-            return EventButton.FAIL_REVIEW.name();
         } else {
             return  "";
         }
