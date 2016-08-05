@@ -15,7 +15,6 @@ import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
-import java.sql.Timestamp;
 import java.util.*;
 
 /**
@@ -32,7 +31,7 @@ public class EventService {
     @Autowired
     private PictureService pictureService;
 
-
+    @Autowired
     private NotificationService notificationService;
 
     public Object events(SessionProperty property, Integer club_id, Integer event_id) {
