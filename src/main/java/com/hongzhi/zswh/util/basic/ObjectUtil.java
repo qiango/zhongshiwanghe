@@ -337,7 +337,6 @@ public class ObjectUtil {
 
 	/**   Twitter : @taylorwang789 
 	 * Creat time : Apr 8, 2016    2:44:48 PM
-	 * @param selectClubInfoByUserIdApp
 	 * @return
 	 */
 	public static Object notNullEntity(Object obj) {
@@ -357,7 +356,16 @@ public class ObjectUtil {
 		Gson gsonWithnull = new GsonBuilder().serializeNulls().create();
 		return  gsonWithnull.toJson(outmap).replace("\\u003d", "=").replace("\\u0026", "&");
 	}
-	
+
+
+    public static String jsonOut(Object obj,String message){
+        Map<String,Object> outmap = new HashMap<>();
+        outmap.put("code", "0");
+        outmap.put("message", null == message ? "" : message );
+        outmap.put("data", null == obj ? new JsonObject() : obj );
+        Gson gsonWithnull = new GsonBuilder().serializeNulls().create();
+        return  gsonWithnull.toJson(outmap).replace("\\u003d", "=").replace("\\u0026", "&");
+    }
 	
 	public static String jsonOutDT(Object obj,String dateFormat){
 		Map<String,Object> outmap = new HashMap<>();
