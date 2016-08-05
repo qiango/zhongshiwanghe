@@ -368,6 +368,7 @@
      left join user_info b
             on a.user_id = b.user_id
       where a.event_id = #{eventID}
+        and a.my_status = 1
     </select>
 
     <insert id="saveReviewReason">
