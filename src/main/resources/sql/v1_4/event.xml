@@ -105,22 +105,26 @@
             ,event_notice
         from
             event a
-        where
-        <if test=" eventStatus == 1 ">
-            (
-        </if>
-        a.event_status = #{eventStatus}
-        <if test=" eventStatus == 1 ">
+     <where>
+        <if test=" event_id == null  or event_id =='' ">
+          <if test=" eventStatus == 1 ">
+              (
+          </if>
+            a.event_status = #{eventStatus}
+          <if test=" eventStatus == 1 ">
             or ( a.event_status = 3
             and a.end_time >= now() )
             )
+          </if>
         </if>
+
         <if test=" event_id !=null  and   event_id !='' ">
           and a.event_id = #{event_id}
         </if>
         <if test="club_id !=null  and   club_id !='' ">
           and  a.club_id = #{club_id}
         </if>
+     </where>
 
     </select>
     <select id="latestEventList" resultType="com.hongzhi.zswh.app_1_4.entity.Event">
