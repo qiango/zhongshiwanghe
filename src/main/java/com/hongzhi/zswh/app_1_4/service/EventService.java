@@ -88,6 +88,8 @@ public class EventService {
                     user_join_event = true;
                 }
 
+            } else {
+                club_user_level = userLevel(property,0,0);
             }
 
 
@@ -135,7 +137,7 @@ public class EventService {
                     if (myEventsIDs.contains(event_id)) {
                         level = UserLevel.EVENT_MEMBER.name();
                     } else {
-                        level = UserLevel.CLUB_MANAGER.name();
+                        level = UserLevel.CLUB_MEMBER.name();
                     }
                 }
                 break;
