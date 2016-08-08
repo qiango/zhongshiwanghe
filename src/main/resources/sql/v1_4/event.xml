@@ -6,13 +6,26 @@
 
     <select id="statusInfo" resultType="map" >
     select
-         case when user_id = #{userID}
+         case when b.user_id = #{userID}
               then 'true'
               else 'false'
               end as is_registered
         ,count(1) as registered_count
-    from event_registration
-    where event_id = #{eventID}
+        ,coalesce(a.event_detail,'') as event_detail
+        ,coalesce(c.nickname,concat(substr(c.phone,1,3),'****',substr(c.phone,8)) ) as organizer_name
+        ,coalesce(concat(substr(c.phone,1,3),'****',substr(c.phone,8)),'') as phone
+        ,coalesce(c.profile_picture,'') as profile_image
+        ,coalesce(d.user_level,'99')  as organizer_level
+    from event  a
+    left join event_registration  b
+           on a.event_id = b.event_id
+          and b.my_status = 1
+    and b.event_id = #{eventID}
+    left join user_info c
+    on a.organizer_id = c.user_id
+    left join user_detail d
+           on c.user_id = d.user_id
+    where a.event_id = #{eventID}
     </select>
 
     <insert id="createEvent"  useGeneratedKeys="true"  keyProperty="event_id" >
@@ -32,6 +45,8 @@
          ,event_status
          ,view_guests
          ,form_item
+         ,event_detail
+         ,event_notice
     ) values (
           #{event_name}
          ,#{club_id}
@@ -48,13 +63,17 @@
          ,#{event_status}
          ,#{view_guests}
          ,#{form_item}
+         ,#{event_detail}
+         ,#{event_notice}
     )
 
     </insert>
 
-    <select id="eventIDs" resultType="Integer" >
+    <select id="eventIDs" resultType="map" >
     select
-        event_id
+        event_id as event_id
+        ,organizer_id as organizer_id
+        ,event_name as event_name
     from event
     where club_id = #{club_id}
     </select>
@@ -75,7 +94,7 @@
             ,a.event_status
             ,coalesce(a.fee,0.0)  as fee
             ,a.form_item
-            ,concat('/pic.htmls?p=',coalesce(a.image,'')) as image
+            ,coalesce(a.image,'') as image
             ,coalesce(a.max_people,0) as max_people
             ,coalesce(a.min_people,0) as min_people
             ,a.organizer_id
@@ -83,78 +102,74 @@
             ,a.register_start_time
             ,a.start_time
             ,a.view_guests
+            ,event_detail as event_detail_data
+            ,event_notice
         from
             event a
-        where
+     <where>
+        <if test=" event_id == null  or event_id =='' ">
+          <if test=" eventStatus == 1 ">
+              (
+          </if>
+            a.event_status = #{eventStatus}
+          <if test=" eventStatus == 1 ">
+            or ( a.event_status = 3
+            and a.end_time >= now() )
+            )
+          </if>
+        </if>
+
         <if test=" event_id !=null  and   event_id !='' ">
-            a.event_id = #{event_id}
-        and
+          and a.event_id = #{event_id}
         </if>
         <if test="club_id !=null  and   club_id !='' ">
-            a.club_id = #{club_id}
-        and
+          and  a.club_id = #{club_id}
         </if>
-            a.event_status = 1
-        or
-          (a.event_status = 2 and a.end_time > now())
+     </where>
 
     </select>
     <select id="latestEventList" resultType="com.hongzhi.zswh.app_1_4.entity.Event">
-          select
-             d.event_id
-            ,d.club_id
-            ,d.end_time
-            ,d.event_address
-            ,d.event_name
-            ,d.event_status
-            ,coalesce(d.fee,0.0)  as fee
-            ,d.form_item
-            ,concat('/pic.htmls?p=',coalesce(d.image,'')) as image
-            ,coalesce(d.max_people,0) as max_people
-            ,coalesce(d.min_people,0) as min_people
-            ,d.organizer_id
-            ,d.register_end_time
-            ,d.register_start_time
-            ,d.start_time
-            ,d.view_guests
-          from
-             (
-             select
-                  COUNT(1) as sum_member
-                  ,a.event_id as event_id
-              from
-                  event a
-              left join
-                  event_registration b
-              on
-                  a.event_id = b.event_id
-        where
-            a.event_status = 1
-        and
-        <![CDATA[
-        a.register_start_time < now()
-        ]]>
-        and
-        <![CDATA[
-        a.register_end_time > NOW()
-        ]]>
-        GROUP BY a.event_id
-        ) c
-        LEFT JOIN
-            event d
-        on
-            d.event_id = c.event_id
-        where
-         <![CDATA[
-            c.sum_member < d.max_people
-        ]]>
-        or
-            coalesce(d.max_people,0) = 0
-         <if  test="club_id !=0 ">
-             and d.club_id = #{club_id}
-         </if>
-
-        ORDER BY d.start_time desc
+    select
+         t1.event_id
+        ,t1.event_name
+        ,t1.club_id
+        ,t1.start_time
+        ,t1.end_time
+        ,t1.register_start_time
+        ,t1.register_end_time
+        ,t1.organizer_id
+        ,t1.event_address
+        ,t1.min_people
+        ,t1.max_people
+        ,t1.fee
+        ,t1.image
+        ,t1.event_status
+        ,t1.view_guests
+        ,t1.form_item
+        ,t1.event_detail
+        ,t1.event_notice
+     from event t1
+     left join (
+        select  a.event_id ,  count(b.user_id)  as member_cnt
+        from  event a
+        left join event_registration  b
+        on a.event_id = b.event_id
+        where a.club_id = #{club_id}
+        group by a.event_id
+     )t2
+        on t1.event_id = t2.event_id
+     left join  event_registration  t3
+            on t1.event_id = t3.event_id
+           and t3.user_id = #{userID}
+           and t3.my_status = 1
+     where t1.club_id = #{club_id}
+       and t1.event_status = 1
+     <![CDATA[    and t1.register_start_time < now() ]]>
+       and t1.register_end_time > NOW()
+       and (t1.max_people > t2.member_cnt
+            or coalesce(t1.max_people,0) = 0 )
+        ORDER BY t1.start_time desc
+        LIMIT 2
     </select>
 
 
@@ -176,16 +191,25 @@
          a.event_id
         ,a.club_id
         ,b.item_code
-        ,c.item_name
-        ,coalesce(d.item_value,'')  as item_value
+        ,coalesce(c.item_name,'')  as item_name
+        ,coalesce(d.item_value,
+            case when b.item_code = 'name'
+                 then e.user_real_name
+                 when b.item_code = 'mobile'
+                 then e.phone
+                 else null
+                 end
+        ,'')  as item_value
     from event a
     left join event_form b
            on a.event_id = b.event_id
-    left join event_form_item c
+    left join user_profile_item c
            on b.item_code = c.item_code
+    left join user_info e
+           on e.user_id = #{userID}
     left join user_profile d
            on b.item_code = d.item_code
-          and d.user_id = #{userID}
+          and d.user_id = e.user_id
     where a.event_id = #{eventID}
     order by c.index
     </select>
@@ -278,7 +302,7 @@
                 ,a.event_status
                 ,coalesce(a.fee,0.0)  as fee
                 ,a.form_item
-                ,concat('/pic.htmls?p=',coalesce(a.image,'')) as image
+                ,coalesce(a.image,'') as image
                 ,coalesce(a.max_people,0) as max_people
                 ,coalesce(a.min_people,0) as min_people
                 ,a.organizer_id
@@ -293,4 +317,122 @@
           and
               a.club_id = #{club_id}
     </select>
+
+
+    <insert id="saveUserProfile" >
+    insert into user_profile
+        (
+        user_id
+       ,item_code
+       ,item_value
+       ) values
+       <foreach collection="profiles" item="profile" separator="," >
+       (
+        #{userID}
+       ,#{profile.item_code}
+       ,#{profile.item_value}
+       )
+       </foreach>
+    </insert>
+
+    <select id="clubEventsCount" resultType="Integer">
+          select
+              COUNT(1) evnets_count
+          from
+              event  a
+          where
+              a.club_id = #{clubID}
+           and a.event_status = 1
+    </select>
+
+    <insert id="organizerJoin" >
+    insert into event_registration (
+         event_id
+        ,user_id
+        ,create_time
+        ,my_status
+    ) values (
+         #{event_id}
+        ,#{organizer_id}
+        ,now()
+        ,1
+    )
+    </insert>
+
+    <select id="eventMembers" resultType="com.hongzhi.zswh.app_1_4.entity.EventJoinMember">
+    select
+         a.user_id
+        ,coalesce(b.nickname,concat(substr(b.phone,1,3),'****',substr(b.phone,8)) ) as name
+        ,b.profile_picture as  profile_image
+        ,concat(substr(b.phone,1,3),'****',substr(b.phone,8))  as phone
+     from event_registration a
+     left join user_info b
+            on a.user_id = b.user_id
+      where a.event_id = #{eventID}
+        and a.my_status = 1
+    </select>
+
+    <insert id="saveReviewReason">
+          insert into
+             event_reason (
+             event_id
+            ,reason_type
+            ,reason
+    ) values (
+          #{event_id}
+         ,#{reason_type}
+         ,#{review_reason}
+    )
+
+    </insert>
+
+    <select id="selectEventByClubId" resultType="Integer">
+        select
+            COUNT(1) as counts
+        from
+            event a
+        where
+            a.event_status = 0
+        and
+            a.club_id = #{club_id}
+    </select>
+    <select id="selectEventFormItem" resultType="map">
+        select
+             a.item_code
+            ,a.item_name
+            ,a.is_default
+            ,a.language
+            ,a.index
+        from
+            user_profile_item a
+        ORDER BY a.index
+    </select>
+
+    <select id="selectDefaultImage" resultType="map">
+        select
+            a.id
+            ,concat('/pic.htmls?p=',coalesce(a.image,'')) as image
+            ,a.index
+        from
+            event_image a
+        ORDER BY a.index
+
+    </select>
+
+    <update id="abort" >
+      update event a
+      left join (
+                select
+                     event_id
+                    ,count(1) as cnt
+                from event_registration
+                group by event_id
+                )  b
+          on a.event_id = b.event_id
+         set a.event_status = 3
+       where a.organizer_id = #{userID}
+         and a.event_id = #{eventID}
+         and ( a.start_time >= now()
+        	 or (a.start_time > now() and b.cnt = 0 )  )
+    </update>
 </mapper>

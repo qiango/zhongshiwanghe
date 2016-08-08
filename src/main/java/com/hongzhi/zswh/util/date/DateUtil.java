@@ -256,4 +256,13 @@ public class DateUtil {
 		return map;
 	}
 
+
+    public static Date getFirstDayOfWeek (int firstDayOfWeek ) {
+        Calendar calendar = Calendar.getInstance();
+//        calendar.setFirstDayOfWeek(Calendar.MONDAY);
+        calendar.setFirstDayOfWeek(firstDayOfWeek);
+        calendar.add(Calendar.DAY_OF_WEEK,  calendar.getFirstDayOfWeek() - calendar.get(Calendar.DAY_OF_WEEK) );
+        return calendar.getTime();
+    }
+
 }

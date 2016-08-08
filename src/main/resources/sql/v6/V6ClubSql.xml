@@ -435,4 +435,29 @@
             where club_id = #{club_id}
         </if>
     </update>
+
+    <select id="selectEvent" resultType="map">
+          SELECT
+               b.organizer_id
+              ,b.club_id
+              ,b.event_id
+
+          from
+              event_registration a
+
+          LEFT JOIN
+              event b
+
+          on
+              a.event_id = b.event_id
+
+          where
+              a.my_status = 1
+          and
+              b.event_status = 1
+          and
+              b.end_time >= NOW()
+          and
+              a.user_id = #{user_id}
+    </select>
 </mapper>

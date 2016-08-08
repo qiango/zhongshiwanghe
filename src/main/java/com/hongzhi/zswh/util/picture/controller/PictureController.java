@@ -5,6 +5,7 @@ import java.io.IOException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.hongzhi.zswh.util.basic.dictionaryDao.Dictionary;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -30,6 +31,13 @@ public class PictureController {
     public String  springUpload(HttpServletRequest request) throws IllegalStateException, IOException {
             // return file upload path
             return picService.picUpload(request).toString();
+    }
+
+    @ResponseBody
+    @RequestMapping("/appPicUpload")  //  picutre upload
+    public String  appspringUpload(HttpServletRequest request) throws IllegalStateException, IOException {
+        // return file upload path
+        return picService.picUpload(request,"/pic.htmls?p=").toString();
     }
 
     @RequestMapping("/webPicUpload")  //  picutre upload

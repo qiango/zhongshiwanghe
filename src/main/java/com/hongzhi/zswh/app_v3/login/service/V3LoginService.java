@@ -97,6 +97,15 @@ public class V3LoginService {
 			out.put("join_club_status",  ObjectUtil.isEmpty(userDetail_query) ? "0" : ObjectUtil.getProperty(userDetail_query.getJoin_club_status(), "0") );
 			out.put("user_name", userInfo.get("user_real_name"));
 			out.put("sports_camp_id", sport_camp_id);
+            out.put("gender",userInfo.get("gender"));
+            out.put("birthdate",userInfo.get("birthdate"));
+            out.put("profile_picture",userInfo.get("profile_picture"));
+
+            List<Map<String,Object>> profileInfos = dao.profileInfos(Integer.valueOf(userInfo.get("user_id").toString()));
+            for (int i = 0; i < profileInfos.size(); i++) {
+                out.put(profileInfos.get(i).get("item_code").toString(),profileInfos.get(i).get("item_value"));
+            }
+
 			Map<String, Object> aa = new HashMap<>();
 			aa.put("user_info", out);
 

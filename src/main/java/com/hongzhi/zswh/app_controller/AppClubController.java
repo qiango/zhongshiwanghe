@@ -6,6 +6,7 @@ import com.hongzhi.zswh.util.basic.DictionaryUtil;
 import com.hongzhi.zswh.util.basic.ObjectUtil;
 import com.hongzhi.zswh.util.basic.SessionUtil;
 import com.hongzhi.zswh.util.basic.sessionDao.SessionProperty;
+import com.hongzhi.zswh.util.date.DateFormat;
 import com.hongzhi.zswh.util.exception.HongZhiException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -25,6 +26,8 @@ public class AppClubController {
     @Autowired
     private ClubService clubService;
     @Autowired
+    private com.hongzhi.zswh.app_1_4.service.ClubService v1_4_clubService;
+    @Autowired
     private SessionUtil sess;
     @Autowired
     private DictionaryUtil dic;
@@ -38,11 +41,14 @@ public class AppClubController {
                 case "v1.3":
                     property = sess.sessionEffective(session, session_id, "/v1.3/club/load_club_manage");
                     return ObjectUtil.jsonOut(clubService.loadClubManage(property));
+                case "v1.4":
+                    property = sess.sessionEffective(session,session_id,"/v1.4/club/load_club_manage");
+                    return ObjectUtil.jsonOutDT(v1_4_clubService.loadClubManage(property), "MM月dd日 HH:mm");
                 default:
-                    return null;
+                    return "404";
             }
         } catch (HongZhiException e) {
-            return ObjectUtil.jsonOut(clubService.loadClubManageNotLogIn());
+            return ObjectUtil.jsonOut(v1_4_clubService.loadClubManageNotLogIn());
         }
     }
 
@@ -55,7 +61,9 @@ public class AppClubController {
             switch (version) {
                 case "v1.3":
                     property = sess.sessionEffective(session,session_id,"/v1.3/club/set_club");
-                    return ObjectUtil.jsonOut(clubService.setClub(request,property,club));
+                    String return_str  =  ObjectUtil.jsonOut(clubService.setClub(request,property,club));
+                    sess.refreshAttribute();
+                    return return_str;
                 default:
                     return null;
             }

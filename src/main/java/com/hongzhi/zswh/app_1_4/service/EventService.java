@@ -1,21 +1,21 @@
 package com.hongzhi.zswh.app_1_4.service;
 
+import com.google.gson.Gson;
 import com.hongzhi.zswh.app_1_4.dao.EventDao;
-import com.hongzhi.zswh.app_1_4.entity.Event;
-import com.hongzhi.zswh.app_1_4.entity.EventCreate;
-import com.hongzhi.zswh.app_1_4.entity.EventStatus;
+import com.hongzhi.zswh.app_1_4.entity.*;
+import com.hongzhi.zswh.app_v3.notification.service.NotificationService;
 import com.hongzhi.zswh.util.basic.DictionaryUtil;
 import com.hongzhi.zswh.util.basic.ObjectUtil;
 import com.hongzhi.zswh.util.basic.sessionDao.SessionProperty;
 import com.hongzhi.zswh.util.exception.HongZhiException;
+import com.hongzhi.zswh.util.picture.service.Picture;
+import com.hongzhi.zswh.util.picture.service.PictureService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.Arrays;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import javax.servlet.http.HttpServletRequest;
+import java.io.IOException;
+import java.util.*;
 
 /**
  * Created by taylor on 7/27/16.
@@ -28,26 +28,126 @@ public class EventService {
     private EventDao eventDao;
     @Autowired
     private DictionaryUtil dictionaryUtil;
+    @Autowired
+    private PictureService pictureService;
 
+    @Autowired
+    private NotificationService notificationService;
 
     public Object events(SessionProperty property, Integer club_id, Integer event_id) {
 
-        List<Event> events = eventDao.events(club_id, event_id);
+        Map<String, Object> map = new HashMap<>();
 
-        if (!ObjectUtil.isEmpty(event_id)) {
+        if (property.getClub_id() != 0) {
+// && "0".equals(property.getClub_user_level())
+            List<Event> events = eventDao.events(property.getClub_id(), event_id,EventStatus.NORMAL.getValue());
+//            List<Event> events_review = eventDao.events(property.getClub_id(), event_id, EventStatus.UNDER_REVIEW.getValue());
 
-            Map<String, Object> info = eventDao.statusInfo(Integer.valueOf(property.getUser_id()), event_id);
-            events.get(0).setButton_show_code(Boolean.valueOf(info.get("is_registered").toString()), Integer.valueOf(info.get("registered_count").toString()), property.getLanguage());
-            events.get(0).setButton_show_content( dictionaryUtil.getValue(events.get(0).getButton_show_code().toLowerCase(),"event_button",property.getLanguage()));
+            int counts = eventDao.selectEventByClubId(property.getClub_id());
+
+            String club_user_level = "";
+            Integer organizer_level = 3 ;
+            boolean abort_event = false ;
+            boolean user_join_event = false;
+            // detail
+            if (!ObjectUtil.isEmpty(event_id)) {
+                Map<String, Object> info = eventDao.statusInfo(Integer.valueOf(property.getUser_id()), event_id);
+                events.get(0).setButton_show_code(Boolean.valueOf(info.get("is_registered").toString()), Integer.valueOf(info.get("registered_count").toString()), property.getLanguage());
+                events.get(0).setButton_show_content(dictionaryUtil.getValue(events.get(0).getButton_show_code().toLowerCase(), "event_button", property.getLanguage()));
+                Gson gson = new Gson();
+                if (!ObjectUtil.isEmpty(info.get("event_detail"))) {
+                    events.get(0).setEvent_detail(gson.fromJson(info.get("event_detail").toString(), EventCreateRichText[].class));
+                }
+                EventJoinMember organizer = new EventJoinMember();
+                organizer.setUser_id(events.get(0).getOrganizer_id());
+                organizer.setName(info.get("organizer_name").toString());
+                organizer.setProfile_image(info.get("profile_image").toString());
+                organizer.setPhone(info.get("phone").toString());
+                events.get(0).setOrganizer(organizer);
+                events.get(0).setMembers(eventDao.eventMembers(event_id));
+                organizer_level = Integer.valueOf(info.get("organizer_level").toString());
+
+                club_user_level = userLevel(property,events.get(0).getOrganizer_id(),events.get(0).getEvent_id());
+
+                if ( events.get(0).getOrganizer_id().equals(Integer.valueOf(property.getUser_id())) && !events.get(0).getEvent_status().equals(EventStatus.OVER.getValue()) ) {
+                     if (events.get(0).getStart_time().getTime() > System.currentTimeMillis() ) {
+                         abort_event = true;
+                     } else if ( events.get(0).getMembers().size() == 0 ){
+                         abort_event = true;
+                     } else {
+                         abort_event = false;
+                     }
+                }
+
+                List<Integer>  joinEventUserIDs = new ArrayList<>() ;
+                for (int i = 0; i < events.get(0).getMembers().size(); i++) {
+                    joinEventUserIDs.add(events.get(0).getMembers().get(i).getUser_id()) ;
+                }
+                if (joinEventUserIDs.contains(Integer.valueOf(property.getUser_id()))) {
+                    user_join_event = true;
+                }
+
+            } else {
+                club_user_level = userLevel(property,0,0);
+            }
+
+
+            map.put("club_user_level", club_user_level );
+            map.put("organizer_level_name", UserLevel.findDictionary(organizer_level,property.getLanguage()));
+            map.put("events", events);
+            map.put("abort_event", abort_event );
+            map.put("abort_event_name", DictionaryUtil.find("abort_event","event",property.getLanguage()) );
+            map.put("user_join_event", user_join_event);
+
+            if (property.getClub_user_level().equals("0")) {
+                map.put("review_counts", counts);
+            } else {
+                map.put("review_counts", 0 );
+            }
+
+
+        }else if (property.getClub_id() == 0) {
+
+            map.put("club_user_level", UserLevel.NOT_JOIN_CLUB.name() );
+            map.put("organizer_level_name", "" );
+            map.put("review_counts", 0);
+            map.put("events", new ArrayList<>());
+            map.put("abort_event", false );
+            map.put("abort_event_name", "" );
+            map.put("user_join_event", false);
         }
 
-        Map<String, Object> map = new HashMap<>();
-        map.put("events", events);
         return map;
     }
 
-    public Object eventCreate(EventCreate event_create, SessionProperty property) throws HongZhiException {
+    private String userLevel(SessionProperty property, Integer organizer_id, Integer event_id) {
+        String level = "";
+        switch (property.getClub_user_level()) {
+            case "0" : level = UserLevel.CLUB_MANAGER.name();break;
+            case "99":
+                if ( property.getUser_id().equals(organizer_id.toString() ) ) {
+                    level = UserLevel.EVENT_ORGANIZER.name();
+                } else {
+                    List<Event> myEvents = eventDao.myJoinEvent(property.getUser_id(),property.getClub_id());
+                    List<Integer> myEventsIDs = new ArrayList<>();
+                    for (int i = 0; i < myEvents.size() ; i++) {
+                        myEventsIDs.add(myEvents.get(i).getEvent_id());
+                    }
+                    if (myEventsIDs.contains(event_id)) {
+                        level = UserLevel.EVENT_MEMBER.name();
+                    } else {
+                        level = UserLevel.CLUB_MEMBER.name();
+                    }
+                }
+                break;
+            default: level = UserLevel.NOT_JOIN_CLUB.name() ; break;
+        }
+        return  level;
+    }
+
+    public Object eventCreate(HttpServletRequest request, EventCreate event_create, SessionProperty property) throws HongZhiException {
         event_create.setOrganizer_id(Integer.valueOf(property.getUser_id()));
+        event_create.setClub_id(property.getClub_id());
         event_create.verifyData();
 
         String return_info = "";
@@ -60,25 +160,99 @@ public class EventService {
             return_info = EventStatus.UNDER_REVIEW.name();
         }
 
+        List<Picture> pictures = new ArrayList<>();
+        // upload picture
+        try {
+            pictures = pictureService.picUploadMore(request);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        Gson  gson = new Gson();
+        System.out.println(event_create.getEvent_detail_rich_text());
+
+        EventCreateRichText[] richText = gson.fromJson(event_create.getEvent_detail_rich_text(),EventCreateRichText[].class);
+
+        int j =0;
+        for (int i = 0; i < richText.length ;i++) {
+            if (richText[i].getType().toLowerCase().equals("image") && pictures.size() >= j && !ObjectUtil.isEmpty(pictures.get(j))) {
+                richText[i].setContent(dictionaryUtil.getValue("picHead","data_alias",property.getLanguage())+pictures.get(j).getNewName());
+                richText[i].setHeight(pictures.get(j).getHeight());
+                richText[i].setWidth(pictures.get(j).getWidth());
+                j++;
+            }
+        }
+        event_create.setEvent_detail(gson.toJson(richText).toString());
+
+
         eventDao.createEvent(event_create);
 
         List<String> items = Arrays.asList(event_create.getForm_item().split(","));
 
-        eventDao.saveEventItems(event_create.getEvent_id(),items);
+        eventDao.saveEventItems(event_create.getEvent_id(), items);
 
         if (event_create.getOrganizer_join().toLowerCase().equals("true")) {
             eventDao.organizerJoin(event_create);
         }
 
-        Map<String,String > map = new HashMap<>() ;
-        map.put("info",return_info);
-        return  map ;
+        Map<String, String> map = new HashMap<>();
+        map.put("info", return_info);
+        return map;
     }
 
+    /**
+     * 活动审核
+     * @param event
+     * @param property
+     * @return
+     * @throws HongZhiException
+     */
+    public Object eventReview(EventEntity event, SessionProperty property) throws HongZhiException {
 
-    public Object eventReview(Integer event_id, SessionProperty property) throws HongZhiException {
+        List<Map<String, Object>> event_ids = eventDao.eventIDs(property.getClub_id());
 
-        List<Integer> event_ids = eventDao.eventIDs(property.getClub_id());
+        if (event_ids.size() > 0) {
+            for (int i = 0; i < event_ids.size(); i++) {
+                if (event_ids.get(i).get("event_id").toString().equals(event.getEvent_id())) {
+
+                    if ("1".equals(event.getReview_type())) { //审核通过
+
+                        int cnt = eventDao.passReview(Integer.valueOf(event.getEvent_id()), EventStatus.NORMAL.getValue());
+
+                        if (1 == cnt) {
+
+                            notificationService.sendNoti(1, null, Integer.valueOf(event_ids.get(i).get("organizer_id").toString()), "1", dictionaryUtil.getCodeValue("review_event_true", "event", "zh") + event_ids.get(i).get("event_name").toString() + dictionaryUtil.getCodeValue("event_true_message", "event", "zh"));
+                            break;
+                        } else {
+                            throw new HongZhiException("review_fail", "event");
+                        }
+
+                    } else if ("2".equals(event.getReview_type())) {//审核未通过
+                        event.setReason_type("REVIEW_FAIL");
+                        int cnt_event = eventDao.passReview(Integer.valueOf(event.getEvent_id()), EventStatus.FAIL_REVIEW.getValue());
+
+                        int cnt_review_reason = eventDao.saveReviewReason(event);
+
+                        if (1 == cnt_event && 1 == cnt_review_reason) {
+
+                            notificationService.sendNoti(1, null, Integer.valueOf(event_ids.get(i).get("organizer_id").toString()), "1", dictionaryUtil.getCodeValue("review_event_fail", "event", "zh") + event_ids.get(i).get("event_name").toString() + dictionaryUtil.getCodeValue("event_fail_message", "event", "zh")+event.getReview_reason());
+                            break;
+                        } else {
+                            throw new HongZhiException("review_fail", "event");
+                        }
+                    }
+                }
+            }
+        } else {
+            throw new HongZhiException("no_authority_review", "event");
+        }
+
+        Map<String, String> map = new HashMap<>();
+
+        map.put("status", "success");
+        return map;
+
+/*       List<Integer> event_ids = eventDao.eventIDs(property.getClub_id());
 
         if (event_ids.contains(event_id)) {
 
@@ -93,23 +267,28 @@ public class EventService {
             }
         } else {
             throw new HongZhiException("no_authority_review", "event");
-        }
+        }*/
     }
 
     /**
      * 最新活动
+     *
      * @param property
      * @return
      */
     public Object latestEvent(SessionProperty property) {
 
-        List<Event> events_list = eventDao.latestEventList( property.getClub_id());
+        List<Event> events_list = eventDao.latestEventList(property.getClub_id(),Integer.valueOf(property.getUser_id()));
+
+        int club_events_counts = eventDao.clubEventsCount(property.getClub_id());
 
         Map<String, Object> map = new HashMap<>();
 
-        if (events_list.size() > 0){
+        map.put("event_counts",club_events_counts);
+
+        if (events_list.size() > 0) {
             map.put("events_list", events_list);
-        }else{
+        } else {
             map.put("events_list", new ArrayList<>());
         }
 
@@ -118,26 +297,27 @@ public class EventService {
 
     /**
      * 我的活动+我发起的活动
+     *
      * @param property
      * @return
      */
     public Object myActivities(SessionProperty property) {
 
-        List<Event> my_join_event_list = eventDao.myJoinEvent(property.getUser_id(),property.getClub_id());
+        List<Event> my_join_event_list = eventDao.myJoinEvent(property.getUser_id(), property.getClub_id());
 
-        List<Event> my_set_event_list = eventDao.mySetEvent(property.getUser_id(),property.getClub_id());
+        List<Event> my_set_event_list = eventDao.mySetEvent(property.getUser_id(), property.getClub_id());
 
         Map<String, Object> map = new HashMap<>();
 
-        if (my_join_event_list.size() > 0 ){
+        if (my_join_event_list.size() > 0) {
             map.put("my_join_event_list", my_join_event_list);
-        }else{
-            map.put("my_join_event_list",  new ArrayList<>());
+        } else {
+            map.put("my_join_event_list", new ArrayList<>());
         }
-        if (my_set_event_list.size() > 0){
+        if (my_set_event_list.size() > 0) {
             map.put("my_set_event_list", my_set_event_list);
-        }else{
-            map.put("my_set_event_list",  new ArrayList<>());
+        } else {
+            map.put("my_set_event_list", new ArrayList<>());
         }
 
         return map;
@@ -145,62 +325,121 @@ public class EventService {
 
     public Object eventForm(Integer event_id, SessionProperty property) throws HongZhiException {
 
-        List<Map<String,Object>>  formItems = eventDao.formItems(event_id, Integer.valueOf(property.getUser_id()));
+        Event eventInfo = eventDao.events(property.getClub_id(), event_id,EventStatus.NORMAL.getValue()).get(0);
+        List<Map<String, Object>> formItems = eventDao.formItems(event_id, Integer.valueOf(property.getUser_id()));
 //       map : a.event_id ,a.club_id ,b.item_code ,c.item_name, item_value
 
-        if (! formItems.get(0).get("club_id").equals(property.getClub_id())) {
-            throw new HongZhiException("not_own_club","event");
+        if (!formItems.get(0).get("club_id").equals(property.getClub_id())) {
+            throw new HongZhiException("not_own_club", "event");
         }
 
-        Map<String,Object> map = new HashMap<>();
-        map.put("items",formItems);
+        Map<String, Object> map = new HashMap<>();
+        map.put("items", formItems);
+        map.put("event_info",eventInfo);
         return map;
     }
 
-    public Object eventRegister(Integer event_id, SessionProperty property) throws HongZhiException {
+    public Object eventRegister(Integer event_id, SessionProperty property, String profiles) throws HongZhiException {
 
         int effect_count = eventDao.saveUserRegister(event_id, Integer.valueOf(property.getUser_id()));
 
         // save new data
+        if (!ObjectUtil.isEmpty(profiles)) {
+            Gson gson = new Gson();
+            UserProfile[] profileArray = gson.fromJson(profiles,UserProfile[].class);
+            List<UserProfile>  inputProfiles = Arrays.asList(profileArray);
+            eventDao.saveUserProfile(Integer.valueOf(property.getUser_id()),inputProfiles);
+        }
 
-        //
-
-        if ( 1 != effect_count ) {
-            throw new HongZhiException("register_fail","event");
+        if (1 != effect_count) {
+            throw new HongZhiException("register_fail", "event");
         } else {
             return null;
         }
     }
 
-    public Object eventUnregister(Integer event_id, SessionProperty property) {
+    public Object eventUnregister(Integer event_id, SessionProperty property) throws HongZhiException {
 
         int effect_count = eventDao.unregister(event_id, Integer.valueOf(property.getUser_id()));
 
-        return null;
+        if ( 1 == effect_count ) {
+            Map<String,String> map = new HashMap<>();
+            map.put("status","success");
+            return  map;
+        } else {
+            throw  new HongZhiException("unregister_fail","event");
+        }
     }
+
     /**
-     * 活动审核
+     * 活动审核列表
+     *
+     * @param property
+     * @param property
      * @return
-     * @param property
-     * @param property
      */
     public Object verifyEvent(SessionProperty property) {
 
         List<Event> verify_event_list = eventDao.verifyEvent(property.getClub_id());
 
-        Map<String,Object> map = new HashMap<>();
+        Map<String, Object> map = new HashMap<>();
 
-        if (verify_event_list.size() > 0){
-            for (Event event: verify_event_list){
-/*                Map<String, Object> info = eventDao.statusInfo(0, event.getEvent_id());
-                event.setButton_show_code(Boolean.valueOf(info.get("is_registered").toString()), Integer.valueOf(info.get("registered_count").toString()), property.getLanguage());
-                event.setButton_show_content( dictionaryUtil.getValue(event.getButton_show_code().toLowerCase(),"event_button",property.getLanguage()));*/
-                event.setEvent_status_name_code();
-                event.setEvent_status_name(dictionaryUtil.getValue(event.getEvent_status_name_code().toLowerCase(),"event_button",property.getLanguage()));
+        if (verify_event_list.size() > 0) {
+            for (Event event : verify_event_list) {
+                event.setEvent_status_name(dictionaryUtil.getValue(event.getEvent_status_code().toLowerCase(), "event_button", property.getLanguage()));
             }
+            map.put("verify_event_list", verify_event_list);
+        }else{
+            map.put("verify_event_list", new ArrayList<>());
         }
-        map.put("verify_event_list",verify_event_list);
 
         return map;
     }
+
+    /**
+     * 选择报名信息
+     * @return
+     */
+    public Object registerInformation() {
+
+        List<Map<String,Object>> register_info_list  = eventDao.selectEventFormItem();
+
+        Map<String, Object> map = new HashMap<>();
+        map.put("register_info_list", register_info_list);
+
+        return map;
+    }
+
+    /**
+     *
+     * 选择默认图片
+     * @return
+     */
+    public Object defaultImage() {
+
+        List<Map<String,Object>> default_image_list  = eventDao.selectDefaultImage();
+
+        Map<String, Object> map = new HashMap<>();
+        map.put("default_image", default_image_list);
+
+        return map;
+    }
+
+    public Object abort(SessionProperty property, String event_id) throws HongZhiException {
+
+        int effectCount = eventDao.abort(Integer.valueOf(property.getUser_id()),Integer.valueOf(event_id));
+
+        if ( 1 == effectCount ) {
+            return null;
+        } else {
+           throw new HongZhiException("abort_fail","event") ;
+        }
+    }
+
+
+/*    public Object verifyEventDetails(String event_id, SessionProperty property) throws HongZhiException {
+        ExcepUtil.verify(event_id,"event_name_null","event");
+
+        return null;
+    }*/
 }

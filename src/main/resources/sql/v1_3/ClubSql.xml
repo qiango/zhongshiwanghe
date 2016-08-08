@@ -518,17 +518,18 @@
 
     </select>
     <update id="updateClubStatus">
-        <foreach collection ="club_id" item="item" index= "index" separator=",">
             update
                 club a
             set
                 a.club_status = '3'
             where
-                a.club_id = #{item}
+                a.club_id in (
+        <foreach collection ="club_id" item="item" index= "index" separator=",">
+            #{item}
+        </foreach>
+        )
             and
                 a.is_delete = 0
-        </foreach>
-
     </update>
 
     <select id="selectClubMembersByClubId" resultType="Integer">
@@ -603,16 +604,16 @@
     </delete>
 
     <update id="updateClubReminderMark">
-        <foreach collection ="reminder" item="item" index= "index" separator=",">
-            update
-              club a
-            set
-              a.reminder_mark = '1'
-            where
-              a.club_id = #{item}
-            and
-              a.is_delete = 0
+        update
+        club a
+        set
+        a.reminder_mark = '1'
+        where a.club_id in (
+        <foreach collection="reminder" item="clubID" separator=",">
+            #{clubID}
         </foreach>
-
+        )
+        and
+        a.is_delete = 0
     </update>
 </mapper>

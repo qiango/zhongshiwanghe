@@ -1,6 +1,14 @@
 package com.hongzhi.zswh.app_1_4.entity;
 
+import com.google.gson.Gson;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonParser;
+import com.hongzhi.zswh.util.basic.DictionaryUtil;
+import com.hongzhi.zswh.util.basic.dictionaryDao.Dictionary;
+
 import java.sql.Timestamp;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by taylor on 7/27/16.
@@ -23,13 +31,19 @@ public class Event {
     private Double fee ;
     private String image ;
     private Integer event_status ;
-    private String event_status_name;
-    private String event_status_name_code;
+    private String event_status_name="";
     private String event_status_code ;
     private Integer view_guests;
     private String view_guests_code;
-    private String button_show_code;
-    private String button_show_content;
+    private String button_show_code="";
+    private String button_show_content="";
+
+    private EventCreateRichText[] event_detail = {} ;
+    private String event_notice="";
+
+    private List<EventJoinMember> members = new ArrayList<>();
+    private EventJoinMember organizer = new EventJoinMember();
+
 
     public Integer getEvent_id() {
         return event_id;
@@ -132,7 +146,11 @@ public class Event {
     }
 
     public void setImage(String image) {
-        this.image = image;
+        if (image.startsWith("/pic.htmls")) {
+            this.image = image;
+        } else {
+            this.image = DictionaryUtil.find("picHead","data_alias","zh")+ image;
+        }
     }
 
     public Integer getEvent_status() {
@@ -142,6 +160,7 @@ public class Event {
     public void setEvent_status(Integer event_status) {
         this.event_status = event_status;
         this.event_status_code = EventStatus.getEventStatus(event_status).name();
+        this.event_status_name = EventStatus.findDictionary(event_status);
     }
 
     public String getEvent_status_code() {
@@ -194,22 +213,22 @@ public class Event {
 
         if ( end_time.getTime() < current) {
             return EventButton.FINISH.name();
+        } else if ( EventStatus.getEventStatus(event_status).name().equals(EventStatus.UNDER_REVIEW.name()) ) {
+            return EventButton.UNDER_REVIEW.name();
+        } else if ( EventStatus.getEventStatus(event_status).name().equals(EventStatus.FAIL_REVIEW.name()) ) {
+            return EventButton.FAIL_REVIEW.name();
         } else if ( EventStatus.getEventStatus(event_status).name().equals(EventStatus.OVER.name()) ) {
             return EventButton.ABORT.name();
         } else if ( isRegistered ) {
             return EventButton.REGISTERED.name();
         } else if ( register_end_time.getTime() < current ) {
             return EventButton.STOP_REGISTER.name();
-        } else if ( current_registered_people >= max_people ) {
+        } else if ( max_people > 0 && current_registered_people >= max_people ) {
             return EventButton.FULL.name();
         } else if ( register_start_time.getTime() < current && register_end_time.getTime() > current ) {
             return EventButton.I_WANNA_JOIN.name();
         } else if ( register_start_time.getTime() > current ) {
             return EventButton.PREPARE.name();
-        } else if ( EventStatus.getEventStatus(event_status).name().equals(EventStatus.UNDER_REVIEW.name()) ) {
-            return EventButton.UNDER_REVIEW.name();
-        } else if ( EventStatus.getEventStatus(event_status).name().equals(EventStatus.FAIL_REVIEW.name()) ) {
-            return EventButton.FAIL_REVIEW.name();
         } else {
             return  "";
         }
@@ -223,13 +242,6 @@ public class Event {
         this.event_status_name = event_status_name;
     }
 
-    public String getEvent_status_name_code() {
-        return event_status_name_code;
-    }
-
-    public void setEvent_status_name_code() {
-        this.event_status_name_code = getEventStatusName();
-    }
 
     public String getEventStatusName(){
         if ( EventStatus.getEventStatus(event_status).name().equals(EventStatus.UNDER_REVIEW.name()) ){
@@ -244,4 +256,43 @@ public class Event {
             return "";
         }
     }
+
+    public void setButton_show_code(String button_show_code) {
+        this.button_show_code = button_show_code;
+    }
+
+
+    public String getEvent_notice() {
+        return event_notice;
+    }
+
+    public void setEvent_notice(String event_notice) {
+        this.event_notice = event_notice;
+    }
+
+    public List<EventJoinMember> getMembers() {
+        return members;
+    }
+
+    public void setMembers(List<EventJoinMember> members) {
+        this.members = members;
+    }
+
+    public EventJoinMember getOrganizer() {
+        return organizer;
+    }
+
+    public void setOrganizer(EventJoinMember organizer) {
+        this.organizer = organizer;
+    }
+
+
+    public EventCreateRichText[] getEvent_detail() {
+        return event_detail;
+    }
+
+    public void setEvent_detail(EventCreateRichText[] event_detail) {
+        this.event_detail= event_detail;
+    }
+
 }

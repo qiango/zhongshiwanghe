@@ -57,6 +57,14 @@ public class V6ClubService {
             //不允许退出
             throw new HongZhiException("1077");
         }
+
+        List<Map<String,Object>> event_list = v6ClubDao.selectEvent(Integer.valueOf(userId));
+
+        if (event_list.size() > 0 ){
+
+            throw new HongZhiException("1086");//有参见的活动，还没结束的活动，不能退出俱乐部
+        }
+
         Map<String, Object> clubMap = v6ClubDao.queryClubLevel(null, userId);
 
         Map<String, Object> map = v6ClubDao.queryUserInfoByUserId(userId);
@@ -104,7 +112,7 @@ public class V6ClubService {
 
         if ("1".equals(clubMap.get("join_club_status"))) {
             throw new HongZhiException("1080");//您已取消，欢迎下次再来
-        } else {
+        }else{
             return "success";
         }
 

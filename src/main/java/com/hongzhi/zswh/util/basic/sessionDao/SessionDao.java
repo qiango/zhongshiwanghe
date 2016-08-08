@@ -57,4 +57,5 @@ public interface SessionDao {
 	List<SessionTime> listSession();
 
 
+    List<Map<String,Object>> clubInfo();
 }
