@@ -59,7 +59,7 @@ public class EventCreate {
         ExcepUtil.verify(end_time,"end_time_null",dic_p_code);
         ExcepUtil.verify(register_start_time,"register_start_null",dic_p_code);
         ExcepUtil.verify(register_end_time,"register_end_null",dic_p_code);
-
+        ExcepUtil.verify(image,"image_null",dic_p_code);
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm");
         try {
             sql_start_time = new Timestamp(simpleDateFormat.parse(start_time).getTime());
