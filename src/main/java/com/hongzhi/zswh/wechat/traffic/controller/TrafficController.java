@@ -49,9 +49,9 @@ public class TrafficController {
 			
 			SimpleDateFormat hours = new SimpleDateFormat("HH");
 			int nowHours = Integer.parseInt(hours.format(new Date())) + 8;
-			if (17 > nowHours || 21 <= nowHours) {
-				throw new HongZhiException("1076");
-			}
+//			if (17 > nowHours || 21 <= nowHours) {
+//				throw new HongZhiException("1076");
+//			}
 			
 			SimpleDateFormat df = new SimpleDateFormat("yyyyMMddhhmmss");
 			String nowDate = df.format(new Date());
