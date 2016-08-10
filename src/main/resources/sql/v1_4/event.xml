@@ -164,7 +164,7 @@
            and t3.my_status = 1
      where t1.club_id = #{club_id}
        and t1.event_status = 1
-     <![CDATA[    and t1.register_start_time < now() ]]>
+     /*<![CDATA[    and t1.register_start_time < now() ]]>*/
        and t1.register_end_time > NOW()
        and (t1.max_people > t2.member_cnt
             or coalesce(t1.max_people,0) = 0 )
@@ -247,7 +247,7 @@
             ,b.event_status
             ,coalesce(b.fee,0.0)  as fee
             ,b.form_item
-            ,concat('/pic.htmls?p=',coalesce(b.image,'')) as image
+           ,coalesce(b.image,'') as image
             ,coalesce(b.max_people,0) as max_people
             ,coalesce(b.min_people,0) as min_people
             ,b.organizer_id
@@ -278,7 +278,7 @@
             ,a.event_status
             ,coalesce(a.fee,0.0)  as fee
             ,a.form_item
-            ,concat('/pic.htmls?p=',coalesce(a.image,'')) as image
+            ,coalesce(a.image,'') as image
             ,coalesce(a.max_people,0) as max_people
             ,coalesce(a.min_people,0) as min_people
             ,a.organizer_id
