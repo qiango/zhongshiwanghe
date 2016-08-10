@@ -445,4 +445,12 @@
         where
           a.event_id = #{event_id}
     </select>
+    <select id="selectJoinEvent" resultType="map">
+          select
+            t1.userId
+          from
+            (select a.user_id userId from  event_registration a where a.event_id =#{event_id} and a.my_status = 1) t1
+          where t1.userId not in
+            (select t2.organizer_id from event t2 where t2.event_id = #{event_id} )
+    </select>
 </mapper>

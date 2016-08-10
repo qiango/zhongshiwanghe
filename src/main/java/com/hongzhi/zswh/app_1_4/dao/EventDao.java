@@ -63,5 +63,7 @@ public interface EventDao {
 
     int abort(@Param("userID") Integer user_id,@Param("eventID") Integer event_id);
 
-    Map<String,Object> selectOrganizerIdByEventId(Integer event_id);
+    Map<String, Object> selectOrganizerIdByEventId(Integer event_id);
+
+    List<Integer> selectJoinEvent(String event_id);
 }

@@ -357,7 +357,7 @@ public class EventService {
             throw new HongZhiException("register_fail", "event");
         } else {
 
-            Map<String,Object> map = eventDao.selectOrganizerIdByEventId(event_id);
+           Map<String,Object> map = eventDao.selectOrganizerIdByEventId(event_id);
 
             if (map.get("organizer_id").toString().equals(property.getUser_id())){
 
@@ -455,6 +455,12 @@ public class EventService {
         int effectCount = eventDao.abort(Integer.valueOf(property.getUser_id()),Integer.valueOf(event_id));
 
         if ( 1 == effectCount ) {
+            List<Integer> multiple_receiver = eventDao.selectJoinEvent(event_id);
+
+            Map<String,Object> event_map = eventDao.selectOrganizerIdByEventId(Integer.valueOf(event_id));
+
+            notificationService.sendNoti(1, multiple_receiver, null, "1", dictionaryUtil.getCodeValue("abort_event", "event", "zh")+event_map.get("event_name")+ dictionaryUtil.getCodeValue("abort_event_message", "event", "zh"));
+
             return null;
         } else {
            throw new HongZhiException("abort_fail","event") ;
