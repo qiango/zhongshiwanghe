@@ -436,4 +436,13 @@
          and ( a.start_time >= now()
         	 or (a.start_time > now() and b.cnt = 0 )  )
     </update>
+    <select id="selectOrganizerIdByEventId" resultType="map">
+        select
+          coalesce(a.organizer_id,'') as organizer_id
+          ,coalesce(a.event_name,'') as event_name
+        from
+          event a
+        where
+          a.event_id = #{event_id}
+    </select>
 </mapper>

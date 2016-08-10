@@ -356,6 +356,14 @@ public class EventService {
         if (1 != effect_count) {
             throw new HongZhiException("register_fail", "event");
         } else {
+
+            Map<String,Object> map = eventDao.selectOrganizerIdByEventId(event_id);
+
+            List<Integer> multiple_receiver = new ArrayList<>();
+            multiple_receiver.add(Integer.valueOf(map.get("organizer_id").toString()));
+
+            notificationService.sendNoti(1, multiple_receiver, null, "1", dictionaryUtil.getCodeValue("join_event", "event", "zh")+property.getUser_real_name()+ dictionaryUtil.getCodeValue("join_event_message", "event", "zh")+map.get("event_name"));
+
             return null;
         }
     }

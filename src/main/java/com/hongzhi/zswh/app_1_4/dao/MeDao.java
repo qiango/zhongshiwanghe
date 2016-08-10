@@ -9,5 +9,5 @@ public interface MeDao {
 
 	OutputEntity loadMe(@Param("user_id") int user_id, @Param("platform_id") int platform_id, @Param("language") String language);
 
-	int selectMyJoinEvent(@Param("user_id") String user_id);
+	int selectMyJoinEvent(@Param("user_id") String user_id, @Param("club_id") Integer club_id);
 }
