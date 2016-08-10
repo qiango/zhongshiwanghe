@@ -359,10 +359,14 @@ public class EventService {
 
             Map<String,Object> map = eventDao.selectOrganizerIdByEventId(event_id);
 
-            List<Integer> multiple_receiver = new ArrayList<>();
-            multiple_receiver.add(Integer.valueOf(map.get("organizer_id").toString()));
+            if (map.get("organizer_id").toString().equals(property.getUser_id())){
 
-            notificationService.sendNoti(1, multiple_receiver, null, "1", dictionaryUtil.getCodeValue("join_event", "event", "zh")+property.getUser_real_name()+ dictionaryUtil.getCodeValue("join_event_message", "event", "zh")+map.get("event_name"));
+                List<Integer> multiple_receiver = new ArrayList<>();
+                multiple_receiver.add(Integer.valueOf(map.get("organizer_id").toString()));
+
+                notificationService.sendNoti(1, multiple_receiver, null, "1", dictionaryUtil.getCodeValue("join_event", "event", "zh")+property.getUser_real_name()+ dictionaryUtil.getCodeValue("join_event_message", "event", "zh")+map.get("event_name"));
+
+            }
 
             return null;
         }
@@ -373,6 +377,17 @@ public class EventService {
         int effect_count = eventDao.unregister(event_id, Integer.valueOf(property.getUser_id()));
 
         if ( 1 == effect_count ) {
+
+            Map<String,Object> event_map = eventDao.selectOrganizerIdByEventId(event_id);
+
+            if (event_map.get("organizer_id").toString().equals(property.getUser_id())) {
+
+                List<Integer> multiple_receiver = new ArrayList<>();
+                multiple_receiver.add(Integer.valueOf(event_map.get("organizer_id").toString()));
+
+                notificationService.sendNoti(1, multiple_receiver, null, "1", dictionaryUtil.getCodeValue("unregister_event", "event", "zh")+property.getUser_real_name()+ dictionaryUtil.getCodeValue("unregister_event_m", "event", "zh")+event_map.get("event_name"));
+            }
+
             Map<String,String> map = new HashMap<>();
             map.put("status","success");
             return  map;
