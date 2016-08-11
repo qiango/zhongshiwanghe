@@ -113,6 +113,8 @@
           </if>
             a.event_status = #{eventStatus}
           <if test=" eventStatus == 1 ">
+            and
+        <![CDATA[ a.end_time > now() ]]>
             or ( a.event_status = 3
             and a.end_time >= now() )
             )
@@ -344,6 +346,9 @@
           where
               a.club_id = #{clubID}
            and a.event_status = 1
+           and a.end_time > now()
+           or ( a.event_status = 3
+           and a.end_time >= now() )
     </select>
 
     <insert id="organizerJoin" >

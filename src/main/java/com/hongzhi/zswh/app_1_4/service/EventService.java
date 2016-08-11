@@ -278,8 +278,6 @@ public class EventService {
      */
     public Object latestEvent(SessionProperty property) {
 
-
-
         List<Event> events_list = eventDao.latestEventList(property.getClub_id(),Integer.valueOf(property.getUser_id()));
 
         int club_events_counts = eventDao.clubEventsCount(property.getClub_id());
@@ -325,20 +323,32 @@ public class EventService {
         return map;
     }
 
-    public Object eventForm(Integer event_id, SessionProperty property) throws HongZhiException {
-
-        Event eventInfo = eventDao.events(property.getClub_id(), event_id,EventStatus.NORMAL.getValue()).get(0);
-        List<Map<String, Object>> formItems = eventDao.formItems(event_id, Integer.valueOf(property.getUser_id()));
+    public Object eventForm(Integer event_id, String user_id, SessionProperty property) throws HongZhiException {
+        if (ObjectUtil.isEmpty(user_id)){
+            Event eventInfo = eventDao.events(property.getClub_id(), event_id,EventStatus.NORMAL.getValue()).get(0);
+            List<Map<String, Object>> formItems = eventDao.formItems(event_id, Integer.valueOf(property.getUser_id()));
 //       map : a.event_id ,a.club_id ,b.item_code ,c.item_name, item_value
 
-        if (!formItems.get(0).get("club_id").equals(property.getClub_id())) {
-            throw new HongZhiException("not_own_club", "event");
+            if (!formItems.get(0).get("club_id").equals(property.getClub_id())) {
+                throw new HongZhiException("not_own_club", "event");
+            }
+
+            Map<String, Object> map = new HashMap<>();
+            map.put("items", formItems);
+            map.put("event_info",eventInfo);
+            return map;
+        }else{
+            Event eventInfo = eventDao.events(property.getClub_id(), event_id,EventStatus.NORMAL.getValue()).get(0);
+            List<Map<String, Object>> formItems = eventDao.formItems(event_id, Integer.valueOf(user_id));
+            if (!formItems.get(0).get("club_id").equals(property.getClub_id())) {
+                throw new HongZhiException("not_own_club", "event");
+            }
+            Map<String, Object> map = new HashMap<>();
+            map.put("items", formItems);
+            map.put("event_info",eventInfo);
+            return map;
         }
 
-        Map<String, Object> map = new HashMap<>();
-        map.put("items", formItems);
-        map.put("event_info",eventInfo);
-        return map;
     }
 
     public Object eventRegister(Integer event_id, SessionProperty property, String profiles) throws HongZhiException {
