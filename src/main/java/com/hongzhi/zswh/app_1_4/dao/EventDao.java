@@ -66,4 +66,6 @@ public interface EventDao {
     Map<String, Object> selectOrganizerIdByEventId(Integer event_id);
 
     List<Integer> selectJoinEvent(String event_id);
+
+    void updateEventRegistration(Integer event_id);
 }

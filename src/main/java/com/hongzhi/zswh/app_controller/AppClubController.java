@@ -117,7 +117,7 @@ public class AppClubController {
             switch (version){
                 case "v1.4":
                     property = sess.sessionEffective(session, session_id, "/v1.4/club/delete_member");
-                   // return ObjectUtil.jsonOut(clubService.deleteMember(user_id,property));
+                    return ObjectUtil.jsonOut(v1_4_clubService.deleteMember(user_id,property));
                 default:
                     return "404";
             }

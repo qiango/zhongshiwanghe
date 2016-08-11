@@ -10,7 +10,7 @@
               then 'true'
               else 'false'
               end as is_registered
-        ,count(1) as registered_count
+        ,count(b.event_id) as registered_count
         ,coalesce(a.event_detail,'') as event_detail
         ,coalesce(c.nickname,concat(substr(c.phone,1,3),'****',substr(c.phone,8)) ) as organizer_name
         ,coalesce(concat(substr(c.phone,1,3),'****',substr(c.phone,8)),'') as phone
@@ -373,11 +373,13 @@
           from
               event  a
           where
-              a.club_id = #{clubID}
-           and a.event_status = 1
+           (
+           a.event_status = 1
            and a.end_time > now()
            or ( a.event_status = 3
            and a.end_time >= now() )
+           )
+           and  a.club_id = #{clubID}
     </select>
 
     <insert id="organizerJoin" >
@@ -403,8 +405,12 @@
      from event_registration a
      left join user_info b
             on a.user_id = b.user_id
+      left join  event c
+      on a.event_id = c.event_id
       where a.event_id = #{eventID}
         and a.my_status = 1
+        and c.start_time >= NOW()
+
     </select>
 
     <insert id="saveReviewReason">
@@ -469,6 +475,16 @@
          and a.event_id = #{eventID}
          and ( a.start_time >= now()
         	 or (a.start_time > now() and b.cnt = 0 )  )
+    </update>
+
+    <update id="updateEventRegistration">
+        update
+           event_registration a
+        set
+            a.my_status = 0
+        where
+            a.event_id=#{event_id}
+
     </update>
     <select id="selectOrganizerIdByEventId" resultType="map">
         select

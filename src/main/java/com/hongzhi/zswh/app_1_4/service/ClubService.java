@@ -112,4 +112,15 @@ public class ClubService {
         map.put("club_interface_data", out);
         return map;
     }
+
+    public Object deleteMember(String user_id, SessionProperty property) {
+        if ("0".equals(property.getClub_user_level())){
+ /*           List<>
+            clubDao.insetIntoUserDetail(user_detail_list);
+
+            clubDao.clubUnbuild(multiple_receiver);*/
+        }
+
+        return null;
+    }
 }
