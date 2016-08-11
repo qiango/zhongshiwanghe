@@ -43,8 +43,6 @@ public class EventService {
             List<Event> events = eventDao.events(property.getClub_id(), event_id,EventStatus.NORMAL.getValue());
 //            List<Event> events_review = eventDao.events(property.getClub_id(), event_id, EventStatus.UNDER_REVIEW.getValue());
 
-            int counts = eventDao.selectEventByClubId(property.getClub_id());
-
             String club_user_level = "";
             Integer organizer_level = 3 ;
             boolean abort_event = false ;
@@ -100,6 +98,7 @@ public class EventService {
             map.put("user_join_event", user_join_event);
 
             if (property.getClub_user_level().equals("0")) {
+                int counts = eventDao.selectEventByClubId(property.getClub_id());
                 map.put("review_counts", counts);
             } else {
                 map.put("review_counts", 0 );
