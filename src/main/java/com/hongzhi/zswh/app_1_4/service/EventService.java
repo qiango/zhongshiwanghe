@@ -278,8 +278,6 @@ public class EventService {
      */
     public Object latestEvent(SessionProperty property) {
 
-
-
         List<Event> events_list = eventDao.latestEventList(property.getClub_id(),Integer.valueOf(property.getUser_id()));
 
         int club_events_counts = eventDao.clubEventsCount(property.getClub_id());
@@ -325,20 +323,32 @@ public class EventService {
         return map;
     }
 
-    public Object eventForm(Integer event_id, SessionProperty property) throws HongZhiException {
-
-        Event eventInfo = eventDao.events(property.getClub_id(), event_id,EventStatus.NORMAL.getValue()).get(0);
-        List<Map<String, Object>> formItems = eventDao.formItems(event_id, Integer.valueOf(property.getUser_id()));
+    public Object eventForm(Integer event_id, String user_id, SessionProperty property) throws HongZhiException {
+        if (ObjectUtil.isEmpty(user_id)){
+            Event eventInfo = eventDao.events(property.getClub_id(), event_id,EventStatus.NORMAL.getValue()).get(0);
+            List<Map<String, Object>> formItems = eventDao.formItems(event_id, Integer.valueOf(property.getUser_id()));
 //       map : a.event_id ,a.club_id ,b.item_code ,c.item_name, item_value
 
-        if (!formItems.get(0).get("club_id").equals(property.getClub_id())) {
-            throw new HongZhiException("not_own_club", "event");
+            if (!formItems.get(0).get("club_id").equals(property.getClub_id())) {
+                throw new HongZhiException("not_own_club", "event");
+            }
+
+            Map<String, Object> map = new HashMap<>();
+            map.put("items", formItems);
+            map.put("event_info",eventInfo);
+            return map;
+        }else{
+            Event eventInfo = eventDao.events(property.getClub_id(), event_id,EventStatus.NORMAL.getValue()).get(0);
+            List<Map<String, Object>> formItems = eventDao.formItems(event_id, Integer.valueOf(user_id));
+            if (!formItems.get(0).get("club_id").equals(property.getClub_id())) {
+                throw new HongZhiException("not_own_club", "event");
+            }
+            Map<String, Object> map = new HashMap<>();
+            map.put("items", formItems);
+            map.put("event_info",eventInfo);
+            return map;
         }
 
-        Map<String, Object> map = new HashMap<>();
-        map.put("items", formItems);
-        map.put("event_info",eventInfo);
-        return map;
     }
 
     public Object eventRegister(Integer event_id, SessionProperty property, String profiles) throws HongZhiException {
@@ -356,6 +366,18 @@ public class EventService {
         if (1 != effect_count) {
             throw new HongZhiException("register_fail", "event");
         } else {
+
+           Map<String,Object> map = eventDao.selectOrganizerIdByEventId(event_id);
+
+            if (map.get("organizer_id").toString().equals(property.getUser_id())){
+
+                List<Integer> multiple_receiver = new ArrayList<>();
+                multiple_receiver.add(Integer.valueOf(map.get("organizer_id").toString()));
+
+                notificationService.sendNoti(1, multiple_receiver, null, "1", dictionaryUtil.getCodeValue("join_event", "event", "zh")+property.getUser_real_name()+ dictionaryUtil.getCodeValue("join_event_message", "event", "zh")+map.get("event_name"));
+
+            }
+
             return null;
         }
     }
@@ -365,6 +387,17 @@ public class EventService {
         int effect_count = eventDao.unregister(event_id, Integer.valueOf(property.getUser_id()));
 
         if ( 1 == effect_count ) {
+
+            Map<String,Object> event_map = eventDao.selectOrganizerIdByEventId(event_id);
+
+            if (event_map.get("organizer_id").toString().equals(property.getUser_id())) {
+
+                List<Integer> multiple_receiver = new ArrayList<>();
+                multiple_receiver.add(Integer.valueOf(event_map.get("organizer_id").toString()));
+
+                notificationService.sendNoti(1, multiple_receiver, null, "1", dictionaryUtil.getCodeValue("unregister_event", "event", "zh")+property.getUser_real_name()+ dictionaryUtil.getCodeValue("unregister_event_m", "event", "zh")+event_map.get("event_name"));
+            }
+
             Map<String,String> map = new HashMap<>();
             map.put("status","success");
             return  map;
@@ -432,6 +465,12 @@ public class EventService {
         int effectCount = eventDao.abort(Integer.valueOf(property.getUser_id()),Integer.valueOf(event_id));
 
         if ( 1 == effectCount ) {
+            List<Integer> multiple_receiver = eventDao.selectJoinEvent(event_id);
+
+            Map<String,Object> event_map = eventDao.selectOrganizerIdByEventId(Integer.valueOf(event_id));
+
+            notificationService.sendNoti(1, multiple_receiver, null, "1", dictionaryUtil.getCodeValue("abort_event", "event", "zh")+event_map.get("event_name")+ dictionaryUtil.getCodeValue("abort_event_message", "event", "zh"));
+
             return null;
         } else {
            throw new HongZhiException("abort_fail","event") ;

@@ -148,7 +148,7 @@ public class AppEventController {
 
     @ResponseBody
     @RequestMapping(value = "/form")
-    public String form(HttpSession session, String session_id, Integer event_id , @PathVariable String version){
+    public String form(HttpSession session, String session_id, Integer event_id ,String user_id ,@PathVariable String version){
         SessionProperty property;
         String language = "zh";
         try{
@@ -156,7 +156,7 @@ public class AppEventController {
                 case "v1.4":
                     property = sess.sessionEffective(session,session_id,"/v1.4/event/form");
                     language=property.getLanguage();
-                    return ObjectUtil.jsonOutDT( eventService.eventForm(event_id,property) , "MM月dd日 HH:mm");
+                    return ObjectUtil.jsonOutDT( eventService.eventForm(event_id,user_id,property) , "MM月dd日 HH:mm");
                 default:
                     return "404";
             }

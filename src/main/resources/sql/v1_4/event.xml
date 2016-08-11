@@ -113,6 +113,8 @@
           </if>
             a.event_status = #{eventStatus}
           <if test=" eventStatus == 1 ">
+            and
+        <![CDATA[ a.end_time > now() ]]>
             or ( a.event_status = 3
             and a.end_time >= now() )
             )
@@ -344,6 +346,9 @@
           where
               a.club_id = #{clubID}
            and a.event_status = 1
+           and a.end_time > now()
+           or ( a.event_status = 3
+           and a.end_time >= now() )
     </select>
 
     <insert id="organizerJoin" >
@@ -436,4 +441,21 @@
          and ( a.start_time >= now()
         	 or (a.start_time > now() and b.cnt = 0 )  )
     </update>
+    <select id="selectOrganizerIdByEventId" resultType="map">
+        select
+          coalesce(a.organizer_id,'') as organizer_id
+          ,coalesce(a.event_name,'') as event_name
+        from
+          event a
+        where
+          a.event_id = #{event_id}
+    </select>
+    <select id="selectJoinEvent" resultType="map">
+          select
+            t1.userId
+          from
+            (select a.user_id userId from  event_registration a where a.event_id =#{event_id} and a.my_status = 1) t1
+          where t1.userId not in
+            (select t2.organizer_id from event t2 where t2.event_id = #{event_id} )
+    </select>
 </mapper>

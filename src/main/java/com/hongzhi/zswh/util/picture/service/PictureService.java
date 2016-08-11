@@ -1,19 +1,7 @@
 package com.hongzhi.zswh.util.picture.service;
 
-import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.text.SimpleDateFormat;
-import java.util.*;
-
-import javax.imageio.ImageIO;
-import javax.servlet.ServletOutputStream;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
-import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
+import com.hongzhi.zswh.util.basic.ObjectUtil;
 import com.hongzhi.zswh.util.encryption.SHA256;
 import com.hongzhi.zswh.util.picture.dao.PictueUpload;
 import org.apache.ibatis.io.Resources;
@@ -23,8 +11,17 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.springframework.web.multipart.commons.CommonsMultipartResolver;
 
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
+import javax.imageio.ImageIO;
+import javax.servlet.ServletOutputStream;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 
 /**   Twitter : @taylorwang789 
@@ -83,9 +80,10 @@ public class PictureService {
                 }
             }
         }
-        JsonObject obj = new JsonObject();
-        obj.addProperty("picUrl",head+file_name);
-        return obj.toString();
+
+        Map<String,String> map = new HashMap<>();
+        map.put("picUrl",head+file_name);
+        return ObjectUtil.jsonOut(map);
     }
     
     public String picUpload(HttpServletRequest request) throws IllegalStateException, IOException {
