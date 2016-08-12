@@ -117,12 +117,16 @@ public class ClubService {
 
     public Object deleteMember(String user_id, SessionProperty property) {
         if ("0".equals(property.getClub_user_level())){
+
             List<Integer> multiple_receiver = new ArrayList<>();
             multiple_receiver.add(Integer.valueOf(user_id));
+
             List<UserDetailEntity> user_detail_list = clubDao.queryClubInfo(multiple_receiver);
+
             clubDao.insetIntoUserDetail(user_detail_list);
 
-          //  clubDao.clubUnbuild(multiple_receiver);
+            clubDao.clubUnbuild(multiple_receiver);
+
         }
 
         return null;
