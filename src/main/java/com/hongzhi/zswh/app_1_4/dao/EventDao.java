@@ -1,10 +1,6 @@
 package com.hongzhi.zswh.app_1_4.dao;
 
-import com.hongzhi.zswh.app_1_4.entity.Event;
-import com.hongzhi.zswh.app_1_4.entity.EventCreate;
-import com.hongzhi.zswh.app_1_4.entity.EventJoinMember;
-import com.hongzhi.zswh.app_1_4.entity.EventEntity;
-import com.hongzhi.zswh.app_1_4.entity.UserProfile;
+import com.hongzhi.zswh.app_1_4.entity.*;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
@@ -68,4 +64,6 @@ public interface EventDao {
     List<Integer> selectJoinEvent(String event_id);
 
     void updateEventRegistration(Integer event_id);
+
+    List<Integer> selectClubAmin(Integer club_id);
 }

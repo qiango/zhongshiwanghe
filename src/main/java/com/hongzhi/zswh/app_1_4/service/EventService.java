@@ -70,6 +70,8 @@ public class EventService {
                 if ( events.get(0).getOrganizer_id().equals(Integer.valueOf(property.getUser_id())) && !events.get(0).getEvent_status().equals(EventStatus.OVER.getValue()) ) {
                      if (events.get(0).getStart_time().getTime() > System.currentTimeMillis() ) {
                          abort_event = true;
+                     } else if (events.get(0).getStart_time().getTime() <= System.currentTimeMillis()){
+                         abort_event = false;
                      } else if ( events.get(0).getMembers().size() == 0 ){
                          abort_event = true;
                      } else {
@@ -193,6 +195,14 @@ public class EventService {
 
         if (event_create.getOrganizer_join().toLowerCase().equals("true")) {
             eventDao.organizerJoin(event_create);
+        }
+        if (!"0".equals(property.getClub_user_level())){
+
+            List<Integer> admin_list =  eventDao.selectClubAmin(property.getClub_id());
+
+            if (admin_list.size() != 0){
+                notificationService.sendNoti(1, admin_list, null, "1", dictionaryUtil.getCodeValue("create_event", "event", "zh")+property.getUser_real_name()+ dictionaryUtil.getCodeValue("create_event_message", "event", "zh")+event_create.getEvent_name());
+            }
         }
 
         Map<String, String> map = new HashMap<>();
@@ -362,7 +372,10 @@ public class EventService {
             List<UserProfile>  inputProfiles = Arrays.asList(profileArray);
             for (int i = 0 ; i < inputProfiles.size() ; i++){
                 if (!ObjectUtil.isEmpty(inputProfiles.get(i).getItem_code())){
-                    eventDao.saveUserProfile(Integer.valueOf(property.getUser_id()),inputProfiles);
+                    List<UserProfile> list = new ArrayList<>();
+                    list.add(inputProfiles.get(i));
+                    eventDao.saveUserProfile(Integer.valueOf(property.getUser_id()),list);
+
                 }
             }
         }

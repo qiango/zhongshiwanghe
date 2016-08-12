@@ -176,15 +176,16 @@ public class MeService {
 			profile2.setItem_value(params.get("nickname"));
 			profiles.add(profile2);
 		}
-		if (!ObjectUtil.isEmpty(params.get("user_id"))){
+		if (!ObjectUtil.isEmpty(params.get("user_mail"))){
 			UserProfile profile3 = new UserProfile();
 			profile3.setUser_id(Integer.valueOf(params.get("user_id")));
 			profile3.setItem_code("email");
 			profile3.setItem_value(params.get("user_mail"));
 			profiles.add(profile3);
 		}
-
-		userInfoDao.saveNewUserProfile(profiles);
+		if (profiles.size() > 0){
+			userInfoDao.saveNewUserProfile(profiles);
+		}
 	}
 
 	public String loadMeAddress(Map<String, String> params) {

@@ -40,5 +40,5 @@ public interface AppUserInfoDao {
 
 	Integer getIdbyPhone(String phone);
 
-	void saveNewUserProfile(List<UserProfile> profiles);
+	void saveNewUserProfile(@Param("profiles") List<UserProfile> profiles);
 }

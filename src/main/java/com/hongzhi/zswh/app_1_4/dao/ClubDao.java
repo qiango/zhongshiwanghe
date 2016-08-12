@@ -9,6 +9,7 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 @Repository("app_1_4_ClubDao")
 public interface ClubDao {
@@ -32,4 +33,8 @@ public interface ClubDao {
     void insetIntoUserDetail(@Param("detailList") List<UserDetailEntity> user_detail_list);
 
     void clubUnbuild(@Param("reciver") List<Integer> multiple_receiver);
+
+    List<Map<String,Objects>> selectCompetitionByUserId(Integer user_id);
+
+    List<Map<String,Object>> selectEvent(Integer user_id);
 }

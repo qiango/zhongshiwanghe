@@ -504,4 +504,14 @@
           where t1.userId not in
             (select t2.organizer_id from event t2 where t2.event_id = #{event_id} )
     </select>
+    <select id="selectClubAmin" resultType="map">
+        select
+            a.club_id
+        from
+            user_detail a
+        where
+            a.club_id = #{club_id}
+        and
+            a.user_level = 0
+    </select>
 </mapper>
