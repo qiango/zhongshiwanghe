@@ -1,22 +1,23 @@
 package com.hongzhi.zswh.app.me.service;
 
+import com.hongzhi.zswh.app.me.dao.AdressDao;
+import com.hongzhi.zswh.app.me.dao.AppUserInfoDao;
+import com.hongzhi.zswh.app.me.dao.MeDao;
+import com.hongzhi.zswh.app.me.entity.Adress;
+import com.hongzhi.zswh.app.me.entity.UserInfo;
+import com.hongzhi.zswh.app.me.entity.UserProfile;
+import com.hongzhi.zswh.util.basic.DictionaryUtil;
+import com.hongzhi.zswh.util.basic.ObjectUtil;
+import com.hongzhi.zswh.util.encryption.SHA256;
+import com.hongzhi.zswh.util.exception.HongZhiException;
+import com.hongzhi.zswh.util.page.PageModel;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Repository;
-
-import com.hongzhi.zswh.app.me.dao.AdressDao;
-import com.hongzhi.zswh.app.me.dao.MeDao;
-import com.hongzhi.zswh.app.me.dao.AppUserInfoDao;
-import com.hongzhi.zswh.app.me.entity.Adress;
-import com.hongzhi.zswh.app.me.entity.UserInfo;
-import com.hongzhi.zswh.util.basic.DictionaryUtil;
-import com.hongzhi.zswh.util.encryption.SHA256;
-import com.hongzhi.zswh.util.exception.HongZhiException;
-import com.hongzhi.zswh.util.page.PageModel;
 
 /**   Twitter : @taylorwang789 
  * Creat time : Mar 21, 2016    3:59:24 PM
@@ -148,11 +149,42 @@ public class MeService {
 		userInfo.setMail_address(params.get("user_mail"));
 		userInfo.setUser_real_name(params.get("user_name"));
 		int update_count = userInfoDao.updateUserInfo(userInfo);
+
+		updateUserProfile(params);
+
 		if(update_count==1){
 			return dictionaryUtil.appOut(params.get("code"), "");
 		}else{
 			return dictionaryUtil.appOut( "1011" , "");
 		}
+	}
+
+	private void updateUserProfile(Map<String, String> params){
+		List<UserProfile> profiles = new ArrayList<>();
+
+		if (!ObjectUtil.isEmpty(params.get("user_name"))){
+			UserProfile profile1 = new UserProfile();
+			profile1.setUser_id(Integer.valueOf(params.get("user_id")));
+			profile1.setItem_code("name");
+			profile1.setItem_value(params.get("user_name"));
+			profiles.add(profile1);
+		}
+		if (!ObjectUtil.isEmpty(params.get("nickname"))){
+			UserProfile profile2 = new UserProfile();
+			profile2.setUser_id(Integer.valueOf(params.get("user_id")));
+			profile2.setItem_code("nickname");
+			profile2.setItem_value(params.get("nickname"));
+			profiles.add(profile2);
+		}
+		if (!ObjectUtil.isEmpty(params.get("user_id"))){
+			UserProfile profile3 = new UserProfile();
+			profile3.setUser_id(Integer.valueOf(params.get("user_id")));
+			profile3.setItem_code("email");
+			profile3.setItem_value(params.get("user_mail"));
+			profiles.add(profile3);
+		}
+
+		userInfoDao.saveNewUserProfile(profiles);
 	}
 
 	public String loadMeAddress(Map<String, String> params) {

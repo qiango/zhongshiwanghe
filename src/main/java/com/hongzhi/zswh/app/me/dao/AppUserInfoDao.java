@@ -1,8 +1,11 @@
 package com.hongzhi.zswh.app.me.dao;
 
+import com.hongzhi.zswh.app.me.entity.UserProfile;
 import org.apache.ibatis.annotations.Param;
 
 import com.hongzhi.zswh.app.me.entity.UserInfo;
+
+import java.util.List;
 
 /**   Twitter : @taylorwang789 
  * Creat time : Mar 24, 2016    5:10:10 PM
@@ -37,4 +40,5 @@ public interface AppUserInfoDao {
 
 	Integer getIdbyPhone(String phone);
 
+	void saveNewUserProfile(List<UserProfile> profiles);
 }
