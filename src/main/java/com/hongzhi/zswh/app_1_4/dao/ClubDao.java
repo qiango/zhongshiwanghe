@@ -27,7 +27,9 @@ public interface ClubDao {
 
     List<Integer> queryClub(String club_id);
 
-    List<UserDetailEntity> queryClubInfo(List<Integer> multiple_receiver);
+    List<UserDetailEntity> queryClubInfo( @Param("multipleReceiver")List<Integer> multiple_receiver);
 
-    void insetIntoUserDetail(List<UserDetailEntity> user_detail_list);
+    void insetIntoUserDetail(@Param("detailList") List<UserDetailEntity> user_detail_list);
+
+    void clubUnbuild(@Param("reciver") List<Integer> multiple_receiver);
 }

@@ -20,6 +20,7 @@
     left join event_registration  b
            on a.event_id = b.event_id
           and b.my_status = 1
+          and b.user_id = #{userID}
     and b.event_id = #{eventID}
     left join user_info c
     on a.organizer_id = c.user_id
@@ -352,7 +353,7 @@
 
 
     <insert id="saveUserProfile" >
-    insert into user_profile
+      replace into user_profile
         (
         user_id
        ,item_code

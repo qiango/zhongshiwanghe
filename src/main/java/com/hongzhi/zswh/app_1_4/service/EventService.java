@@ -360,7 +360,11 @@ public class EventService {
             Gson gson = new Gson();
             UserProfile[] profileArray = gson.fromJson(profiles,UserProfile[].class);
             List<UserProfile>  inputProfiles = Arrays.asList(profileArray);
-            eventDao.saveUserProfile(Integer.valueOf(property.getUser_id()),inputProfiles);
+            for (int i = 0 ; i < inputProfiles.size() ; i++){
+                if (!ObjectUtil.isEmpty(inputProfiles.get(i).getItem_code())){
+                    eventDao.saveUserProfile(Integer.valueOf(property.getUser_id()),inputProfiles);
+                }
+            }
         }
 
         if (1 != effect_count) {
@@ -387,7 +391,7 @@ public class EventService {
 
         int effect_count = eventDao.unregister(event_id, Integer.valueOf(property.getUser_id()));
 
-        if ( 1 == effect_count ) {
+        if ( 0 != effect_count ) {
 
             Map<String,Object> event_map = eventDao.selectOrganizerIdByEventId(event_id);
 
