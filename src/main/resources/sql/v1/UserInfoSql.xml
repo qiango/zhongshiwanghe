@@ -108,4 +108,23 @@
          	is_delete='0'
          	and phone=#{phone}	
     </select>
+    <insert id="saveNewUserProfile">
+          replace into
+              user_profile
+              (
+              user_id
+              ,item_code
+              ,item_value
+              )VALUE
+        <foreach collection ="profiles" item="item" index= "index" separator=",">
+            (
+            #{item.user_id},
+            #{item.item_code},
+            #{item.item_value}
+            )
+        </foreach>
+
+
+    </insert>
+
 </mapper>

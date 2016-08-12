@@ -4,12 +4,14 @@ package com.hongzhi.zswh.app_1_4.service;
 import com.hongzhi.zswh.app_1_4.dao.ClubDao;
 import com.hongzhi.zswh.app_1_4.entity.ClubManageEntity;
 import com.hongzhi.zswh.app_1_4.entity.ClubQueryEntity;
+import com.hongzhi.zswh.app_1_4.entity.UserDetailEntity;
 import com.hongzhi.zswh.util.basic.ObjectUtil;
 import com.hongzhi.zswh.util.basic.sessionDao.SessionProperty;
 import com.hongzhi.zswh.util.exception.HongZhiException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -115,10 +117,12 @@ public class ClubService {
 
     public Object deleteMember(String user_id, SessionProperty property) {
         if ("0".equals(property.getClub_user_level())){
- /*           List<>
+            List<Integer> multiple_receiver = new ArrayList<>();
+            multiple_receiver.add(Integer.valueOf(user_id));
+            List<UserDetailEntity> user_detail_list = clubDao.queryClubInfo(multiple_receiver);
             clubDao.insetIntoUserDetail(user_detail_list);
 
-            clubDao.clubUnbuild(multiple_receiver);*/
+          //  clubDao.clubUnbuild(multiple_receiver);
         }
 
         return null;
