@@ -297,4 +297,43 @@
         </foreach>
         )
     </delete>
+
+    <select id="selectCompetitionByUserId" resultType="map">
+        SELECT
+        b.competition_id
+        FROM
+        user_competition a
+        LEFT JOIN
+        competition b
+        on a.competition_id =b.competition_id
+        WHERE a.user_id = #{user_id}
+        and b.compertition_live_status !=5
+        and a.user_competition_status IN ('1','99')
+    </select>
+
+
+    <select id="selectEvent" resultType="map">
+        SELECT
+        b.organizer_id
+        ,b.club_id
+        ,b.event_id
+
+        from
+        event_registration a
+
+        LEFT JOIN
+        event b
+
+        on
+        a.event_id = b.event_id
+
+        where
+        a.my_status = 1
+        and
+        b.event_status = 1
+        and
+        b.end_time >= NOW()
+        and
+        a.user_id = #{user_id}
+    </select>
 </mapper>
