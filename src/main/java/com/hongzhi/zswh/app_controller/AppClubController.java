@@ -6,7 +6,6 @@ import com.hongzhi.zswh.util.basic.DictionaryUtil;
 import com.hongzhi.zswh.util.basic.ObjectUtil;
 import com.hongzhi.zswh.util.basic.SessionUtil;
 import com.hongzhi.zswh.util.basic.sessionDao.SessionProperty;
-import com.hongzhi.zswh.util.date.DateFormat;
 import com.hongzhi.zswh.util.exception.HongZhiException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -109,4 +108,23 @@ public class AppClubController {
             return ObjectUtil.jsonOutError(e.getCode(), dic.getCodeValue(e.getCode(), language));
         }
 }
-}
+    @ResponseBody
+    @RequestMapping("/delete_member")
+    public String deleteMember(HttpSession session, String session_id,String user_id,@PathVariable String version) {
+        SessionProperty property;
+        String language = "zh";
+        try {
+            switch (version){
+                case "v1.4":
+                    property = sess.sessionEffective(session, session_id, "/v1.4/club/delete_member");
+                    return ObjectUtil.jsonOut(v1_4_clubService.deleteMember(user_id,property));
+                default:
+                    return "404";
+            }
+
+        }catch (HongZhiException e){
+            return ObjectUtil.jsonOutError(e.getCode(), dic.getCodeValue(e.getCode(), language));
+        }
+    }
+
+    }

@@ -4,15 +4,14 @@ package com.hongzhi.zswh.app_1_4.service;
 import com.hongzhi.zswh.app_1_4.dao.ClubDao;
 import com.hongzhi.zswh.app_1_4.entity.ClubManageEntity;
 import com.hongzhi.zswh.app_1_4.entity.ClubQueryEntity;
+import com.hongzhi.zswh.app_1_4.entity.UserDetailEntity;
 import com.hongzhi.zswh.util.basic.ObjectUtil;
 import com.hongzhi.zswh.util.basic.sessionDao.SessionProperty;
 import com.hongzhi.zswh.util.exception.HongZhiException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 
 @Service("app_1_4_ClubService")
@@ -111,5 +110,35 @@ public class ClubService {
         Map<String, Object> map = new HashMap<>();
         map.put("club_interface_data", out);
         return map;
+    }
+
+    public Object deleteMember(String user_id, SessionProperty property) throws HongZhiException {
+
+        if ("0".equals(property.getClub_user_level()) && !ObjectUtil.isEmpty(user_id)){
+
+            List<Map<String, Objects>> list = clubDao.selectCompetitionByUserId(Integer.valueOf(user_id));
+            if (list.size() > 0) {
+                //不允许退出
+                throw new HongZhiException("1077");
+            }
+
+            List<Map<String,Object>> event_list = clubDao.selectEvent(Integer.valueOf(user_id));
+
+            if (event_list.size() > 0 ){
+
+                throw new HongZhiException("1086");//有参见的活动，还没结束的活动，不能退出俱乐部
+            }
+
+            List<Integer> multiple_receiver = new ArrayList<>();
+            multiple_receiver.add(Integer.valueOf(user_id));
+
+            List<UserDetailEntity> user_detail_list = clubDao.queryClubInfo(multiple_receiver);
+
+            clubDao.insetIntoUserDetail(user_detail_list);
+
+            clubDao.clubUnbuild(multiple_receiver);
+
+        }
+        return null;
     }
 }

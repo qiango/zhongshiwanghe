@@ -24,7 +24,7 @@ public class MeServce {
 		OutputEntity out =meDao.loadMe(user_id,platform_id,language);
 
 		if (properties.getClub_id() != 0 || !ObjectUtil.isEmpty(properties.getClub_id())){
-			int event_counts = meDao.selectMyJoinEvent(properties.getUser_id());
+			int event_counts = meDao.selectMyJoinEvent(properties.getUser_id(),properties.getClub_id());
 			out.setEvent_counts(String.valueOf(event_counts));
 		}else{
 			out.setEvent_counts("0");

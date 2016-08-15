@@ -3,11 +3,13 @@ package com.hongzhi.zswh.app_1_4.dao;
 
 
 import com.hongzhi.zswh.app_1_4.entity.ClubQueryEntity;
+import com.hongzhi.zswh.app_1_4.entity.UserDetailEntity;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 @Repository("app_1_4_ClubDao")
 public interface ClubDao {
@@ -25,4 +27,14 @@ public interface ClubDao {
     List<Integer> queryEvent(String club_id);
 
     List<Integer> queryClub(String club_id);
+
+    List<UserDetailEntity> queryClubInfo( @Param("multipleReceiver")List<Integer> multiple_receiver);
+
+    void insetIntoUserDetail(@Param("detailList") List<UserDetailEntity> user_detail_list);
+
+    void clubUnbuild(@Param("reciver") List<Integer> multiple_receiver);
+
+    List<Map<String,Objects>> selectCompetitionByUserId(Integer user_id);
+
+    List<Map<String,Object>> selectEvent(Integer user_id);
 }

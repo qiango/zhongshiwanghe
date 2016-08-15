@@ -81,14 +81,16 @@
 	</select>
 
 	<select id="selectMyJoinEvent" resultType="Integer">
-			SELECT
-				  COUNT(1) as counts
-			FROM
-				event_registration a
-			where
-				a.user_id = #{user_id}
-			and
-				a.my_status = 1
+		  select
+		  	(t1.count_event+t2.count_event_registration) counts
+		  from
+		  	(select COUNT(1) count_event from event a where (a.event_status = 1 or ( a.event_status = 3
+			and a.end_time >= now() )) and a.club_id = #{club_id} and a.organizer_id = #{user_id}
+			) t1
+	    	,(select COUNT(1) count_event_registration from event_registration b where b.my_status = 1
+	    	and b.user_id =  #{user_id}  and b.event_id not in
+			(select a.event_id from event a where a.event_status = 1 and a.club_id = #{club_id} and a.organizer_id = #{user_id})
+			)t2
 	</select>
 
 </mapper>
