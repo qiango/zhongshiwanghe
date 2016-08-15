@@ -506,7 +506,7 @@
     </select>
     <select id="selectClubAmin" resultType="map">
         select
-            a.club_id
+            a.user_id
         from
             user_detail a
         where
