@@ -202,8 +202,8 @@ public class EventCreate {
     }
 
     public Double getFee() {
-        return Double.valueOf(fee);
-//        return 0.0;
+  //      return Double.valueOf(fee);
+        return 0.0;
     }
 
     public void setFee(String fee) {
