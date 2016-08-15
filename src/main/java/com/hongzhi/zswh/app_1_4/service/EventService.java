@@ -390,7 +390,7 @@ public class EventService {
 
            Map<String,Object> map = eventDao.selectOrganizerIdByEventId(event_id);
 
-            if (map.get("organizer_id").toString().equals(property.getUser_id())){
+            if (!(map.get("organizer_id").toString()).equals(property.getUser_id())){
 
                 List<Integer> multiple_receiver = new ArrayList<>();
                 multiple_receiver.add(Integer.valueOf(map.get("organizer_id").toString()));
@@ -412,7 +412,7 @@ public class EventService {
 
             Map<String,Object> event_map = eventDao.selectOrganizerIdByEventId(event_id);
 
-            if (event_map.get("organizer_id").toString().equals(property.getUser_id())) {
+            if (!(event_map.get("organizer_id").toString()).equals(property.getUser_id())) {
 
                 List<Integer> multiple_receiver = new ArrayList<>();
                 multiple_receiver.add(Integer.valueOf(event_map.get("organizer_id").toString()));
