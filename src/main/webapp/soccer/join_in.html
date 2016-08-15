@@ -65,9 +65,9 @@
       .modal-back.load{ width: 100%; height: 100%; background-color: rgba(111,111,111,0.6); left: 0; top: 0; z-index: 100; }
       .back-text{ position: absolute; width: 100%; top: 50%; margin-top: -.5em; color: #fff; font-size: 16px; text-align: center; } 
       
-      .panel-group{ position: absolute; z-index: 22; height: 100%; width: 100%; -webkit-transition: -webkit-transform .4s ease-out 0s; -webkit-transform: translateX(0) perspective(1000px) rotateY(-90deg); -webkit-transform-origin: 100% 50%; 
-       transition: transform .4s ease-out 0s; transform: translateX(0) perspective(1000px) rotateY(-90deg); transform-origin: 100% 50%; }
-      .panel-group.active{ -webkit-transform: translateX(0); transform: translateX(0); }
+      .panel-group{ position: absolute; z-index: 22; height: 100%; width: 100%; -webkit-transition: -webkit-transform .4s ease-out 0s; -webkit-transform: translateZ(0) perspective(1000px) rotateY(-90deg); -webkit-transform-origin: 100% 50%;
+       transition: transform .4s ease-out 0s; transform: translateZ(0) perspective(1000px) rotateY(-90deg); transform-origin: 100% 50%; }
+      .panel-group.active{ -webkit-transform: translateZ(0); transform: translateZ(0); }
       .search-panel{ position: absolute; height: 100%; width: 100%; }
       .blur{ -webkit-filter: blur(3px); }
       .bg-alpha{ background: -webkit-linear-gradient(rgba(12, 12, 12, 0.5), rgba(32,178,170,0.5), rgba(146, 212, 105, 0.5) , rgba(32, 178, 170, 0.5)); background: linear-gradient(rgba(12, 12, 12, 0.5), rgba(32,178,170,0.5), rgba(146, 212, 105, 0.5) , rgba(32, 178, 170, 0.5)); }
@@ -183,6 +183,14 @@
     <script type="text/javascript" src="http://apps.bdimg.com/libs/bootstrap/3.3.4/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="http://touch.code.baidu.com/touch-0.2.14.min.js"></script>
     <script type="text/javascript">
+    if(location.search.search('session_id=') === -1){
+      alert('你未登录，你可以登录之后再进行相关操作');
+      history.back();
+    } else {
+      [].forEach.call(document.querySelectorAll('.choose-link'),function(v,k){
+        v.href = v.href + location.search;
+      });
+    }
     //高度的问题
     $('html').css('height',$(window).height());
 

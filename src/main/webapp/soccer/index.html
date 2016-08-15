@@ -9,7 +9,6 @@
     <meta name="format-detection" content="telephone=no">
     <title>5人足球赛</title>
     <link rel="stylesheet" href="http://apps.bdimg.com/libs/bootstrap/3.3.4/css/bootstrap.min.css">
-    <link rel="stylesheet" href="http://cdn.bootcss.com/font-awesome/4.6.3/css/font-awesome.min.css">
     <link rel="stylesheet" href="http://cdn.bootcss.com/animate.css/3.5.2/animate.css">
     <style>
       html{ height: 100%; }
@@ -27,12 +26,21 @@
   <body>
     <div>
       <button type="button" class="back-btn pulse animated infinite loop-animate" onclick="history.back();"></button>
-      <button type="button" class="introducce-btn pulse animated infinite loop-animate text-center"><a href="introduce.html">投票活动介绍</a></button>
-      <button type="button" class="vote-btn bounceIn animated infinite loop-animate text-center"><a href="join_in.html">开始投票</a></button>
+      <button type="button" class="introducce-btn pulse animated infinite loop-animate text-center"><a class="choose-link" href="introduce.html">投票活动介绍</a></button>
+      <button type="button" class="vote-btn bounceIn animated infinite loop-animate text-center"><a class="choose-link" href="join_in.html">开始投票</a></button>
     </div>
-    <script type="text/javascript" src="http://apps.bdimg.com/libs/jquery/1.11.3/jquery.min.js"></script>
-    <script type="text/javascript" src="http://apps.bdimg.com/libs/bootstrap/3.3.4/js/bootstrap.min.js"></script>
-    <script type="text/javascript" src="http://touch.code.baidu.com/touch-0.2.14.min.js"></script>
-    <script type="text/javascript"></script>
+    <script type="text/javascript">
+    if(location.search.search('session_id=') === -1){
+      alert('你未登录，你可以登录之后再进行相关操作');
+      [].forEach.call(document.querySelectorAll('.choose-link'),function(v,k){
+        v.href = 'javascript:;';
+      });
+      history.back();
+    } else {
+      [].forEach.call(document.querySelectorAll('.choose-link'),function(v,k){
+        v.href = v.href + location.search;
+      });
+    }
+    </script>
   </body>
 </html>
