@@ -201,7 +201,11 @@ public class EventService {
             List<Integer> admin_list =  eventDao.selectClubAmin(property.getClub_id());
 
             if (admin_list.size() != 0){
-                notificationService.sendNoti(1, admin_list, null, "1", dictionaryUtil.getCodeValue("create_event", "event", "zh")+property.getUser_real_name()+ dictionaryUtil.getCodeValue("create_event_message", "event", "zh")+event_create.getEvent_name());
+                try {
+                    notificationService.sendNoti(1, admin_list, null, "1", dictionaryUtil.getCodeValue("create_event", "event", "zh")+property.getUser_real_name()+ dictionaryUtil.getCodeValue("create_event_message", "event", "zh")+event_create.getEvent_name());
+                }catch (Exception e){
+                    e.printStackTrace();
+                }
             }
         }
 
