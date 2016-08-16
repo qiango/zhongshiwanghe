@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 /**
@@ -90,6 +91,19 @@ public class EventService {
 
             } else {
                 club_user_level = userLevel(property,0,0);
+            }
+
+            for (int i = 0; i<events.size(); i++){
+                if (events.get(i).getStart_time().getTime() > System.currentTimeMillis() && events.get(i).getEvent_status() == 1 ) {
+                    SimpleDateFormat df = new SimpleDateFormat("MM月dd日 HH:mm");
+                    events.get(i).setEvent_status_name(df.format(events.get(i).getStart_time())+DictionaryUtil.find("event_start","event","zh"));
+                }else if (events.get(i).getStart_time().getTime() <= System.currentTimeMillis() && events.get(i).getEvent_status() == 1){
+                    events.get(i).setEvent_status_name(DictionaryUtil.find("event_ongoing","event","zh"));
+                }else if (events.get(i).getEvent_status() == 3){
+                    events.get(i).setEvent_status_name(DictionaryUtil.find("OVER","event_enum","zh"));
+                }else if (events.get(i).getEnd_time().getTime() <= System.currentTimeMillis()&& events.get(i).getEvent_status() == 1){
+                    events.get(i).setEvent_status_name(DictionaryUtil.find("event_end","event","zh"));
+                }
             }
 
 
@@ -300,6 +314,19 @@ public class EventService {
 
         map.put("event_counts",club_events_counts);
 
+        for (int i = 0; i < events_list.size(); i++) {
+            if (events_list.get(i).getStart_time().getTime() > System.currentTimeMillis() && events_list.get(i).getEvent_status() == 1) {
+                SimpleDateFormat df = new SimpleDateFormat("MM月dd日 HH:mm");
+                events_list.get(i).setEvent_status_name(df.format(events_list.get(i).getStart_time()) + DictionaryUtil.find("event_start", "event", "zh"));
+            } else if (events_list.get(i).getStart_time().getTime() <= System.currentTimeMillis() && events_list.get(i).getEvent_status() == 1) {
+                events_list.get(i).setEvent_status_name(DictionaryUtil.find("event_ongoing", "event", "zh"));
+            } else if (events_list.get(i).getEvent_status() == 3) {
+                events_list.get(i).setEvent_status_name(DictionaryUtil.find("OVER", "event_enum", "zh"));
+            } else if (events_list.get(i).getEnd_time().getTime() <= System.currentTimeMillis() && events_list.get(i).getEvent_status() == 1) {
+                events_list.get(i).setEvent_status_name(DictionaryUtil.find("event_end", "event", "zh"));
+            }
+        }
+
         if (events_list.size() > 0) {
             map.put("events_list", events_list);
         } else {
@@ -324,11 +351,39 @@ public class EventService {
         Map<String, Object> map = new HashMap<>();
 
         if (my_join_event_list.size() > 0) {
+
+            for (int i = 0; i < my_join_event_list.size(); i++) {
+                if (my_join_event_list.get(i).getStart_time().getTime() > System.currentTimeMillis() && my_join_event_list.get(i).getEvent_status() == 1) {
+                    SimpleDateFormat df = new SimpleDateFormat("MM月dd日 HH:mm");
+                    my_join_event_list.get(i).setEvent_status_name(df.format(my_join_event_list.get(i).getStart_time()) + DictionaryUtil.find("event_start", "event", "zh"));
+                } else if (my_join_event_list.get(i).getStart_time().getTime() <= System.currentTimeMillis() && my_join_event_list.get(i).getEvent_status() == 1) {
+                    my_join_event_list.get(i).setEvent_status_name(DictionaryUtil.find("event_ongoing", "event", "zh"));
+                } else if (my_join_event_list.get(i).getEvent_status() == 3) {
+                    my_join_event_list.get(i).setEvent_status_name(DictionaryUtil.find("OVER", "event_enum", "zh"));
+                } else if (my_join_event_list.get(i).getEnd_time().getTime() <= System.currentTimeMillis() && my_join_event_list.get(i).getEvent_status() == 1) {
+                    my_join_event_list.get(i).setEvent_status_name(DictionaryUtil.find("event_end", "event", "zh"));
+                }
+            }
             map.put("my_join_event_list", my_join_event_list);
         } else {
+
             map.put("my_join_event_list", new ArrayList<>());
         }
         if (my_set_event_list.size() > 0) {
+
+            for (int i = 0; i < my_set_event_list.size(); i++) {
+                if (my_set_event_list.get(i).getStart_time().getTime() > System.currentTimeMillis() && my_set_event_list.get(i).getEvent_status() == 1) {
+                    SimpleDateFormat df = new SimpleDateFormat("MM月dd日 HH:mm");
+                    my_set_event_list.get(i).setEvent_status_name(df.format(my_set_event_list.get(i).getStart_time()) + DictionaryUtil.find("event_start", "event", "zh"));
+                } else if (my_set_event_list.get(i).getStart_time().getTime() <= System.currentTimeMillis() && my_set_event_list.get(i).getEvent_status() == 1) {
+                    my_set_event_list.get(i).setEvent_status_name(DictionaryUtil.find("event_ongoing", "event", "zh"));
+                } else if (my_set_event_list.get(i).getEvent_status() == 3) {
+                    my_set_event_list.get(i).setEvent_status_name(DictionaryUtil.find("OVER", "event_enum", "zh"));
+                } else if (my_set_event_list.get(i).getEnd_time().getTime() <= System.currentTimeMillis() && my_set_event_list.get(i).getEvent_status() == 1) {
+                    my_set_event_list.get(i).setEvent_status_name(DictionaryUtil.find("event_end", "event", "zh"));
+                }
+            }
+
             map.put("my_set_event_list", my_set_event_list);
         } else {
             map.put("my_set_event_list", new ArrayList<>());
@@ -341,13 +396,26 @@ public class EventService {
         if (ObjectUtil.isEmpty(user_id)){
             Event eventInfo = eventDao.events(property.getClub_id(), event_id,EventStatus.NORMAL.getValue()).get(0);
             List<Map<String, Object>> formItems = eventDao.formItems(event_id, Integer.valueOf(property.getUser_id()));
+
 //       map : a.event_id ,a.club_id ,b.item_code ,c.item_name, item_value
 
             if (!formItems.get(0).get("club_id").equals(property.getClub_id())) {
                 throw new HongZhiException("not_own_club", "event");
             }
+            List<Map<String,Object>> otherItems = eventDao.otherItems(event_id);
 
             Map<String, Object> map = new HashMap<>();
+
+            if (otherItems.size() > 0){
+                for (int i = 0 ; i < formItems.size(); i++){
+                    for (int j = 0 ; j < otherItems.size(); j++){
+                       if (formItems.get(i).get("item_code").toString().equals(otherItems.get(j).get("item_code").toString())){
+                           formItems.get(i).put("item_value","");
+                           break;
+                       }
+                    }
+                }
+            }
             map.put("items", formItems);
             map.put("event_info",eventInfo);
             return map;
@@ -357,7 +425,43 @@ public class EventService {
             if (!formItems.get(0).get("club_id").equals(property.getClub_id())) {
                 throw new HongZhiException("not_own_club", "event");
             }
+      /*      Map<String, Object> event_user_profile = new HashMap<>();
+            List<Map<String,Object>> list  = new ArrayList<>();*/
+
+            List<Map<String,Object>> otherItems = eventDao.otherItems(event_id);
+            List<Map<String, Object>>  eventUserProfile = eventDao.selectEventUserProfile(event_id,user_id);
+            if (otherItems.size() > 0){
+                for (int i = 0 ; i < formItems.size();i++ ){
+                    for (int j = 0 ; j<eventUserProfile.size() ; j++){
+                        if (formItems.get(i).get("item_code").toString().equals(eventUserProfile.get(j).get("item_code").toString())){
+                            formItems.get(i).put("item_value",eventUserProfile.get(j).get("item_value"));
+                            break;
+                        }
+                    }
+                }
+            }
+
+     /*       if (otherItems.size() > 0 && eventUserProfile.size() > 0){
+
+                for (int i = 0; i < eventUserProfile.size(); i++){
+                    for (int j = 0; j < otherItems.size(); j++){
+                        if(eventUserProfile.get(i).get("item_code").toString().equals(otherItems.get(j).get("item_code"))){
+
+                            event_user_profile.put(eventUserProfile.get(i).get("item_code").toString(),eventUserProfile.get(i).get("item_value"));
+                            list.add(event_user_profile);
+                            break;
+                        }
+                    }
+
+                }
+            }*/
             Map<String, Object> map = new HashMap<>();
+           /* if (list.size() > 0){
+                map.put("other_items",list);
+            }else{
+                map.put("other_items",new ArrayList<>());
+            }*/
+
             map.put("items", formItems);
             map.put("event_info",eventInfo);
             return map;
@@ -379,6 +483,8 @@ public class EventService {
                     List<UserProfile> list = new ArrayList<>();
                     list.add(inputProfiles.get(i));
                     eventDao.saveUserProfile(Integer.valueOf(property.getUser_id()),list);
+                    //活动--用户
+                    eventDao.saveEventUserProfile(Integer.valueOf(property.getUser_id()),event_id,list);
 
                 }
             }
@@ -407,7 +513,7 @@ public class EventService {
     public Object eventUnregister(Integer event_id, SessionProperty property) throws HongZhiException {
 
         int effect_count = eventDao.unregister(event_id, Integer.valueOf(property.getUser_id()));
-
+        eventDao.updateEventUserProfile(event_id,property.getUser_id());
         if ( 0 != effect_count ) {
 
             Map<String,Object> event_map = eventDao.selectOrganizerIdByEventId(event_id);

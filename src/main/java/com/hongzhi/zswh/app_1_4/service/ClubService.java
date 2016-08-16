@@ -5,6 +5,8 @@ import com.hongzhi.zswh.app_1_4.dao.ClubDao;
 import com.hongzhi.zswh.app_1_4.entity.ClubManageEntity;
 import com.hongzhi.zswh.app_1_4.entity.ClubQueryEntity;
 import com.hongzhi.zswh.app_1_4.entity.UserDetailEntity;
+import com.hongzhi.zswh.app_v3.notification.service.NotificationService;
+import com.hongzhi.zswh.util.basic.DictionaryUtil;
 import com.hongzhi.zswh.util.basic.ObjectUtil;
 import com.hongzhi.zswh.util.basic.sessionDao.SessionProperty;
 import com.hongzhi.zswh.util.exception.HongZhiException;
@@ -20,6 +22,10 @@ public class ClubService {
     private ClubDao clubDao;
     @Autowired
     private EventService eventService;
+    @Autowired
+    private NotificationService notificationService;
+    @Autowired
+    private DictionaryUtil dictionaryUtil;
     /**
      * @param property
      * @return
@@ -112,7 +118,7 @@ public class ClubService {
         return map;
     }
 
-    public Object deleteMember(String user_id, SessionProperty property) throws HongZhiException {
+    public Object deleteMember(String user_id, SessionProperty property, String delete_reason) throws HongZhiException {
 
         if ("0".equals(property.getClub_user_level()) && !ObjectUtil.isEmpty(user_id)){
 
@@ -137,6 +143,10 @@ public class ClubService {
             clubDao.insetIntoUserDetail(user_detail_list);
 
             clubDao.clubUnbuild(multiple_receiver);
+
+            Map<String,Object> club_map = clubDao.queryClubName(property.getClub_id());
+
+            notificationService.sendNoti(1, multiple_receiver, null, "1", dictionaryUtil.getCodeValue("delete_member", "event", "zh")+club_map.get("club_name")+ dictionaryUtil.getCodeValue("delete_member_m", "event", "zh"));
 
         }
         return null;

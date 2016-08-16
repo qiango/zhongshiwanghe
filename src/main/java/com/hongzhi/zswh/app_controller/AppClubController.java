@@ -110,14 +110,14 @@ public class AppClubController {
 }
     @ResponseBody
     @RequestMapping("/delete_member")
-    public String deleteMember(HttpSession session, String session_id,String user_id,@PathVariable String version) {
+    public String deleteMember(HttpSession session, String session_id,String user_id,String delete_reason,@PathVariable String version) {
         SessionProperty property;
         String language = "zh";
         try {
             switch (version){
                 case "v1.4":
                     property = sess.sessionEffective(session, session_id, "/v1.4/club/delete_member");
-                    return ObjectUtil.jsonOut(v1_4_clubService.deleteMember(user_id,property));
+                    return ObjectUtil.jsonOut(v1_4_clubService.deleteMember(user_id,property,delete_reason));
                 default:
                     return "404";
             }

@@ -129,7 +129,7 @@
           and  a.club_id = #{club_id}
         </if>
      </where>
-        ORDER BY a.event_status asc,a.register_start_time desc,a.start_time desc
+        ORDER BY a.event_status asc,a.register_start_time asc,a.start_time asc
     </select>
 
     <select id="latestEventList" resultType="com.hongzhi.zswh.app_1_4.entity.Event">
@@ -156,7 +156,7 @@
     where t1.club_id = #{club_id}
     and t1.event_status = 1
     and  t1.end_time > NOW()
-    ORDER BY t1.register_start_time desc,t1.start_time desc
+    ORDER BY t1.register_start_time asc,t1.start_time asc
         LIMIT 2
      </select>
 
@@ -246,7 +246,55 @@
     where a.event_id = #{eventID}
     order by c.index
     </select>
+    <select id="otherItems"  resultType="map">
+        SELECT
+            coalesce(b.item_code,'') as item_code
+        FROM
+            event_form a
+        LEFT JOIN
+            event_form_item b
+        on
+            a.item_code = b.item_code
+        where
+            a.event_id = #{event_id}
+        and
+            b.is_default =0
 
+
+    </select>
+
+    <update id="updateEventUserProfile">
+        update
+            event_user_profile a
+        set
+            a.is_delete = 1
+        where
+            a.event_id = #{event_id}
+        and
+            a.user_id = #{user_id}
+
+    </update>
+
+    <select id="selectEventUserProfile"  resultType="map">
+        SELECT
+            coalesce(a.item_code,'') as item_code
+           ,coalesce(a.item_value,'') as item_value
+        FROM
+            event_user_profile a
+        left join
+            user_profile_item b
+        on
+            a.item_code = b.item_code
+        where
+            a.event_id = #{event_id}
+        and
+            a.user_id = #{user_id}
+        and
+            a.is_delete = 0
+        and
+            b.is_default = 0
+
+    </select>
     <insert id="saveUserRegister" >
     insert into  event_registration (
       event_id
@@ -296,9 +344,11 @@
           where
               a.user_id =#{user_id}
           and
-              a.my_status = 1
+              a.my_status in (1,2)
           and
               b.club_id = #{club_id}
+          ORDER BY b.register_start_time asc,b.start_time asc
+
     </select>
     <select id="mySetEvent" resultType="com.hongzhi.zswh.app_1_4.entity.Event">
           select
@@ -324,6 +374,8 @@
               a.club_id = #{club_id}
           and
               a.organizer_id = #{user_id}
+          ORDER BY a.register_start_time asc,a.start_time asc
+
     </select>
     <select id="verifyEvent" resultType="com.hongzhi.zswh.app_1_4.entity.Event">
           select
@@ -349,6 +401,8 @@
               a.event_status = 0
           and
               a.club_id = #{club_id}
+          ORDER BY a.register_start_time asc,a.start_time asc
+
     </select>
 
 
@@ -367,7 +421,24 @@
        )
        </foreach>
     </insert>
+    <insert id="saveEventUserProfile">
+        replace into event_user_profile
+        (
+        user_id
+        ,event_id
+        ,item_code
+        ,item_value
+        ) values
+        <foreach collection="profiles" item="profile" separator="," >
+            (
+            #{userID}
+            ,#{eventID}
+            ,#{profile.item_code}
+            ,#{profile.item_value}
+            )
+        </foreach>
 
+    </insert>
     <select id="clubEventsCount" resultType="Integer">
           select
               COUNT(1) evnets_count
@@ -482,7 +553,7 @@
         update
            event_registration a
         set
-            a.my_status = 0
+            a.my_status = 2
         where
             a.event_id=#{event_id}
 

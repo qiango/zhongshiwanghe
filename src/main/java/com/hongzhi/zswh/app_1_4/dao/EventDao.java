@@ -66,4 +66,12 @@ public interface EventDao {
     void updateEventRegistration(Integer event_id);
 
     List<Integer> selectClubAmin(Integer club_id);
+
+    void saveEventUserProfile(@Param("userID") Integer user_id, @Param("eventID") Integer event_id,@Param("profiles") List<UserProfile> list);
+
+    List<Map<String,Object>> otherItems(Integer event_id);
+
+    List<Map<String,Object>> selectEventUserProfile(@Param("event_id") Integer event_id, @Param("user_id") String user_id);
+
+    void updateEventUserProfile(@Param("event_id") Integer event_id, @Param("user_id") String user_id);
 }
