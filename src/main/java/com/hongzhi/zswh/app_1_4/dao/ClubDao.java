@@ -37,4 +37,6 @@ public interface ClubDao {
     List<Map<String,Objects>> selectCompetitionByUserId(Integer user_id);
 
     List<Map<String,Object>> selectEvent(Integer user_id);
+
+    Map<String,Object> queryClubName(Integer club_id);
 }

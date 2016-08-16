@@ -1,10 +1,10 @@
 package com.hongzhi.zswh.app_v3.notification.service;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
+import com.hongzhi.zswh.app_v3.notification.dao.NotificationUserStateDao;
+import com.hongzhi.zswh.app_v3.notification.entity.NotificationEntity;
+import com.hongzhi.zswh.app_v3.notification.entity.NotificationUserState;
+import com.hongzhi.zswh.util.basic.ObjectUtil;
+import com.hongzhi.zswh.util.exception.HongZhiException;
 import com.hongzhi.zswh.util.mipush.config.MessageType;
 import com.hongzhi.zswh.util.mipush.message.MiMessage;
 import com.hongzhi.zswh.util.mipush.message.MiMessageService;
@@ -12,11 +12,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.hongzhi.zswh.app_v3.notification.dao.NotificationUserStateDao;
-import com.hongzhi.zswh.app_v3.notification.entity.NotificationEntity;
-import com.hongzhi.zswh.app_v3.notification.entity.NotificationUserState;
-import com.hongzhi.zswh.util.basic.ObjectUtil;
-import com.hongzhi.zswh.util.exception.HongZhiException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**   Twitter : @taylorwang789 
  * Creat time : May 3, 2016    4:38:38 PM
@@ -75,9 +74,9 @@ public class NotificationService {
 	}
 	
 	
-	public Object sendNoti(Integer from_user_id , List<Integer> multiple_receiver,Integer single_receiver ,String notificationCategory, String notificationBody) throws HongZhiException {
+	public Object sendNoti(Integer from_user_id , final List<Integer> multiple_receiver, Integer single_receiver , String notificationCategory, String notificationBody) throws HongZhiException {
 		if(ObjectUtil.isEmpty(multiple_receiver) &&  !ObjectUtil.isEmpty(single_receiver)){
-				NotificationEntity notificationEntity = new NotificationEntity();
+			   NotificationEntity notificationEntity = new NotificationEntity();
 				notificationEntity.setNoti_from(from_user_id);
 				notificationEntity.setNoti_to(single_receiver);
 				notificationEntity.setNoti_category(notificationCategory);
@@ -88,7 +87,7 @@ public class NotificationService {
 				notificationEntity.VNotification_body();
 				return saveNoti(notificationEntity);
 		}else if(!ObjectUtil.isEmpty(multiple_receiver)){
-			NotificationEntity notificationEntity = new NotificationEntity();
+			final NotificationEntity notificationEntity = new NotificationEntity();
 			notificationEntity.setNoti_from(from_user_id);
 			notificationEntity.setNoti_category(notificationCategory);
 			notificationEntity.setNotification_body(notificationBody);
@@ -104,9 +103,18 @@ public class NotificationService {
 			if(saveCount==multiple_receiver.size()){
 				   notiStateDao.updateNotificationStateMultipleUser(multiple_receiver);
 
-                    MiMessage message = new MiMessage(MessageType.NOTIFICATION);
-                    message.sendMessage(notificationEntity.VNotification_body(), miMessageService.getRegidList(multiple_receiver));
+                 final   MiMessage message = new MiMessage(MessageType.NOTIFICATION);
 
+				new Thread(new Runnable() {
+					@Override
+					public void run() {
+						try {
+							message.sendMessage(notificationEntity.VNotification_body(), miMessageService.getRegidList(multiple_receiver));
+						} catch (HongZhiException e) {
+							e.printStackTrace();
+						}
+					}
+				}).start();
 					return  "success";
 			}else{
 					throw new HongZhiException("1011");
