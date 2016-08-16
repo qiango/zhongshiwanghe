@@ -146,7 +146,7 @@ public class ClubService {
 
             Map<String,Object> club_map = clubDao.queryClubName(property.getClub_id());
 
-            notificationService.sendNoti(1, multiple_receiver, null, "1", dictionaryUtil.getCodeValue("delete_member", "event", "zh")+club_map.get("club_name")+ dictionaryUtil.getCodeValue("delete_member_m", "event", "zh"));
+            notificationService.sendNoti(1, multiple_receiver, null, "1", dictionaryUtil.getCodeValue("delete_member", "event", "zh")+club_map.get("club_name")+ dictionaryUtil.getCodeValue("delete_member_m", "event", "zh")+delete_reason);
 
         }
         return null;
