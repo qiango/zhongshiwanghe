@@ -35,7 +35,14 @@ public class EventService {
     @Autowired
     private NotificationService notificationService;
 
-    public Object events(SessionProperty property, Integer club_id, Integer event_id) {
+    public Object events(SessionProperty property, Integer club_id, Integer event_id) throws HongZhiException {
+
+        List<Integer> club_member_list = eventDao.queryClubMember(property.getUser_id(),property.getClub_id());
+
+        if (club_member_list.size() == 0){
+
+            throw new HongZhiException("1087");
+        }
 
         Map<String, Object> map = new HashMap<>();
 
@@ -589,7 +596,7 @@ public class EventService {
         return map;
     }
 
-    public Object abort(SessionProperty property, String event_id) throws HongZhiException {
+    public Object abort(SessionProperty property, String event_id,String review_reason) throws HongZhiException {
 
         int effectCount = eventDao.abort(Integer.valueOf(property.getUser_id()),Integer.valueOf(event_id));
         eventDao.updateEventRegistration(Integer.valueOf(event_id));
@@ -598,7 +605,7 @@ public class EventService {
 
             Map<String,Object> event_map = eventDao.selectOrganizerIdByEventId(Integer.valueOf(event_id));
             if (multiple_receiver.size()!= 0){
-                notificationService.sendNoti(1, multiple_receiver, null, "1", dictionaryUtil.getCodeValue("abort_event", "event", "zh")+event_map.get("event_name")+ dictionaryUtil.getCodeValue("abort_event_message", "event", "zh"));
+                notificationService.sendNoti(1, multiple_receiver, null, "1", dictionaryUtil.getCodeValue("abort_event", "event", "zh")+event_map.get("event_name")+ dictionaryUtil.getCodeValue("abort_event_message", "event", "zh")+review_reason);
             }
 
             return null;

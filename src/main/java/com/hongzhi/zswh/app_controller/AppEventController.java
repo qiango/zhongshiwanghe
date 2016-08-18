@@ -262,7 +262,7 @@ public class AppEventController {
 
     @ResponseBody
     @RequestMapping(value = "/abort")
-    public String abort(HttpSession session, String session_id,String event_id, @PathVariable String version){
+    public String abort(HttpSession session, String session_id,String event_id,String review_reason, @PathVariable String version){
         SessionProperty property;
         String language = "zh";
         try {
@@ -270,7 +270,7 @@ public class AppEventController {
                 case "v1.4":
                     property = sess.sessionEffective(session,session_id,"/v1.4/event/abort");
                     language=property.getLanguage();
-                    return ObjectUtil.jsonOut( eventService.abort(property,event_id) ,DictionaryUtil.find("abort_success","event",language) );
+                    return ObjectUtil.jsonOut( eventService.abort(property,event_id,review_reason) ,DictionaryUtil.find("abort_success","event",language) );
                 default:
                     return "404";
             }
