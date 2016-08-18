@@ -616,4 +616,17 @@
         and
         a.is_delete = 0
     </update>
+
+    <select id="queryClubMember" resultType="Integer">
+        SELECT
+            a.club_id
+        FROM
+            user_detail a
+        where
+            a.club_id = #{club_id}
+        and
+            a.user_id = #{user_id}
+        and
+            a.join_club_status = 99
+    </select>
 </mapper>

@@ -160,7 +160,15 @@ public class ClubService {
      */
     public Object queryClubAdmin(SessionProperty property) throws HongZhiException {
 
-            Map<String,Object>  club_map = clubDao.queryClubLevel( property.getUser_id());//查看是否是俱乐部管理员
+        List<Integer> club_member = clubDao.queryClubMember(property.getUser_id(),property.getClub_id());
+
+        if (club_member.size() == 0){
+
+            throw new HongZhiException("1087");
+        }
+
+
+        Map<String,Object>  club_map = clubDao.queryClubLevel( property.getUser_id());//查看是否是俱乐部管理员
             String club_id = club_map.get("club_id").toString();
 
             List<Integer> club_member_list  = clubDao.selectClubMembers(club_id);
