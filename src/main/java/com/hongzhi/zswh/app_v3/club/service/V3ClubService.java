@@ -129,7 +129,15 @@ public class V3ClubService {
 	 * @param page 
 	 * @return
 	 */
-	public Object clubMembers(SessionProperty properties, String page) {
+	public Object clubMembers(SessionProperty properties, String page) throws HongZhiException {
+
+		List<Integer> club_member_list = dao.queryClubMember(properties.getUser_id(),properties.getClub_id());
+
+		if (club_member_list.size() == 0){
+
+			throw new HongZhiException("1087");
+		}
+
 		int startRow = 0;
 		if(!ObjectUtil.isEmpty(page)){
 			startRow = (Integer.parseInt(page) -1 ) * defaultPageSize ;

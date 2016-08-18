@@ -114,4 +114,6 @@ public interface V3ClubManageDao {
 
 
 	Map<String,String> getClubName(int club_id);
+
+	List<Integer> queryClubMember(@Param("user_id") String user_id, @Param("club_id") Integer club_id);
 }
