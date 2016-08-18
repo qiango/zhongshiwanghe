@@ -14,6 +14,7 @@ public class EASEMOB {
     public static String CLIENT_ID = "YXA6u9JhQDgeEeaNIvsrL_c7cQ";
     public static String CLIENT_SECRET = "YXA6PJf0O1I18Uu-Ws07tehvnTZN79I" ;
 
+    public static String USERS = "users";
 
     public static String ACCESS_TOKEN="";
     public static long   EXPIRES_IN = 0 ;
