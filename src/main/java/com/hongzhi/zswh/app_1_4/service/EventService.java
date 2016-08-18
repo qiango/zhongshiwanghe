@@ -102,7 +102,7 @@ public class EventService {
 
             for (int i = 0; i<events.size(); i++){
                 if (events.get(i).getStart_time().getTime() > System.currentTimeMillis() && events.get(i).getEvent_status() == 1 ) {
-                    SimpleDateFormat df = new SimpleDateFormat("MM月dd日 HH:mm");
+                    SimpleDateFormat df = new SimpleDateFormat("MM月dd日");
                     events.get(i).setEvent_status_name(df.format(events.get(i).getStart_time())+DictionaryUtil.find("event_start","event","zh"));
                 }else if (events.get(i).getStart_time().getTime() <= System.currentTimeMillis() && events.get(i).getEvent_status() == 1){
                     events.get(i).setEvent_status_name(DictionaryUtil.find("event_ongoing","event","zh"));
@@ -323,7 +323,7 @@ public class EventService {
 
         for (int i = 0; i < events_list.size(); i++) {
             if (events_list.get(i).getStart_time().getTime() > System.currentTimeMillis() && events_list.get(i).getEvent_status() == 1) {
-                SimpleDateFormat df = new SimpleDateFormat("MM月dd日 HH:mm");
+                SimpleDateFormat df = new SimpleDateFormat("MM月dd日");
                 events_list.get(i).setEvent_status_name(df.format(events_list.get(i).getStart_time()) + DictionaryUtil.find("event_start", "event", "zh"));
             } else if (events_list.get(i).getStart_time().getTime() <= System.currentTimeMillis() && events_list.get(i).getEvent_status() == 1) {
                 events_list.get(i).setEvent_status_name(DictionaryUtil.find("event_ongoing", "event", "zh"));
@@ -361,7 +361,7 @@ public class EventService {
 
             for (int i = 0; i < my_join_event_list.size(); i++) {
                 if (my_join_event_list.get(i).getStart_time().getTime() > System.currentTimeMillis() && my_join_event_list.get(i).getEvent_status() == 1) {
-                    SimpleDateFormat df = new SimpleDateFormat("MM月dd日 HH:mm");
+                    SimpleDateFormat df = new SimpleDateFormat("MM月dd日");
                     my_join_event_list.get(i).setEvent_status_name(df.format(my_join_event_list.get(i).getStart_time()) + DictionaryUtil.find("event_start", "event", "zh"));
                 } else if (my_join_event_list.get(i).getStart_time().getTime() <= System.currentTimeMillis() && my_join_event_list.get(i).getEvent_status() == 1) {
                     my_join_event_list.get(i).setEvent_status_name(DictionaryUtil.find("event_ongoing", "event", "zh"));
@@ -380,7 +380,7 @@ public class EventService {
 
             for (int i = 0; i < my_set_event_list.size(); i++) {
                 if (my_set_event_list.get(i).getStart_time().getTime() > System.currentTimeMillis() && my_set_event_list.get(i).getEvent_status() == 1) {
-                    SimpleDateFormat df = new SimpleDateFormat("MM月dd日 HH:mm");
+                    SimpleDateFormat df = new SimpleDateFormat("MM月dd日");
                     my_set_event_list.get(i).setEvent_status_name(df.format(my_set_event_list.get(i).getStart_time()) + DictionaryUtil.find("event_start", "event", "zh"));
                 } else if (my_set_event_list.get(i).getStart_time().getTime() <= System.currentTimeMillis() && my_set_event_list.get(i).getEvent_status() == 1) {
                     my_set_event_list.get(i).setEvent_status_name(DictionaryUtil.find("event_ongoing", "event", "zh"));

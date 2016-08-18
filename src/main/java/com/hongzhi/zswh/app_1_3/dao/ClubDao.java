@@ -63,4 +63,6 @@ public interface ClubDao {
     List<Integer> selectClubMembersByClubId(@Param("clubId") List<Integer> club_id_list);
 
     int updateClubReminderMark(@Param("reminder") List<Integer> club_id_reminder_list);
+
+    List<Integer> queryClubMember(@Param("user_id") String user_id, @Param("club_id") Integer club_id);
 }
