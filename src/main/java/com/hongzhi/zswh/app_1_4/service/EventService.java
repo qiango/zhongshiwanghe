@@ -598,6 +598,9 @@ public class EventService {
 
     public Object abort(SessionProperty property, String event_id,String review_reason) throws HongZhiException {
 
+        if (ObjectUtil.isEmpty(review_reason)){
+            throw new HongZhiException("1087");
+        }
         int effectCount = eventDao.abort(Integer.valueOf(property.getUser_id()),Integer.valueOf(event_id));
         eventDao.updateEventRegistration(Integer.valueOf(event_id));
         if ( 1 == effectCount ) {
