@@ -488,10 +488,10 @@ public class EventService {
                 } else if (my_set_event_list.get(i).getEnd_time().getTime() < System.currentTimeMillis() && my_set_event_list.get(i).getEvent_status() == 1) {
                     my_set_event_list.get(i).setEvent_status_name(DictionaryUtil.find("event_end", "event", "zh"));
                 }else if (0 == my_join_event_list.get(i).getEvent_status()){
-                    my_join_event_list.get(i).setEvent_status_name(DictionaryUtil.find("UNDER_REVIEW", "event_enum", "zh"));
+                    my_set_event_list.get(i).setEvent_status_name(DictionaryUtil.find("UNDER_REVIEW", "event_enum", "zh"));
 
-                }else if (2 == my_join_event_list.get(i).getEvent_status()){
-                    my_join_event_list.get(i).setEvent_status_name(DictionaryUtil.find("fail_review", "event_button", "zh"));
+                }else if (2 == my_set_event_list.get(i).getEvent_status()){
+                    my_set_event_list.get(i).setEvent_status_name(DictionaryUtil.find("fail_review", "event_button", "zh"));
                 }
             }
 
