@@ -415,25 +415,25 @@ public class EventService {
         SimpleDateFormat format_year = new SimpleDateFormat("yy年MM月dd日");
         SimpleDateFormat sdf = new SimpleDateFormat("yy");
 
-
-        for (Event event : my_join_event_list) {
-
-            Date date = new Date();
-
-            String start_date = sdf.format(event.getStart_time());
-
-            String now_date = sdf.format(date);
-
-            if (!now_date.equals(start_date)) {
-                String event_start_date = format_year.format(event.getStart_time());
-                event.setEvent_start_time(event_start_date);
-
-            } else {
-                String event_start_date = format_month.format(event.getStart_time());
-                event.setEvent_start_time(event_start_date);
-            }
-        }
         if (my_join_event_list.size() > 0) {
+
+            for (Event event : my_join_event_list) {
+
+                Date date = new Date();
+
+                String start_date = sdf.format(event.getStart_time());
+
+                String now_date = sdf.format(date);
+
+                if (!now_date.equals(start_date)) {
+                    String event_start_date = format_year.format(event.getStart_time());
+                    event.setEvent_start_time(event_start_date);
+
+                } else {
+                    String event_start_date = format_month.format(event.getStart_time());
+                    event.setEvent_start_time(event_start_date);
+                }
+            }
 
             for (int i = 0; i < my_join_event_list.size(); i++) {
                 if (my_join_event_list.get(i).getStart_time().getTime() > System.currentTimeMillis() && my_join_event_list.get(i).getEvent_status() == 1) {
@@ -445,6 +445,12 @@ public class EventService {
                     my_join_event_list.get(i).setEvent_status_name(DictionaryUtil.find("OVER", "event_enum", "zh"));
                 } else if (my_join_event_list.get(i).getEnd_time().getTime() <= System.currentTimeMillis() && my_join_event_list.get(i).getEvent_status() == 1) {
                     my_join_event_list.get(i).setEvent_status_name(DictionaryUtil.find("event_end", "event", "zh"));
+                }else if (0 == my_join_event_list.get(i).getEvent_status()){
+                    my_join_event_list.get(i).setEvent_status_name(DictionaryUtil.find("UNDER_REVIEW", "event_enum", "zh"));
+
+                }else if (2 == my_join_event_list.get(i).getEvent_status()){
+                    my_join_event_list.get(i).setEvent_status_name(DictionaryUtil.find("fail_review", "event_button", "zh"));
+
                 }
             }
             map.put("my_join_event_list", my_join_event_list);
@@ -454,6 +460,23 @@ public class EventService {
         }
         if (my_set_event_list.size() > 0) {
 
+            for (Event event : my_set_event_list) {
+
+                Date date = new Date();
+
+                String start_date = sdf.format(event.getStart_time());
+
+                String now_date = sdf.format(date);
+
+                if (!now_date.equals(start_date)) {
+                    String event_start_date = format_year.format(event.getStart_time());
+                    event.setEvent_start_time(event_start_date);
+
+                } else {
+                    String event_start_date = format_month.format(event.getStart_time());
+                    event.setEvent_start_time(event_start_date);
+                }
+            }
             for (int i = 0; i < my_set_event_list.size(); i++) {
                 if (my_set_event_list.get(i).getStart_time().getTime() > System.currentTimeMillis() && my_set_event_list.get(i).getEvent_status() == 1) {
 
@@ -464,6 +487,12 @@ public class EventService {
                     my_set_event_list.get(i).setEvent_status_name(DictionaryUtil.find("OVER", "event_enum", "zh"));
                 } else if (my_set_event_list.get(i).getEnd_time().getTime() <= System.currentTimeMillis() && my_set_event_list.get(i).getEvent_status() == 1) {
                     my_set_event_list.get(i).setEvent_status_name(DictionaryUtil.find("event_end", "event", "zh"));
+                }else if (0 == my_join_event_list.get(i).getEvent_status()){
+                    my_join_event_list.get(i).setEvent_status_name(DictionaryUtil.find("UNDER_REVIEW", "event_enum", "zh"));
+
+                }else if (2 == my_join_event_list.get(i).getEvent_status()){
+                    my_join_event_list.get(i).setEvent_status_name(DictionaryUtil.find("fail_review", "event_button", "zh"));
+
                 }
             }
 
