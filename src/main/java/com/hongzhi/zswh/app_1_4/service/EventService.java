@@ -439,7 +439,7 @@ public class EventService {
                 if (my_join_event_list.get(i).getStart_time().getTime() > System.currentTimeMillis() && my_join_event_list.get(i).getEvent_status() == 1) {
 
                     my_join_event_list.get(i).setEvent_status_name(my_join_event_list.get(i).getEvent_start_time() + DictionaryUtil.find("event_start", "event", "zh"));
-                } else if (my_join_event_list.get(i).getStart_time().getTime() <= System.currentTimeMillis() && my_set_event_list.get(i).getEnd_time().getTime() >= System.currentTimeMillis()&& my_join_event_list.get(i).getEvent_status() == 1) {
+                } else if (my_join_event_list.get(i).getStart_time().getTime() <= System.currentTimeMillis() && my_join_event_list.get(i).getEnd_time().getTime() >= System.currentTimeMillis()&& my_join_event_list.get(i).getEvent_status() == 1) {
                     my_join_event_list.get(i).setEvent_status_name(DictionaryUtil.find("event_ongoing", "event", "zh"));
                 } else if (3 == my_join_event_list.get(i).getEvent_status()) {
                     my_join_event_list.get(i).setEvent_status_name(DictionaryUtil.find("OVER", "event_enum", "zh"));
@@ -487,7 +487,7 @@ public class EventService {
                     my_set_event_list.get(i).setEvent_status_name(DictionaryUtil.find("OVER", "event_enum", "zh"));
                 } else if (my_set_event_list.get(i).getEnd_time().getTime() < System.currentTimeMillis() && my_set_event_list.get(i).getEvent_status() == 1) {
                     my_set_event_list.get(i).setEvent_status_name(DictionaryUtil.find("event_end", "event", "zh"));
-                }else if (0 == my_join_event_list.get(i).getEvent_status()){
+                }else if (0 == my_set_event_list.get(i).getEvent_status()){
                     my_set_event_list.get(i).setEvent_status_name(DictionaryUtil.find("UNDER_REVIEW", "event_enum", "zh"));
 
                 }else if (2 == my_set_event_list.get(i).getEvent_status()){
