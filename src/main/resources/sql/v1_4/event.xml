@@ -347,6 +347,7 @@
               a.my_status in (1,2)
           and
               b.club_id = #{club_id}
+          GROUP BY a.event_id
           ORDER BY b.register_start_time asc,b.start_time asc
 
     </select>
