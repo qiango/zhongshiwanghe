@@ -99,20 +99,57 @@ public class EventService {
             } else {
                 club_user_level = userLevel(property,0,0);
             }
+            SimpleDateFormat format_month = new SimpleDateFormat("MM月dd日");
+            SimpleDateFormat format_year = new SimpleDateFormat("yy年MM月dd日");
+            SimpleDateFormat sdf = new SimpleDateFormat("yy");
 
-            for (int i = 0; i<events.size(); i++){
-                if (events.get(i).getStart_time().getTime() > System.currentTimeMillis() && events.get(i).getEvent_status() == 1 ) {
-                    SimpleDateFormat df = new SimpleDateFormat("MM月dd日");
-                    events.get(i).setEvent_status_name(df.format(events.get(i).getStart_time())+DictionaryUtil.find("event_start","event","zh"));
-                }else if (events.get(i).getStart_time().getTime() <= System.currentTimeMillis() && events.get(i).getEvent_status() == 1){
-                    events.get(i).setEvent_status_name(DictionaryUtil.find("event_ongoing","event","zh"));
-                }else if (events.get(i).getEvent_status() == 3){
-                    events.get(i).setEvent_status_name(DictionaryUtil.find("OVER","event_enum","zh"));
-                }else if (events.get(i).getEnd_time().getTime() <= System.currentTimeMillis()&& events.get(i).getEvent_status() == 1){
-                    events.get(i).setEvent_status_name(DictionaryUtil.find("event_end","event","zh"));
+
+
+            for (Event event : events){
+
+                Date date = new Date();
+
+                String start_date = sdf.format(event.getStart_time());
+                String end_date = sdf.format(event.getEnd_time());
+                String now_date = sdf.format(date);
+
+                if (!now_date.equals(start_date)){
+                    String event_start_date = format_year.format(event.getStart_time());
+                    event.setEvent_start_time(event_start_date);
+
+                }else {
+                    String event_start_date = format_month.format(event.getStart_time());
+                    event.setEvent_start_time(event_start_date);
                 }
-            }
+                if (!now_date.equals(end_date)){
 
+                    String event_end_date = format_year.format(event.getEnd_time());
+                    event.setEvent_end_time(event_end_date);
+
+                }else {
+                    String event_end_date = format_month.format(event.getEnd_time());
+                    event.setEvent_end_time(event_end_date);
+                }
+
+
+                for (int i = 0; i<events.size(); i++){
+
+                    if (events.get(i).getStart_time().getTime() > System.currentTimeMillis() && events.get(i).getEvent_status() == 1 ) {
+
+                        events.get(i).setEvent_status_name(events.get(i).getEvent_start_time()+DictionaryUtil.find("event_start","event","zh"));
+                    }else if (events.get(i).getStart_time().getTime() <= System.currentTimeMillis() && events.get(i).getEvent_status() == 1){
+
+                        events.get(i).setEvent_status_name(DictionaryUtil.find("event_ongoing","event","zh"));
+                    }else if (3 == events.get(i).getEvent_status()){
+
+                        events.get(i).setEvent_status_name(DictionaryUtil.find("OVER","event_enum","zh"));
+                    }else if (events.get(i).getEnd_time().getTime() <= System.currentTimeMillis()&& events.get(i).getEvent_status() == 1){
+
+                        events.get(i).setEvent_status_name(DictionaryUtil.find("event_end","event","zh"));
+                    }
+                }
+
+            }
 
             map.put("club_user_level", club_user_level );
             map.put("organizer_level_name", UserLevel.findDictionary(organizer_level,property.getLanguage()));
@@ -321,13 +358,36 @@ public class EventService {
 
         map.put("event_counts",club_events_counts);
 
-        for (int i = 0; i < events_list.size(); i++) {
+
+        SimpleDateFormat format_month = new SimpleDateFormat("MM月dd日");
+        SimpleDateFormat format_year = new SimpleDateFormat("yy年MM月dd日");
+        SimpleDateFormat sdf = new SimpleDateFormat("yy");
+
+
+
+        for (Event event : events_list) {
+
+            Date date = new Date();
+
+            String start_date = sdf.format(event.getStart_time());
+
+            String now_date = sdf.format(date);
+
+            if (!now_date.equals(start_date)) {
+                String event_start_date = format_year.format(event.getStart_time());
+                event.setEvent_start_time(event_start_date);
+
+            } else {
+                String event_start_date = format_month.format(event.getStart_time());
+                event.setEvent_start_time(event_start_date);
+            }
+        }
+            for (int i = 0; i < events_list.size(); i++) {
             if (events_list.get(i).getStart_time().getTime() > System.currentTimeMillis() && events_list.get(i).getEvent_status() == 1) {
-                SimpleDateFormat df = new SimpleDateFormat("MM月dd日");
-                events_list.get(i).setEvent_status_name(df.format(events_list.get(i).getStart_time()) + DictionaryUtil.find("event_start", "event", "zh"));
+                events_list.get(i).setEvent_status_name(events_list.get(i).getEvent_start_time() + DictionaryUtil.find("event_start", "event", "zh"));
             } else if (events_list.get(i).getStart_time().getTime() <= System.currentTimeMillis() && events_list.get(i).getEvent_status() == 1) {
                 events_list.get(i).setEvent_status_name(DictionaryUtil.find("event_ongoing", "event", "zh"));
-            } else if (events_list.get(i).getEvent_status() == 3) {
+            } else if (3 == events_list.get(i).getEvent_status()) {
                 events_list.get(i).setEvent_status_name(DictionaryUtil.find("OVER", "event_enum", "zh"));
             } else if (events_list.get(i).getEnd_time().getTime() <= System.currentTimeMillis() && events_list.get(i).getEvent_status() == 1) {
                 events_list.get(i).setEvent_status_name(DictionaryUtil.find("event_end", "event", "zh"));
@@ -357,15 +417,38 @@ public class EventService {
 
         Map<String, Object> map = new HashMap<>();
 
+        SimpleDateFormat format_month = new SimpleDateFormat("MM月dd日");
+        SimpleDateFormat format_year = new SimpleDateFormat("yy年MM月dd日");
+        SimpleDateFormat sdf = new SimpleDateFormat("yy");
+
+
+
+        for (Event event : my_join_event_list) {
+
+            Date date = new Date();
+
+            String start_date = sdf.format(event.getStart_time());
+
+            String now_date = sdf.format(date);
+
+            if (!now_date.equals(start_date)) {
+                String event_start_date = format_year.format(event.getStart_time());
+                event.setEvent_start_time(event_start_date);
+
+            } else {
+                String event_start_date = format_month.format(event.getStart_time());
+                event.setEvent_start_time(event_start_date);
+            }
+        }
         if (my_join_event_list.size() > 0) {
 
             for (int i = 0; i < my_join_event_list.size(); i++) {
                 if (my_join_event_list.get(i).getStart_time().getTime() > System.currentTimeMillis() && my_join_event_list.get(i).getEvent_status() == 1) {
-                    SimpleDateFormat df = new SimpleDateFormat("MM月dd日");
-                    my_join_event_list.get(i).setEvent_status_name(df.format(my_join_event_list.get(i).getStart_time()) + DictionaryUtil.find("event_start", "event", "zh"));
+
+                    my_join_event_list.get(i).setEvent_status_name(my_join_event_list.get(i).getEvent_start_time() + DictionaryUtil.find("event_start", "event", "zh"));
                 } else if (my_join_event_list.get(i).getStart_time().getTime() <= System.currentTimeMillis() && my_join_event_list.get(i).getEvent_status() == 1) {
                     my_join_event_list.get(i).setEvent_status_name(DictionaryUtil.find("event_ongoing", "event", "zh"));
-                } else if (my_join_event_list.get(i).getEvent_status() == 3) {
+                } else if ( 3 == my_join_event_list.get(i).getEvent_status()) {
                     my_join_event_list.get(i).setEvent_status_name(DictionaryUtil.find("OVER", "event_enum", "zh"));
                 } else if (my_join_event_list.get(i).getEnd_time().getTime() <= System.currentTimeMillis() && my_join_event_list.get(i).getEvent_status() == 1) {
                     my_join_event_list.get(i).setEvent_status_name(DictionaryUtil.find("event_end", "event", "zh"));
@@ -380,8 +463,8 @@ public class EventService {
 
             for (int i = 0; i < my_set_event_list.size(); i++) {
                 if (my_set_event_list.get(i).getStart_time().getTime() > System.currentTimeMillis() && my_set_event_list.get(i).getEvent_status() == 1) {
-                    SimpleDateFormat df = new SimpleDateFormat("MM月dd日");
-                    my_set_event_list.get(i).setEvent_status_name(df.format(my_set_event_list.get(i).getStart_time()) + DictionaryUtil.find("event_start", "event", "zh"));
+
+                    my_set_event_list.get(i).setEvent_status_name(my_set_event_list.get(i).getEvent_start_time() + DictionaryUtil.find("event_start", "event", "zh"));
                 } else if (my_set_event_list.get(i).getStart_time().getTime() <= System.currentTimeMillis() && my_set_event_list.get(i).getEvent_status() == 1) {
                     my_set_event_list.get(i).setEvent_status_name(DictionaryUtil.find("event_ongoing", "event", "zh"));
                 } else if (my_set_event_list.get(i).getEvent_status() == 3) {
