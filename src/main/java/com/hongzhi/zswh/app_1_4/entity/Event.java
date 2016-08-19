@@ -1,10 +1,6 @@
 package com.hongzhi.zswh.app_1_4.entity;
 
-import com.google.gson.Gson;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonParser;
 import com.hongzhi.zswh.util.basic.DictionaryUtil;
-import com.hongzhi.zswh.util.basic.dictionaryDao.Dictionary;
 
 import java.sql.Timestamp;
 import java.util.ArrayList;
@@ -21,7 +17,9 @@ public class Event {
     private String event_name ;
     private Integer club_id ;
     private Timestamp start_time ;
+    private String event_start_time;
     private Timestamp end_time ;
+    private String event_end_time;
     private Timestamp register_start_time ;
     private Timestamp register_end_time ;
     private Integer organizer_id ;
@@ -44,6 +42,21 @@ public class Event {
     private List<EventJoinMember> members = new ArrayList<>();
     private EventJoinMember organizer = new EventJoinMember();
 
+    public String getEvent_start_time() {
+        return event_start_time;
+    }
+
+    public void setEvent_start_time(String event_start_time) {
+        this.event_start_time = event_start_time;
+    }
+
+    public String getEvent_end_time() {
+        return event_end_time;
+    }
+
+    public void setEvent_end_time(String event_end_time) {
+        this.event_end_time = event_end_time;
+    }
 
     public Integer getEvent_id() {
         return event_id;
