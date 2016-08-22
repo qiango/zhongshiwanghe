@@ -10,7 +10,7 @@
               then 'true'
               else 'false'
               end as is_registered
-        ,e.registered_count as registered_count
+        ,coalesce(e.registered_count,0) as registered_count
         ,coalesce(a.event_detail,'') as event_detail
         ,coalesce(c.nickname,concat(substr(c.phone,1,3),'****',substr(c.phone,8)) ) as organizer_name
         ,coalesce(concat(substr(c.phone,1,3),'****',substr(c.phone,8)),'') as phone
