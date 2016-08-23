@@ -119,6 +119,7 @@
         left join club  b
         on a.club_id = b.club_id
         where join_club_status = '99'
+        and b.is_delete = 0
         group by
         a.club_id
         ,b.club_pic

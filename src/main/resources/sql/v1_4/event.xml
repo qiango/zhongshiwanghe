@@ -50,6 +50,7 @@
          ,form_item
          ,event_detail
          ,event_notice
+         ,group_id
     ) values (
           #{event_name}
          ,#{club_id}
@@ -68,6 +69,7 @@
          ,#{form_item}
          ,#{event_detail}
          ,#{event_notice}
+         ,#{group_id}
     )
 
     </insert>
@@ -107,6 +109,7 @@
             ,a.view_guests
             ,event_detail as event_detail_data
             ,event_notice
+            ,a.group_id
         from
             event a
      <where>

@@ -35,6 +35,7 @@ public class Event {
     private String view_guests_code;
     private String button_show_code="";
     private String button_show_content="";
+    private String group_id;
 
     private EventCreateRichText[] event_detail = {} ;
     private String event_notice="";
@@ -308,4 +309,11 @@ public class Event {
         this.event_detail= event_detail;
     }
 
+    public String getGroup_id() {
+        return group_id;
+    }
+
+    public void setGroup_id(String group_id) {
+        this.group_id = group_id;
+    }
 }
