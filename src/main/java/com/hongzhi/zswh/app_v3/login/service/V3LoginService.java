@@ -1,30 +1,29 @@
 package com.hongzhi.zswh.app_v3.login.service;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import javax.servlet.http.HttpSession;
-
-import com.hongzhi.zswh.app_1_3.entity.MiPushRegid;
-import com.hongzhi.zswh.app_1_3.service.MiPushService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
 import com.hongzhi.zswh.app.me.dao.AppSportsCampDao;
 import com.hongzhi.zswh.app.me.dao.AppUserDetailDao;
 import com.hongzhi.zswh.app.me.dao.AppUserInfoDao;
 import com.hongzhi.zswh.app.me.entity.SportsCamp;
 import com.hongzhi.zswh.app.me.entity.UserDetail;
 import com.hongzhi.zswh.app.me.entity.UserInfo;
+import com.hongzhi.zswh.app_1_3.entity.MiPushRegid;
+import com.hongzhi.zswh.app_1_3.service.MiPushService;
 import com.hongzhi.zswh.app_v3.login.dao.V3LoginDao;
 import com.hongzhi.zswh.app_v3.login.entity.LoginParam;
+import com.hongzhi.zswh.easemob.service.RestService;
 import com.hongzhi.zswh.util.basic.DictionaryUtil;
 import com.hongzhi.zswh.util.basic.ObjectUtil;
 import com.hongzhi.zswh.util.basic.SessionUtil;
 import com.hongzhi.zswh.util.encryption.SHA256;
 import com.hongzhi.zswh.util.exception.HongZhiException;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import javax.servlet.http.HttpSession;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**   Twitter : @taylorwang789 
  * Creat time : Apr 26, 2016    2:01:29 PM
@@ -48,6 +47,9 @@ public class V3LoginService {
 
     @Autowired
     private MiPushService miPushService;
+
+	@Autowired
+	private RestService restService;
 
 	/**   Twitter : @taylorwang789 
 	 * Creat time : Apr 26, 2016    2:30:00 PM
@@ -107,6 +109,13 @@ public class V3LoginService {
             }
 
 			Map<String, Object> aa = new HashMap<>();
+			//环信名和密码
+			Map<String, String> rest_map = dao.selectRestUserInfo(userInfo.get("user_id").toString(),userInfo.get("phone").toString());
+
+			out.put("rest_user_name ",rest_map.get("rest_user_name"));
+			out.put("rest_user_password",rest_map.get("rest_user_password"));
+
+
 			aa.put("user_info", out);
 
             // mi push
@@ -187,6 +196,9 @@ public class V3LoginService {
                             miPushRegid.setRegid(loginParam.getRegid());
                             miPushService.saveRegidOnLogIn(miPushRegid);
                         }
+
+						//注册环信
+						restService.restRegister(user_input.getUser_id().toString(),loginParam.VPhone());
 
 						return  ObjectUtil.jsonOut(out);
 					} else {

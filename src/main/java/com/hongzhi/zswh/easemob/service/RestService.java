@@ -5,6 +5,7 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.hongzhi.zswh.easemob.client.EASEMOB;
 import com.hongzhi.zswh.easemob.dao.RestServiceDao;
+import com.hongzhi.zswh.easemob.entity.RestUser;
 import com.hongzhi.zswh.util.basic.ObjectUtil;
 import com.sun.jersey.api.client.Client;
 import com.sun.jersey.api.client.ClientResponse;
@@ -33,25 +34,34 @@ public class RestService {
      * @return
      * @param user_id
      */
-    public Object restRegister(String user_id) {
+    public void restRegister(String user_id,String user_login_name) {
+
+        String rest_user_name = getRestUserName(6);
+
+        Map<String, String> param_map = new HashMap<>();
+
+        param_map.put("username",rest_user_name);
+        param_map.put("password", "000000");
+
+        restServiceDao.saveRestUser(user_id,rest_user_name,user_login_name);
 
         ClientResponse response = null;
         try {
             Client client = Client.create();
 
             WebResource webResource = client.resource(EASEMOB.URL + "/" + EASEMOB.ORG_NAME + "/" + EASEMOB.APP_NAME + "/" + EASEMOB.USERS);
-            Map<String, String> param_map = new HashMap<>();
-            param_map.put("username", "15755352552");
-            param_map.put("password", "20160510");
 
-            response = webResource.accept("application/json").header(HttpHeaders.AUTHORIZATION, "Bearer " + "YWMttVPrkGTxEeaoO6HkDk8LjwAAAVfQoQohGardK6gIlFM3DoFiDB2-t2jxKEM").post(ClientResponse.class, ObjectUtil.toJson(param_map));
+            response = webResource.accept("application/json").header(HttpHeaders.AUTHORIZATION, "Bearer " + EASEMOB.ACCESS_TOKEN).post(ClientResponse.class, ObjectUtil.toJson(param_map));
 
-            if (response.getStatus() == 200) {
-                JsonElement jelement = new JsonParser().parse(response.getEntity(String.class));
-                JsonObject result = jelement.getAsJsonObject();
+ /*           if (response.getStatus() == 200) {
+                //JsonElement jelement = new JsonParser().parse(response.getEntity(String.class));
+               // JsonObject result = jelement.getAsJsonObject();
 
-                System.out.print(result.get("uri").getAsString());
-            }
+               // System.out.print(result.get("uri").getAsString());
+                return null;
+            }else {
+                return "false";
+            }*/
         } catch (Exception e) {
             e.getMessage();
         } finally {
@@ -61,7 +71,7 @@ public class RestService {
             }
         }
 
-        return null;
+      //  return null;
 
     }
 
@@ -74,28 +84,51 @@ public class RestService {
         List<Map<String,String>> user_map = restServiceDao.selectUserInfo();
 
         List<Map<String,String>> rest_users = new ArrayList<>();
-        String token = EASEMOB.ACCESS_TOKEN;
+
+        System.out.print( EASEMOB.ACCESS_TOKEN);
+
+        List<RestUser> rest_user_entity = new ArrayList<>();
+
         if (user_map.size() > 0){
             for (Map<String,String> map :user_map){
 
                 String rest_user_name = getRestUserName(6);
+
                 Map<String, String> param_map = new HashMap<>();
+
                 param_map.put("username",rest_user_name);
                 param_map.put("password", "000000");
                 rest_users.add(param_map);
 
-                restServiceDao.saveRestUser(map.get("user_id"),map.get("user_login_name"),rest_user_name);
+                RestUser user_entity = new RestUser();
+
+                user_entity.setUser_id(Integer.valueOf(map.get("user_id")));
+                user_entity.setRest_user_name(rest_user_name);
+                user_entity.setUser_login_name(map.get("user_login_name"));
+                rest_user_entity.add(user_entity);
+
             }
+
+            restServiceDao.saveRestUserInfo(rest_user_entity);
 
         }
 
          ClientResponse response = null;
+
         try {
             Client client = Client.create();
 
             WebResource webResource = client.resource(EASEMOB.URL + "/" + EASEMOB.ORG_NAME + "/" + EASEMOB.APP_NAME + "/" + EASEMOB.USERS);
 
-            response = webResource.accept("application/json").header(HttpHeaders.AUTHORIZATION, "Bearer " + EASEMOB.ACCESS_TOKEN).post(ClientResponse.class, ObjectUtil.toJson(rest_users));
+           // response = webResource.accept("application/json").header(HttpHeaders.AUTHORIZATION, "Bearer " + EASEMOB.ACCESS_TOKEN).post(ClientResponse.class, ObjectUtil.toJson(rest_users));
+
+            if (response.getStatus() == 200) {
+
+                return "success";
+            }else{
+                return "false";
+            }
+
 
         } catch (Exception e) {
             e.getMessage();
@@ -151,14 +184,16 @@ public class RestService {
         try {
             Client client = Client.create();
 
-            WebResource webResource = client.resource(EASEMOB.URL + "/" + EASEMOB.ORG_NAME + "/" + EASEMOB.APP_NAME + "/" + EASEMOB.USERS + "?limit=20");
+            WebResource webResource = client.resource(EASEMOB.URL + "/" + EASEMOB.ORG_NAME + "/" + EASEMOB.APP_NAME + "/" + EASEMOB.USERS + "?limit=600");
 
-            response = webResource.accept("application/json").header(HttpHeaders.AUTHORIZATION, "Bearer " + "YWMttVPrkGTxEeaoO6HkDk8LjwAAAVfQoQohGardK6gIlFM3DoFiDB2-t2jxKEM").get(ClientResponse.class);
+            response = webResource.accept("application/json").header(HttpHeaders.AUTHORIZATION, "Bearer " + EASEMOB.ACCESS_TOKEN).get(ClientResponse.class);
 
             if (response.getStatus() == 200) {
                 JsonElement jelement = new JsonParser().parse(response.getEntity(String.class));
                 JsonObject result = jelement.getAsJsonObject();
                 return result;
+            }else {
+                return "false";
             }
         } catch (Exception e) {
             e.getMessage();
@@ -174,23 +209,26 @@ public class RestService {
 
     /**
      * 获取 IM 用户[单个]
-     * @param user_name
+     * @param rest_user_name
      * @return
      */
-    public Object queryUser(String user_name) {
+    public Object queryUser(String rest_user_name) {
         ClientResponse response = null;
         try {
             Client client = Client.create();
 
-            WebResource webResource = client.resource(EASEMOB.URL + "/" + EASEMOB.ORG_NAME + "/" + EASEMOB.APP_NAME + "/" + EASEMOB.USERS + "/" + user_name);
+            WebResource webResource = client.resource(EASEMOB.URL + "/" + EASEMOB.ORG_NAME + "/" + EASEMOB.APP_NAME + "/" + EASEMOB.USERS + "/" + rest_user_name);
 
-            response = webResource.accept("application/json").header(HttpHeaders.AUTHORIZATION, "Bearer " + "YWMttVPrkGTxEeaoO6HkDk8LjwAAAVfQoQohGardK6gIlFM3DoFiDB2-t2jxKEM").get(ClientResponse.class);
+            response = webResource.accept("application/json").header(HttpHeaders.AUTHORIZATION, "Bearer " + EASEMOB.ACCESS_TOKEN).get(ClientResponse.class);
 
             if (response.getStatus() == 200) {
                 JsonElement jelement = new JsonParser().parse(response.getEntity(String.class));
                 JsonObject result = jelement.getAsJsonObject();
 
                 System.out.print(result.get("uri").getAsString());
+                return result;
+            }else{
+                return "false";
             }
         } catch (Exception e) {
             e.getMessage();
@@ -201,32 +239,32 @@ public class RestService {
             }
         }
 
-        return "success";
+        return null;
 
     }
 
     /**
      *删除 IM 用户[单个]
-     * @param user_name
+     * @param rest_user_name
      * @return
      */
-    public Object deleteUser(String user_name) {
+    public Object deleteUser(String rest_user_name) {
         ClientResponse response = null;
         try {
             Client client = Client.create();
 
-            WebResource webResource = client.resource(EASEMOB.URL + "/" + EASEMOB.ORG_NAME + "/" + EASEMOB.APP_NAME + "/" + EASEMOB.USERS + "/"+user_name );
+            WebResource webResource = client.resource(EASEMOB.URL + "/" + EASEMOB.ORG_NAME + "/" + EASEMOB.APP_NAME + "/" + EASEMOB.USERS + "/"+rest_user_name );
 
-            Map<String, String> param_map = new HashMap<>();
-            param_map.put("username", "15755352552");
-            param_map.put("password", "20160510");
-            response = webResource.accept("application/json").header(HttpHeaders.AUTHORIZATION, "Bearer " + "YWMttVPrkGTxEeaoO6HkDk8LjwAAAVfQoQohGardK6gIlFM3DoFiDB2-t2jxKEM").delete(ClientResponse.class,ObjectUtil.toJson(param_map));
+            response = webResource.accept("application/json").header(HttpHeaders.AUTHORIZATION, "Bearer " + EASEMOB.ACCESS_TOKEN).delete(ClientResponse.class);
 
             if (response.getStatus() == 200) {
-                JsonElement jelement = new JsonParser().parse(response.getEntity(String.class));
+               /* JsonElement jelement = new JsonParser().parse(response.getEntity(String.class));
                 JsonObject result = jelement.getAsJsonObject();
 
-                System.out.print(result.get("uri").getAsString());
+                System.out.print(result.get("uri").getAsString());*/
+                return null;
+            }else{
+                return "false";
             }
         } catch (Exception e) {
             e.getMessage();
@@ -237,10 +275,14 @@ public class RestService {
             }
         }
 
-        return "success";
+        return null;
 
     }
 
+    /**
+     * 删除 IM 用户[批量]
+     * @return
+     */
     public Object deleteUsers() {
         ClientResponse response = null;
         try {
@@ -248,13 +290,59 @@ public class RestService {
 
             WebResource webResource = client.resource(EASEMOB.URL + "/" + EASEMOB.ORG_NAME + "/" + EASEMOB.APP_NAME + "/" + EASEMOB.USERS +"?limit=20" );
 
-            response = webResource.accept("application/json").header(HttpHeaders.AUTHORIZATION, "Bearer " + "YWMttVPrkGTxEeaoO6HkDk8LjwAAAVfQoQohGardK6gIlFM3DoFiDB2-t2jxKEM").delete(ClientResponse.class);
+            response = webResource.accept("application/json").header(HttpHeaders.AUTHORIZATION, "Bearer " + EASEMOB.ACCESS_TOKEN).delete(ClientResponse.class);
 
             if (response.getStatus() == 200) {
                 JsonElement jelement = new JsonParser().parse(response.getEntity(String.class));
                 JsonObject result = jelement.getAsJsonObject();
 
-                System.out.print(result.get("uri").getAsString());
+                return null;
+            }else{
+                return "false";
+            }
+        } catch (Exception e) {
+            e.getMessage();
+
+        } finally {
+
+            if (response != null) {
+                response.close();
+            }
+        }
+
+        return null;
+
+    }
+
+    /**
+     * 查看用户在线状态
+     * @param rest_user_name
+     * @return
+     */
+    public Object queryUserStatus(String rest_user_name) {
+
+        ClientResponse response = null;
+        Map<String, Object> map = new HashMap<>();
+        try {
+            Client client = Client.create();
+
+            WebResource webResource = client.resource(EASEMOB.URL + "/" + EASEMOB.ORG_NAME + "/" + EASEMOB.APP_NAME + "/" + EASEMOB.USERS + "/" + rest_user_name + "/" + EASEMOB.STATUS);
+
+            response = webResource.accept("application/json").header(HttpHeaders.AUTHORIZATION, "Bearer " +  EASEMOB.ACCESS_TOKEN).get(ClientResponse.class);
+
+
+
+            if (response.getStatus() == 200) {
+                JsonElement jelement = new JsonParser().parse(response.getEntity(String.class));
+                JsonObject result = jelement.getAsJsonObject();
+
+                System.out.print(result.get("data").toString());
+
+                if(result.get("data").toString().contains("online")){
+                    map.put("status","online");
+                }else{
+                    map.put("status","offline");
+                }
             }
         } catch (Exception e) {
             e.getMessage();
@@ -265,6 +353,127 @@ public class RestService {
             }
         }
 
+        return map;
+    }
+
+    /**
+     * 重置 IM 用户密码
+     * @param rest_user_name
+     * @param new_password
+     * @return
+     */
+    public Object updateUserPassword(String rest_user_name, String new_password) {
+
+        ClientResponse response = null;
+        Map<String, Object> map = new HashMap<>();
+        try {
+            Client client = Client.create();
+
+            Map<String, String> param_map = new HashMap<>();
+
+            param_map.put("newpassword",new_password);
+
+            WebResource webResource = client.resource(EASEMOB.URL + "/" + EASEMOB.ORG_NAME + "/" + EASEMOB.APP_NAME + "/" + EASEMOB.USERS + "/" + rest_user_name + "/" + EASEMOB.PASSWORD);
+
+            response = webResource.accept("application/json").header(HttpHeaders.AUTHORIZATION, "Bearer " +  EASEMOB.ACCESS_TOKEN).put(ClientResponse.class,ObjectUtil.toJson(param_map));
+
+            if (response.getStatus() == 200) {
+                return null;
+            }else{
+                return "false";
+            }
+        } catch (Exception e) {
+            e.getMessage();
+        } finally {
+
+            if (response != null) {
+                response.close();
+            }
+        }
+
+        return null;
+
+    }
+
+
+    /**
+     * 修改用户昵称
+     * @param rest_user_name
+     * @param new_nickname
+     * @return
+     */
+    public Object updateUserName(String rest_user_name, String new_nickname) {
+
+        ClientResponse response = null;
+        Map<String, Object> map = new HashMap<>();
+        try {
+            Client client = Client.create();
+
+            Map<String,String> param_map = new HashMap<>();
+
+            param_map.put("nickname",new_nickname);
+
+            WebResource webResource = client.resource(EASEMOB.URL + "/" + EASEMOB.ORG_NAME + "/" + EASEMOB.APP_NAME + "/" + EASEMOB.USERS + "/" + rest_user_name);
+
+            response = webResource.accept("application/json").header(HttpHeaders.AUTHORIZATION, "Bearer " +  EASEMOB.ACCESS_TOKEN).put(ClientResponse.class,ObjectUtil.toJson(param_map));
+
+            if (response.getStatus() == 200) {
+                return null;
+            }else{
+                return "false";
+            }
+        } catch (Exception e) {
+            e.getMessage();
+        } finally {
+
+            if (response != null) {
+                response.close();
+            }
+        }
+
+        return null;
+
+    }
+
+    /**
+     * 强制用户下线
+     * @param rest_user_name
+     * @return
+     */
+    public Object disconnect(String rest_user_name) {
+
+        ClientResponse response = null;
+        try {
+            Client client = Client.create();
+            WebResource webResource = client.resource(EASEMOB.URL + "/" + EASEMOB.ORG_NAME + "/" + EASEMOB.APP_NAME + "/" + EASEMOB.USERS + "/" + rest_user_name + "/" + "disconnect");
+            response = webResource.accept("application/json").header(HttpHeaders.AUTHORIZATION, "Bearer " +  EASEMOB.ACCESS_TOKEN).get(ClientResponse.class);
+
+            if (response.getStatus() == 200) {
+                JsonElement jelement = new JsonParser().parse(response.getEntity(String.class));
+                JsonObject result = jelement.getAsJsonObject();
+
+                System.out.print(result.get("data").toString());
+
+                if(result.get("data").toString().contains("true")){ // true表示强制下线成功，false表示强制用户下线失败
+                    return null;
+                }else{
+                    return "false";
+                }
+
+            } else if (404 == response.getStatus()) {
+                //此用户不存在
+            } else if (401 == response.getStatus()) {
+                //未授权[无token、token错误、token过期]
+            }
+
+        } catch (Exception e) {
+            e.getMessage();
+        } finally {
+
+            if (response != null) {
+                response.close();
+            }
+        }
         return null;
 
     }

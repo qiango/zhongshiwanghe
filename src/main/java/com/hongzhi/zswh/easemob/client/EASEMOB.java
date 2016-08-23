@@ -16,6 +16,10 @@ public class EASEMOB {
 
     public static String USERS = "users";
 
+    public static String STATUS = "status";
+
+    public static String PASSWORD = "password";
+
     public static String ACCESS_TOKEN="";
     public static long   EXPIRES_IN = 0 ;
     public static String APPLICATION ="";
