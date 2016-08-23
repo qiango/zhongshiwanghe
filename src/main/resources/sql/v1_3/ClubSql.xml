@@ -627,6 +627,6 @@
         and
             a.user_id = #{user_id}
         and
-            a.join_club_status = 99
+            a.join_club_status in (99,1)
     </select>
 </mapper>
