@@ -9,6 +9,39 @@
 			user_info a
 		where
 			a.is_delete = 0
-
+		/*LIMIT 500,50*/
 	</select>
+
+	<insert id="saveRestUser">
+		INSERT INTO rest_user_info(
+			user_id
+			,user_login_name
+			,rest_user_name
+			,rest_user_password
+	) VALUE(
+		#{user_id}
+		,#{user_login_name}
+		,#{rest_user_name}
+		,'000000'
+		)
+
+	</insert>
+
+	<insert id="saveRestUserInfo" parameterType="com.hongzhi.zswh.easemob.entity.RestUser">
+	INSERT INTO rest_user_info(
+		user_id
+		,user_login_name
+		,rest_user_name
+		,rest_user_password
+	) VALUE
+	<foreach collection ="rest" item="item" index= "index" separator=",">
+		(
+		#{item.user_id}
+		,#{item.user_login_name}
+		,#{item.rest_user_name}
+		,'000000'
+		)
+	</foreach>
+
+	</insert>
 </mapper>

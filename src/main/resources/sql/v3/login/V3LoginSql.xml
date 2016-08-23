@@ -39,5 +39,18 @@
           and b.user_id = #{userID}
           and b.is_delete = 0
     </select>
+<select id="selectRestUserInfo" resultType="map">
+    SELECT
+        coalesce(a.rest_user_name,'') as rest_user_name
+        ,coalesce(a.rest_user_password,'') as rest_user_password
+    from
+        rest_user_info a
+    where
+        a.user_id = #{user_id}
+    and
+        a.user_login_name = #{phone}
+    and
+        a.is_delete = 0
 
+</select>
 </mapper>
