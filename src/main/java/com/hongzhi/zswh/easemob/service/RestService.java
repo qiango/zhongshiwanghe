@@ -51,7 +51,7 @@ public class RestService {
 
             WebResource webResource = client.resource(EASEMOB.URL + "/" + EASEMOB.ORG_NAME + "/" + EASEMOB.APP_NAME + "/" + EASEMOB.USERS);
 
-            response = webResource.accept("application/json").header(HttpHeaders.AUTHORIZATION, "Bearer " + EASEMOB.ACCESS_TOKEN).post(ClientResponse.class, ObjectUtil.toJson(param_map));
+            response = webResource.accept("application/json").header(HttpHeaders.AUTHORIZATION, "Bearer " + EASEMOB.TOKEN()).post(ClientResponse.class, ObjectUtil.toJson(param_map));
 
  /*           if (response.getStatus() == 200) {
                 //JsonElement jelement = new JsonParser().parse(response.getEntity(String.class));
@@ -120,7 +120,7 @@ public class RestService {
 
             WebResource webResource = client.resource(EASEMOB.URL + "/" + EASEMOB.ORG_NAME + "/" + EASEMOB.APP_NAME + "/" + EASEMOB.USERS);
 
-           // response = webResource.accept("application/json").header(HttpHeaders.AUTHORIZATION, "Bearer " + EASEMOB.ACCESS_TOKEN).post(ClientResponse.class, ObjectUtil.toJson(rest_users));
+           // response = webResource.accept("application/json").header(HttpHeaders.AUTHORIZATION, "Bearer " + EASEMOB.TOKEN()).post(ClientResponse.class, ObjectUtil.toJson(rest_users));
 
             if (response.getStatus() == 200) {
 
@@ -186,7 +186,7 @@ public class RestService {
 
             WebResource webResource = client.resource(EASEMOB.URL + "/" + EASEMOB.ORG_NAME + "/" + EASEMOB.APP_NAME + "/" + EASEMOB.USERS + "?limit=600");
 
-            response = webResource.accept("application/json").header(HttpHeaders.AUTHORIZATION, "Bearer " + EASEMOB.ACCESS_TOKEN).get(ClientResponse.class);
+            response = webResource.accept("application/json").header(HttpHeaders.AUTHORIZATION, "Bearer " + EASEMOB.TOKEN()).get(ClientResponse.class);
 
             if (response.getStatus() == 200) {
                 JsonElement jelement = new JsonParser().parse(response.getEntity(String.class));
@@ -219,7 +219,7 @@ public class RestService {
 
             WebResource webResource = client.resource(EASEMOB.URL + "/" + EASEMOB.ORG_NAME + "/" + EASEMOB.APP_NAME + "/" + EASEMOB.USERS + "/" + rest_user_name);
 
-            response = webResource.accept("application/json").header(HttpHeaders.AUTHORIZATION, "Bearer " + EASEMOB.ACCESS_TOKEN).get(ClientResponse.class);
+            response = webResource.accept("application/json").header(HttpHeaders.AUTHORIZATION, "Bearer " + EASEMOB.TOKEN()).get(ClientResponse.class);
 
             if (response.getStatus() == 200) {
                 JsonElement jelement = new JsonParser().parse(response.getEntity(String.class));
@@ -255,7 +255,7 @@ public class RestService {
 
             WebResource webResource = client.resource(EASEMOB.URL + "/" + EASEMOB.ORG_NAME + "/" + EASEMOB.APP_NAME + "/" + EASEMOB.USERS + "/"+rest_user_name );
 
-            response = webResource.accept("application/json").header(HttpHeaders.AUTHORIZATION, "Bearer " + EASEMOB.ACCESS_TOKEN).delete(ClientResponse.class);
+            response = webResource.accept("application/json").header(HttpHeaders.AUTHORIZATION, "Bearer " + EASEMOB.TOKEN()).delete(ClientResponse.class);
 
             if (response.getStatus() == 200) {
                /* JsonElement jelement = new JsonParser().parse(response.getEntity(String.class));
@@ -290,7 +290,7 @@ public class RestService {
 
             WebResource webResource = client.resource(EASEMOB.URL + "/" + EASEMOB.ORG_NAME + "/" + EASEMOB.APP_NAME + "/" + EASEMOB.USERS +"?limit=20" );
 
-            response = webResource.accept("application/json").header(HttpHeaders.AUTHORIZATION, "Bearer " + EASEMOB.ACCESS_TOKEN).delete(ClientResponse.class);
+            response = webResource.accept("application/json").header(HttpHeaders.AUTHORIZATION, "Bearer " + EASEMOB.TOKEN()).delete(ClientResponse.class);
 
             if (response.getStatus() == 200) {
                 JsonElement jelement = new JsonParser().parse(response.getEntity(String.class));
@@ -328,7 +328,7 @@ public class RestService {
 
             WebResource webResource = client.resource(EASEMOB.URL + "/" + EASEMOB.ORG_NAME + "/" + EASEMOB.APP_NAME + "/" + EASEMOB.USERS + "/" + rest_user_name + "/" + EASEMOB.STATUS);
 
-            response = webResource.accept("application/json").header(HttpHeaders.AUTHORIZATION, "Bearer " +  EASEMOB.ACCESS_TOKEN).get(ClientResponse.class);
+            response = webResource.accept("application/json").header(HttpHeaders.AUTHORIZATION, "Bearer " +  EASEMOB.TOKEN()).get(ClientResponse.class);
 
 
 
@@ -375,7 +375,7 @@ public class RestService {
 
             WebResource webResource = client.resource(EASEMOB.URL + "/" + EASEMOB.ORG_NAME + "/" + EASEMOB.APP_NAME + "/" + EASEMOB.USERS + "/" + rest_user_name + "/" + EASEMOB.PASSWORD);
 
-            response = webResource.accept("application/json").header(HttpHeaders.AUTHORIZATION, "Bearer " +  EASEMOB.ACCESS_TOKEN).put(ClientResponse.class,ObjectUtil.toJson(param_map));
+            response = webResource.accept("application/json").header(HttpHeaders.AUTHORIZATION, "Bearer " +  EASEMOB.TOKEN()).put(ClientResponse.class,ObjectUtil.toJson(param_map));
 
             if (response.getStatus() == 200) {
                 return null;
@@ -415,7 +415,7 @@ public class RestService {
 
             WebResource webResource = client.resource(EASEMOB.URL + "/" + EASEMOB.ORG_NAME + "/" + EASEMOB.APP_NAME + "/" + EASEMOB.USERS + "/" + rest_user_name);
 
-            response = webResource.accept("application/json").header(HttpHeaders.AUTHORIZATION, "Bearer " +  EASEMOB.ACCESS_TOKEN).put(ClientResponse.class,ObjectUtil.toJson(param_map));
+            response = webResource.accept("application/json").header(HttpHeaders.AUTHORIZATION, "Bearer " +  EASEMOB.TOKEN()).put(ClientResponse.class,ObjectUtil.toJson(param_map));
 
             if (response.getStatus() == 200) {
                 return null;
@@ -446,7 +446,7 @@ public class RestService {
         try {
             Client client = Client.create();
             WebResource webResource = client.resource(EASEMOB.URL + "/" + EASEMOB.ORG_NAME + "/" + EASEMOB.APP_NAME + "/" + EASEMOB.USERS + "/" + rest_user_name + "/" + "disconnect");
-            response = webResource.accept("application/json").header(HttpHeaders.AUTHORIZATION, "Bearer " +  EASEMOB.ACCESS_TOKEN).get(ClientResponse.class);
+            response = webResource.accept("application/json").header(HttpHeaders.AUTHORIZATION, "Bearer " +  EASEMOB.TOKEN()).get(ClientResponse.class);
 
             if (response.getStatus() == 200) {
                 JsonElement jelement = new JsonParser().parse(response.getEntity(String.class));

@@ -112,7 +112,7 @@ public class V3LoginService {
 			//环信名和密码
 			Map<String, String> rest_map = dao.selectRestUserInfo(userInfo.get("user_id").toString(),userInfo.get("phone").toString());
 
-			out.put("rest_user_name ",rest_map.get("rest_user_name"));
+			out.put("rest_user_name",rest_map.get("rest_user_name"));
 			out.put("rest_user_password",rest_map.get("rest_user_password"));
 
 
