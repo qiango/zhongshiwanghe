@@ -31,10 +31,13 @@ public class V6AdService {
             ad_id_list.add(ad_list.get(i).getAd_id());
 //            ad_location_list.add(ad_list.get(i).getAd_location());
         }
-        List<AdvertisementImageEntity> image_list = v6AdDao.imageListByAdIdList(ad_id_list);
-        for(int i=0;i<image_list.size();i++){
-            ad_list.get( ad_id_list.indexOf( image_list.get(i).getAd_id() ) ).getImage_list().add(image_list.get(i));
+        if (ad_id_list.size()>0){
+            List<AdvertisementImageEntity> image_list = v6AdDao.imageListByAdIdList(ad_id_list);
+            for(int i=0;i<image_list.size();i++){
+                ad_list.get( ad_id_list.indexOf( image_list.get(i).getAd_id() ) ).getImage_list().add(image_list.get(i));
+            }
         }
+
 
         return ad_list;
     }
