@@ -26,7 +26,7 @@
     on a.organizer_id = c.user_id
     left join user_detail d
            on c.user_id = d.user_id
-    LEFT JOIN (SELECT event_id,COUNT(user_id) as registered_count from event_registration where event_id = #{eventID} GROUP BY event_id ) e
+    LEFT JOIN (SELECT event_id,COUNT(user_id) as registered_count from event_registration where event_id = #{eventID}  and my_status = 1 GROUP BY event_id ) e
    on a.event_id = e.event_id
     where a.event_id = #{eventID}
     </select>
