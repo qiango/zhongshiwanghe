@@ -58,6 +58,21 @@
     </foreach>
     </insert>
 
+    <insert id="EventUserProfile">
+        insert into event_user_profile (
+        event_id
+        ,user_id
+        ,item_code
+        ) values
+        <foreach collection="items" item="item" separator="," >
+            (
+            #{event_id}
+            #{user_id}
+            ,#{item}
+            )
+        </foreach>
+    </insert>
+
     <select id="selectClubAmin" resultType="Integer">
         select
         a.user_id

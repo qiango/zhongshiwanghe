@@ -76,4 +76,6 @@ public interface EventDao {
     void updateEventUserProfile(@Param("event_id") Integer event_id, @Param("user_id") String user_id);
 
     List<Integer> queryClubMember(@Param("user_id") String user_id, @Param("club_id") Integer club_id);
+
+    void EventUserProfile(@Param("user_id") String user_id, @Param("event_id") Integer event_id, @Param("items") List<String> items);
 }
