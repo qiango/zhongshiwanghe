@@ -87,9 +87,15 @@ public class EventService {
                 }
 
                 List<Integer> joinEventUserIDs = new ArrayList<>();
-                for (int i = 0; i < events.get(0).getMembers().size(); i++) {
-                    joinEventUserIDs.add(events.get(0).getMembers().get(i).getUser_id());
+                List<EventJoinMember> getMembers = eventDao.queryEventMembers(event_id);
+
+                for (int i = 0; i < getMembers.size(); i++) {
+                    joinEventUserIDs.add(getMembers.get(i).getUser_id());
                 }
+
+            /*    for (int i = 0; i < events.get(0).getMembers().size(); i++) {
+                    joinEventUserIDs.add(events.get(0).getMembers().get(i).getUser_id());
+                }*/
                 if (joinEventUserIDs.contains(Integer.valueOf(property.getUser_id()))) {
 
                     user_join_event = true;
