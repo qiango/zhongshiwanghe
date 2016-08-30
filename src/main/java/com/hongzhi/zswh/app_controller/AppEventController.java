@@ -3,6 +3,7 @@ package com.hongzhi.zswh.app_controller;
 import com.hongzhi.zswh.app_1_4.entity.EventCreate;
 import com.hongzhi.zswh.app_1_4.entity.EventEntity;
 import com.hongzhi.zswh.app_1_4.service.EventService;
+import com.hongzhi.zswh.app_1_5.entity.EventGroup;
 import com.hongzhi.zswh.util.basic.DictionaryUtil;
 import com.hongzhi.zswh.util.basic.ObjectUtil;
 import com.hongzhi.zswh.util.basic.SessionUtil;
@@ -28,6 +29,8 @@ public class AppEventController {
     private DictionaryUtil dic;
     @Autowired
     private EventService eventService;
+    @Autowired
+    private com.hongzhi.zswh.app_1_5.service.EventService v1_5_eventService;
 
     // event list
     @ResponseBody
@@ -79,6 +82,10 @@ public class AppEventController {
                     property = sess.sessionEffective(session,session_id,"/v1.4/event/create");
                     language=property.getLanguage();
                     return ObjectUtil.jsonOut( eventService.eventCreate(request,event_create,property) );
+                case "v1.5":
+                    property = sess.sessionEffective(session,session_id,"/v1.5/event/create");
+                    language=property.getLanguage();
+                    return ObjectUtil.jsonOut( v1_5_eventService.eventCreate(request,event_create,property) );
                 default:
                     return "404";
             }
@@ -279,4 +286,65 @@ public class AppEventController {
         }
     }
 
-}
+    @ResponseBody
+    @RequestMapping(value = "/event_group")
+    public String eventGroup(HttpSession session, String session_id,EventGroup eventGroup, @PathVariable String version) {
+        SessionProperty property;
+        String language = "zh";
+        try {
+            switch (version){
+                case "v1.5":
+                    property = sess.sessionEffective(session,session_id,"/v1.5/event/event_group");
+                    language=property.getLanguage();
+                    return ObjectUtil.jsonOut( v1_5_eventService.eventGroup(property,eventGroup) );
+                default:
+                    return "404";
+            }
+        }catch (HongZhiException e){
+            return ObjectUtil.jsonOutError(e.getCode(), dic.getCodeValue(e.getCode(),e.getMessage(), language ) );
+
+        }
+    }
+
+
+    @ResponseBody
+    @RequestMapping(value = "/event_group_member")
+    public String eventGroupMember(HttpSession session, String session_id,EventGroup eventGroup, @PathVariable String version) {
+        SessionProperty property;
+        String language = "zh";
+        try {
+            switch (version){
+                case "v1.5":
+                    property = sess.sessionEffective(session,session_id,"/v1.5/event/event_group_member");
+                    language=property.getLanguage();
+                    return ObjectUtil.jsonOut( v1_5_eventService.eventGroupMember(property,eventGroup) );
+                default:
+                    return "404";
+            }
+        }catch (HongZhiException e){
+            return ObjectUtil.jsonOutError(e.getCode(), dic.getCodeValue(e.getCode(),e.getMessage(), language ) );
+
+        }
+
+    }
+
+    @ResponseBody
+    @RequestMapping(value = "/delete_group_member")
+    public String deleteGroupMember(HttpSession session, String session_id, EventGroup eventGroup, @PathVariable String version) {
+        SessionProperty property;
+        String language = "zh";
+        try {
+            switch (version) {
+                case "v1.5":
+                    property = sess.sessionEffective(session, session_id, "/v1.6/event/delete_group_member");
+                    language = property.getLanguage();
+                    return ObjectUtil.jsonOut(v1_5_eventService.deleteGroupMember(property,eventGroup));
+                default:
+                    return "404";
+            }
+        } catch (HongZhiException e) {
+            return ObjectUtil.jsonOutError(e.getCode(), dic.getCodeValue(e.getCode(), e.getMessage(), language));
+
+        }
+    }
+    }
