@@ -547,7 +547,7 @@ public class EventService {
                 for (int i = 0; i < formItems.size(); i++) {
                     for (int j = 0; j < eventUserProfile.size(); j++) {
                         if (formItems.get(i).get("item_code").toString().equals(eventUserProfile.get(j).get("item_code").toString())) {
-                            if (user_id.equals(eventInfo.getOrganizer_id().toString())){
+                            if (user_id.equals(eventInfo.getOrganizer_id().toString())&& ObjectUtil.isEmpty(eventUserProfile.get(j).get("item_value").toString())){
                                 formItems.get(i).put("item_value", "");
 
                             }else{
