@@ -606,7 +606,7 @@ public class EventService {
 
         if (events.get(0).getMax_people()!= 0 && events.get(0).getMax_people() <= Integer.valueOf(info.get("registered_count").toString())){
 
-            throw new HongZhiException("full","event_button");//上限人数
+            throw new HongZhiException("1092");//上限人数
         }
 
         int effect_count = eventDao.saveUserRegister(event_id, Integer.valueOf(property.getUser_id()));
