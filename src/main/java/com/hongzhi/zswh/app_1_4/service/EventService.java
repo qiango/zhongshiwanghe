@@ -57,6 +57,12 @@ public class EventService {
             // detail
             if (!ObjectUtil.isEmpty(event_id)) {
                 Map<String, Object> info = eventDao.statusInfo(Integer.valueOf(property.getUser_id()), event_id);
+
+                if (events.get(0).getMax_people()!= 0 && events.get(0).getMax_people() <= Integer.valueOf(info.get("registered_count").toString())){
+
+                    throw new HongZhiException("1092");//上限人数
+                }
+
                 events.get(0).setButton_show_code(Boolean.valueOf(info.get("is_registered").toString()), Integer.valueOf(info.get("registered_count").toString()), property.getLanguage());
                 events.get(0).setButton_show_content(dictionaryUtil.getValue(events.get(0).getButton_show_code().toLowerCase(), "event_button", property.getLanguage()));
                 Gson gson = new Gson();
