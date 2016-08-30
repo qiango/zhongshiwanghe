@@ -1,4 +1,8 @@
 
+INSERT INTO `dictionary` (`code`, `value`, `p_code`, `language`) VALUES ('1089', '活动编号不能为空', 'return_info', 'zh');
+INSERT INTO `dictionary` (`code`, `value`, `p_code`, `language`) VALUES ('1090', '用户编码不能为空', 'return_info', 'zh');
+INSERT INTO `dictionary` (`code`, `value`, `p_code`, `language`) VALUES ('1091', '活动群号不能为空', 'return_info', 'zh');
+
 
 CREATE TABLE `rest_user_info` (
   `user_id` int(11) DEFAULT NULL,
@@ -10,3 +14,12 @@ CREATE TABLE `rest_user_info` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 ALTER TABLE event ADD  column  group_id varchar(100) DEFAULT '0';
+
+
+CREATE TABLE `event_group` (
+  `user_id` int(11) DEFAULT NULL,
+  `event_id` int(11) DEFAULT NULL,
+  `group_id` varchar(100) DEFAULT NULL,
+  `group_level` varchar(2) DEFAULT '99' COMMENT '0群管理员，99普通群成员',
+  `status` varchar(2) DEFAULT '1' COMMENT '1已加入'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
