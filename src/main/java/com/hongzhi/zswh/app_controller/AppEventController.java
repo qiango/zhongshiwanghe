@@ -336,7 +336,7 @@ public class AppEventController {
         try {
             switch (version) {
                 case "v1.5":
-                    property = sess.sessionEffective(session, session_id, "/v1.6/event/delete_group_member");
+                    property = sess.sessionEffective(session, session_id, "/v1.5/event/delete_group_member");
                     language = property.getLanguage();
                     return ObjectUtil.jsonOut(v1_5_eventService.deleteGroupMember(property,eventGroup));
                 default:
