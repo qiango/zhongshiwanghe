@@ -50,7 +50,6 @@
          ,form_item
          ,event_detail
          ,event_notice
-         ,group_id
     ) values (
           #{event_name}
          ,#{club_id}
@@ -69,7 +68,6 @@
          ,#{form_item}
          ,#{event_detail}
          ,#{event_notice}
-         ,#{group_id}
     )
 
     </insert>

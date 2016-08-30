@@ -723,6 +723,8 @@ public class EventService {
     }
 
 
+
+
 /*    public Object verifyEventDetails(String event_id, SessionProperty property) throws HongZhiException {
         ExcepUtil.verify(event_id,"event_name_null","event");
 
