@@ -7,7 +7,6 @@ import com.hongzhi.zswh.app_v3.notification.service.NotificationService;
 import com.hongzhi.zswh.util.basic.DictionaryUtil;
 import com.hongzhi.zswh.util.basic.ObjectUtil;
 import com.hongzhi.zswh.util.basic.sessionDao.SessionProperty;
-import com.hongzhi.zswh.util.exception.ExcepUtil;
 import com.hongzhi.zswh.util.exception.HongZhiException;
 import com.hongzhi.zswh.util.picture.service.Picture;
 import com.hongzhi.zswh.util.picture.service.PictureService;
@@ -59,10 +58,10 @@ public class EventService {
             if (!ObjectUtil.isEmpty(event_id)) {
                 Map<String, Object> info = eventDao.statusInfo(Integer.valueOf(property.getUser_id()), event_id);
 
-                if (events.get(0).getMax_people()!= 0 && events.get(0).getMax_people() <= Integer.valueOf(info.get("registered_count").toString())){
+    /*            if (events.get(0).getMax_people()!= 0 && events.get(0).getMax_people() <= Integer.valueOf(info.get("registered_count").toString())){
                     ExcepUtil.verify("full","event_name_null","event_button");//上限人数
-                   // throw new HongZhiException("1092");
-                }
+                    // throw new HongZhiException("1092");
+                }*/
 
                 events.get(0).setButton_show_code(Boolean.valueOf(info.get("is_registered").toString()), Integer.valueOf(info.get("registered_count").toString()), property.getLanguage());
                 events.get(0).setButton_show_content(dictionaryUtil.getValue(events.get(0).getButton_show_code().toLowerCase(), "event_button", property.getLanguage()));
@@ -601,6 +600,14 @@ public class EventService {
     }
 
     public Object eventRegister(Integer event_id, SessionProperty property, String profiles) throws HongZhiException {
+
+        List<Event> events = eventDao.events(property.getClub_id(), event_id, EventStatus.NORMAL.getValue());
+        Map<String, Object> info = eventDao.statusInfo(Integer.valueOf(property.getUser_id()), event_id);
+
+        if (events.get(0).getMax_people()!= 0 && events.get(0).getMax_people() <= Integer.valueOf(info.get("registered_count").toString())){
+
+            throw new HongZhiException("full","event_button");//上限人数
+        }
 
         int effect_count = eventDao.saveUserRegister(event_id, Integer.valueOf(property.getUser_id()));
 
