@@ -67,7 +67,7 @@
         <foreach collection="items" item="item" separator="," >
             (
             #{event_id}
-            #{user_id}
+           ,#{user_id}
             ,#{item}
             )
         </foreach>
