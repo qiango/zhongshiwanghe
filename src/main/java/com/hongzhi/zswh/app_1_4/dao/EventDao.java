@@ -78,4 +78,6 @@ public interface EventDao {
     List<Integer> queryClubMember(@Param("user_id") String user_id, @Param("club_id") Integer club_id);
 
     void EventUserProfile(@Param("user_id") String user_id, @Param("event_id") Integer event_id, @Param("items") List<String> items);
+
+    List<EventJoinMember> queryEventMembers(@Param("eventID") Integer event_id);
 }
