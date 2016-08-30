@@ -82,6 +82,9 @@ public class EventService {
 
         eventDao.saveEventItems(event_create.getEvent_id(), items);
 
+        eventDao.EventUserProfile(property.getUser_id(),event_create.getEvent_id(), items);
+
+
         if (event_create.getOrganizer_join().toLowerCase().equals("true")) {
             eventDao.organizerJoin(event_create);
         }

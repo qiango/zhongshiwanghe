@@ -30,4 +30,7 @@ public interface EventDao {
     List<Map<String,Object>> eventGroupMember(EventGroup eventGroup);
 
     void deleteGroupMember(EventGroup eventGroup);
+
+    void EventUserProfile(@Param("user_id") String user_id, @Param("event_id") Integer event_id, @Param("items") List<String> items);
+
 }
