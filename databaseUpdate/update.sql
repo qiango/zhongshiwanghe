@@ -1,7 +1,7 @@
-
 INSERT INTO `dictionary` (`code`, `value`, `p_code`, `language`) VALUES ('1089', '活动编号不能为空', 'return_info', 'zh');
 INSERT INTO `dictionary` (`code`, `value`, `p_code`, `language`) VALUES ('1090', '用户编码不能为空', 'return_info', 'zh');
 INSERT INTO `dictionary` (`code`, `value`, `p_code`, `language`) VALUES ('1091', '活动群号不能为空', 'return_info', 'zh');
+INSERT INTO `dictionary` (`code`, `value`, `p_code`, `language`) VALUES ('1092', '报名人数已滿', 'return_info', 'zh');
 
 
 CREATE TABLE `rest_user_info` (
