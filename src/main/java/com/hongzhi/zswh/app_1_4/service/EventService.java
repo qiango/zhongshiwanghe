@@ -7,6 +7,7 @@ import com.hongzhi.zswh.app_v3.notification.service.NotificationService;
 import com.hongzhi.zswh.util.basic.DictionaryUtil;
 import com.hongzhi.zswh.util.basic.ObjectUtil;
 import com.hongzhi.zswh.util.basic.sessionDao.SessionProperty;
+import com.hongzhi.zswh.util.exception.ExcepUtil;
 import com.hongzhi.zswh.util.exception.HongZhiException;
 import com.hongzhi.zswh.util.picture.service.Picture;
 import com.hongzhi.zswh.util.picture.service.PictureService;
@@ -59,8 +60,8 @@ public class EventService {
                 Map<String, Object> info = eventDao.statusInfo(Integer.valueOf(property.getUser_id()), event_id);
 
                 if (events.get(0).getMax_people()!= 0 && events.get(0).getMax_people() <= Integer.valueOf(info.get("registered_count").toString())){
-
-                    throw new HongZhiException("1092");//上限人数
+                    ExcepUtil.verify("full","event_name_null","event_button");//上限人数
+                   // throw new HongZhiException("1092");
                 }
 
                 events.get(0).setButton_show_code(Boolean.valueOf(info.get("is_registered").toString()), Integer.valueOf(info.get("registered_count").toString()), property.getLanguage());
