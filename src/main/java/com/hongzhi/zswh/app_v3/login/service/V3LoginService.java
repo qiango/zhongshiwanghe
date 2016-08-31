@@ -110,11 +110,14 @@ public class V3LoginService {
 
 			Map<String, Object> aa = new HashMap<>();
 			//环信名和密码
-			Map<String, String> rest_map = dao.selectRestUserInfo(userInfo.get("user_id").toString(),userInfo.get("phone").toString());
-
-			out.put("rest_user_name",rest_map.get("rest_user_name"));
-			out.put("rest_user_password",rest_map.get("rest_user_password"));
-
+			List<Map<String, String>> rest_list = dao.selectRestUserInfo(userInfo.get("user_id").toString(),userInfo.get("phone").toString());
+			if (rest_list.size() > 0){
+				out.put("rest_user_name",rest_list.get(0).get("rest_user_name"));
+				out.put("rest_user_password",rest_list.get(0).get("rest_user_password"));
+			}else {
+				out.put("rest_user_name","");
+				out.put("rest_user_password","");
+			}
 
 			aa.put("user_info", out);
 
