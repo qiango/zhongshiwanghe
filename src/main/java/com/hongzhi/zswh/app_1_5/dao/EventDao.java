@@ -33,4 +33,7 @@ public interface EventDao {
 
     void EventUserProfile(@Param("user_id") String user_id, @Param("event_id") Integer event_id, @Param("items") List<String> items);
 
+    List<Integer> selectEventGroupAdmin(@Param("user_id") String user_id, @Param("group_id") String group_id);
+
+    List<Integer> selectEventGroupMember(@Param("user_id") String user_id,@Param("group_id") String group_id);
 }

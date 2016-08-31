@@ -122,9 +122,14 @@ public class EventService {
         eventGroup.Vevent_id();
         eventGroup.Vgroup_id();
 
-        eventGroup.setUser_id(property.getUser_id());
+        List<Integer> member_list =  eventDao.selectEventGroupMember(property.getUser_id(),eventGroup.getGroup_id());
 
-        eventDao.saveEventGroupUser(eventGroup);
+        if (member_list.size() == 0){
+
+            eventGroup.setUser_id(property.getUser_id());
+
+            eventDao.saveEventGroupUser(eventGroup);
+        }
 
         return null;
     }
@@ -141,16 +146,25 @@ public class EventService {
         eventGroup.Vevent_id();
         eventGroup.Vgroup_id();
 
+
+        List<Integer> list_admin = eventDao.selectEventGroupAdmin(property.getUser_id(),eventGroup.getGroup_id());
+
         List<Map<String,Object>>  event_group_member_list =  eventDao.eventGroupMember(eventGroup);
 
         Map<String, Object> map = new HashMap<>();
+
+        if (list_admin.size() > 0){
+            map.put("event_group_admin","0");
+        }else {
+            map.put("event_group_admin","99");
+        }
 
         if (event_group_member_list.size() > 0){
             map.put("event_group_member",event_group_member_list);
 
         }else {
             map.put("event_group_member",new ArrayList<>());
-
+            map.put("event_group_admin","");
         }
 
         return map;

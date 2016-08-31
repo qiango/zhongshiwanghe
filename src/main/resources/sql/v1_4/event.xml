@@ -516,7 +516,7 @@
         left join  event c
         on a.event_id = c.event_id
         where a.event_id = #{eventID}
-        and a.my_status in(1,2)
+        and a.my_status = 1
         and c.start_time >= NOW()
 
     </select>
