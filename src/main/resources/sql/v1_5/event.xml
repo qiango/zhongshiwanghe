@@ -134,7 +134,7 @@
     </insert>
     <select id="eventGroupMember" resultType="map">
           SELECT
-                coalesce(a.user_id,'')user_id
+                coalesce(a.user_id,'') as user_id
                 ,coalesce(b.nickname,concat(substr(b.phone,1,3),'****',substr(b.phone,8)) ) as name
                 ,coalesce(b.profile_picture,'') as  profile_image
                 ,coalesce(a.group_level,'') as group_level
@@ -155,4 +155,33 @@
           and group_id = #{group_id}
           and user_id = #{user_id}
     </update>
+
+
+    <select id="selectEventGroupAdmin" resultType="Integer">
+        SELECT
+          a.user_id
+        FROM
+          event_group a
+        where
+          a.user_id = #{user_id}
+        and
+          a.group_id = #{group_id}
+        and
+          a.group_level = 0
+        and
+          a.status = 1
+    </select>
+
+    <select id="selectEventGroupMember" resultType="Integer">
+        SELECT
+          a.user_id
+        FROM
+          event_group a
+        where
+          a.user_id = #{user_id}
+        and
+          a.group_id = #{group_id}
+        and
+          a.status = 1
+    </select>
 </mapper>
