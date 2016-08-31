@@ -22,5 +22,5 @@ public interface V3LoginDao {
 
     List<Map<String,Object>> profileInfos(@Param("userID") Integer user_id);
 
-	Map<String, String> selectRestUserInfo(@Param("user_id") String user_id, @Param("phone") String phone);
+	List<Map<String, String>> selectRestUserInfo(@Param("user_id") String user_id, @Param("phone") String phone);
 }
