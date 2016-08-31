@@ -110,10 +110,10 @@ public class V3LoginService {
 
 			Map<String, Object> aa = new HashMap<>();
 			//环信名和密码
-			//Map<String, String> rest_map = dao.selectRestUserInfo(userInfo.get("user_id").toString(),userInfo.get("phone").toString());
+			Map<String, String> rest_map = dao.selectRestUserInfo(userInfo.get("user_id").toString(),userInfo.get("phone").toString());
 
-			//out.put("rest_user_name",rest_map.get("rest_user_name"));
-			//out.put("rest_user_password",rest_map.get("rest_user_password"));
+			out.put("rest_user_name",rest_map.get("rest_user_name"));
+			out.put("rest_user_password",rest_map.get("rest_user_password"));
 
 
 			aa.put("user_info", out);
@@ -198,7 +198,7 @@ public class V3LoginService {
                         }
 
 						//注册环信
-						//restService.restRegister(user_input.getUser_id().toString(),loginParam.VPhone());
+						restService.restRegister(user_input.getUser_id().toString(),loginParam.VPhone());
 
 						return  ObjectUtil.jsonOut(out);
 					} else {
