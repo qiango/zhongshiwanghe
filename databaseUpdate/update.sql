@@ -4,6 +4,8 @@ INSERT INTO `dictionary` (`code`, `value`, `p_code`, `language`) VALUES ('1091',
 INSERT INTO `dictionary` (`code`, `value`, `p_code`, `language`) VALUES ('1092', '报名人数已满', 'return_info', 'zh');
 UPDATE dictionary set value ='报名人数已满' where code = 'full' and p_code = 'event_button';
 
+ALTER TABLE event ADD  column  group_id varchar(100) DEFAULT '0';
+
 DROP TABLE IF EXISTS `rest_user_info`;
 CREATE TABLE `rest_user_info` (
   `user_id` int(11) DEFAULT NULL,
