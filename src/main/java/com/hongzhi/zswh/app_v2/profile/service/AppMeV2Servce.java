@@ -20,7 +20,7 @@ public class AppMeV2Servce {
 	@Autowired
 	private DictionaryUtil dictionaryUtil;
 
-	/**   Twitter : @taylorwang789 
+	/**   Twitter : @taylorwang789
 	 * Creat time : Apr 7, 2016    6:40:10 PM
 	 * @param params
 	 * @return
